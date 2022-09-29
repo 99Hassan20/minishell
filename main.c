@@ -62,11 +62,20 @@ void tolower_test(int c)
 void ft_strchr_test(const char *s, int c)
 {
     printf("strchr test....\n");
-    printf("mine : %c\n", *ft_strchr(s, c));
-    printf("theirs : %c\n", *strchr(s, c));
+    printf("mine : %s\n", ft_strchr(s, c));
+    printf("original : %s\n", strchr(s, c));
     printf("strchr test end....\n");
 }
 
+void strrchr_test(const char *s, int c)
+{
+    printf("strrchr test....\n");
+    char *mine = ft_strrchr(s, c);
+    char *theirs = strrchr(s, c);
+    printf("mine : %s\n", mine);
+    printf("original : %s\n", theirs);
+    printf("strrchr test end....\n");
+}
 int main()
 {      
     // is_alpha_test(5);
@@ -77,6 +86,7 @@ int main()
     // strlen_test"");
     // toupper_test('z');
     // tolower_test('.');
-    // ft_strchr_test("hassan", '5');
+    ft_strchr_test("hassan", '\0');
+    strrchr_test("hello world", '\0');
     return 0;
 }

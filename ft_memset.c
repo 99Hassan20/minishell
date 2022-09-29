@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strrchr.c                                       :+:      :+:    :+:   */
+/*   ft_memset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/29 16:21:41 by hoigag            #+#    #+#             */
-/*   Updated: 2022/09/29 18:42:21 by hoigag           ###   ########.fr       */
+/*   Created: 2022/09/29 18:57:30 by hoigag            #+#    #+#             */
+/*   Updated: 2022/09/29 19:05:51 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char *ft_strrchr(const char *s, int c)
+void *ft_memset(void *b, int c, size_t len)
 {
-    int size = ft_strlen(s);
-    char *p = ((char *) s) + size;
-    while(size >= 0)
+    int i = 0;
+    char *p = (unsigned char *) b;
+    while(*p)
     {
-        if (*p == c)
-            return p;
-        size--;
-        p--;
+        if(i < len)
+        {
+            *p = (unsigned char) c;
+        }
+        p++;
+        i++;
     }
-    return NULL;
+    return b;
 }
