@@ -6,13 +6,13 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 12:37:15 by hoigag            #+#    #+#             */
-/*   Updated: 2022/09/29 12:42:31 by hoigag           ###   ########.fr       */
+/*   Updated: 2022/09/30 17:19:27 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int ft_isascii(int c)
+int	ft_isascii(int c)
 {
-    return (c >= 0 && c <= 127);
+	return (c >= 0 && c <= 127);
 }

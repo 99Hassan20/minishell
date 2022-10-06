@@ -6,13 +6,13 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 10:50:37 by hoigag            #+#    #+#             */
-/*   Updated: 2022/09/29 12:38:52 by hoigag           ###   ########.fr       */
+/*   Updated: 2022/09/30 17:19:48 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int ft_isdigit(int c)
+int	ft_isdigit(int c)
 {
-    return (c >= 48 && c <= 57);
+	return (c >= 48 && c <= 57);
 }

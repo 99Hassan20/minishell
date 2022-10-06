@@ -1,16 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalpha.c                                       :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/29 10:02:07 by hoigag            #+#    #+#             */
-/*   Updated: 2022/10/01 14:38:52 by hoigag           ###   ########.fr       */
+/*   Created: 2022/10/03 19:19:09 by hoigag            #+#    #+#             */
+/*   Updated: 2022/10/03 19:44:29 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-int	ft_isalpha(int c)
+#include "libft.h"
+
+void	*ft_calloc(size_t count, size_t size)
 {
-	return ((c >= 65 && c <= 90) || (c >= 97 && c <= 122));
+	void	*ptr;
+	size_t	mem_size;
+
+	mem_size = count * size;
+	ptr = malloc(mem_size);
+	if (!ptr)
+		return (NULL);
+	ft_bzero(ptr, mem_size);
+	return (ptr);
 }
