@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 18:37:25 by hoigag            #+#    #+#             */
-/*   Updated: 2022/10/05 15:22:19 by hoigag           ###   ########.fr       */
+/*   Updated: 2022/10/12 00:25:53 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 	unsigned int	i;
 	char			*res;
 
+	i = 0;
 	if (!s)
 		return (NULL);
 	res = malloc(sizeof(char) * (ft_strlen(s) + 1));
-	i = 0;
 	if (!res)
 		return (NULL);
 	while (s[i])

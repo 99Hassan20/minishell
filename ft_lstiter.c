@@ -1,30 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
+/*   ft_lstiter.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/04 15:53:40 by hoigag            #+#    #+#             */
-/*   Updated: 2022/10/10 13:08:47 by hoigag           ###   ########.fr       */
+/*   Created: 2022/10/08 16:34:13 by hoigag            #+#    #+#             */
+/*   Updated: 2022/10/08 16:37:06 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+void	ft_lstiter(t_list *lst, void (*f)(void *))
 {
-	size_t	i;
+	t_list	*tmp;
 
-	i = 0;
-	if (dstsize > 0)
+	tmp = lst;
+	if (lst && f)
 	{
-		while (i < dstsize - 1 && src[i])
+		while (tmp)
 		{
-			dst[i] = src[i];
-			i++;
+			f(tmp->content);
+			tmp = tmp->next;
 		}
-		dst[i] = '\0';
 	}
-	return (ft_strlen(src));
 }
