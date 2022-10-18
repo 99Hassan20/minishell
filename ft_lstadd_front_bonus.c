@@ -1,29 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memmove.c                                       :+:      :+:    :+:   */
+/*   ft_lstadd_front_bonus.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/30 14:26:26 by hoigag            #+#    #+#             */
-/*   Updated: 2022/10/12 18:05:58 by hoigag           ###   ########.fr       */
+/*   Created: 2022/10/08 12:23:36 by hoigag            #+#    #+#             */
+/*   Updated: 2022/10/13 13:20:52 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdio.h>
 
-void	*ft_memmove(void *dst, const void *src, size_t len)
+void	ft_lstadd_front(t_list **lst, t_list *new)
 {
-	unsigned char		*nsrc;
-	unsigned char		*ndst;
-
-	nsrc = (unsigned char *)src;
-	ndst = (unsigned char *)dst;
-	if (dst > src)
-		while (len--)
-			ndst[len] = nsrc[len];
+	if (*lst)
+	{
+		new->next = *lst;
+		*lst = new;
+	}
 	else
-		ft_memcpy(dst, src, len);
-	return (dst);
+		*lst = new;
 }

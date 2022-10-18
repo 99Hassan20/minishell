@@ -6,23 +6,23 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 21:23:21 by hoigag            #+#    #+#             */
-/*   Updated: 2022/10/04 21:27:50 by hoigag           ###   ########.fr       */
+/*   Updated: 2022/10/12 18:02:35 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void    ft_putstr_fd(char *s, int fd)
+void	ft_putstr_fd(char *s, int fd)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    if (s)
-    {
-        while (s[i])
-        {
-            ft_putchar_fd(s[i], fd);
-            i++;
-        } 
-    }  
+	i = 0;
+	if (s)
+	{
+		while (s[i])
+		{
+			ft_putchar_fd(s[i], fd);
+			i++;
+		}
+	}
 }

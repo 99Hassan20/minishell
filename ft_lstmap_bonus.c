@@ -1,29 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memmove.c                                       :+:      :+:    :+:   */
+/*   ft_lstmap_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/30 14:26:26 by hoigag            #+#    #+#             */
-/*   Updated: 2022/10/12 18:05:58 by hoigag           ###   ########.fr       */
+/*   Created: 2022/10/08 17:18:16 by hoigag            #+#    #+#             */
+/*   Updated: 2022/10/12 18:01:10 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdio.h>
 
-void	*ft_memmove(void *dst, const void *src, size_t len)
+t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 {
-	unsigned char		*nsrc;
-	unsigned char		*ndst;
+	t_list	*tmp;
+	t_list	*new_list;
+	t_list	*new_node;
 
-	nsrc = (unsigned char *)src;
-	ndst = (unsigned char *)dst;
-	if (dst > src)
-		while (len--)
-			ndst[len] = nsrc[len];
-	else
-		ft_memcpy(dst, src, len);
-	return (dst);
+	tmp = lst;
+	new_list = NULL;
+	if (lst)
+	{
+		while (tmp)
+		{
+			new_node = ft_lstnew(f(tmp->content));
+			if (!new_node)
+				ft_lstclear(&new_list, del);
+			else
+			{
+				ft_lstadd_back(&new_list, new_node);
+				tmp = tmp->next;
+			}
+		}
+	}
+	return (new_list);
 }
