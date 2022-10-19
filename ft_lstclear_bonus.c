@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstclear.c                                      :+:      :+:    :+:   */
+/*   ft_lstclear_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 16:04:37 by hoigag            #+#    #+#             */
-/*   Updated: 2022/10/08 16:16:20 by hoigag           ###   ########.fr       */
+/*   Updated: 2022/10/19 22:43:03 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@ void	ft_lstclear(t_list **lst, void (*del)(void*))
 	{
 		while (tmp)
 		{
+			*lst = (*lst)->next;
 			ft_lstdelone(tmp, del);
-			tmp = tmp->next;
+			tmp = *lst;
 		}
 		*lst = NULL;
 	}
