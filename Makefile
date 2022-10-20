@@ -6,7 +6,7 @@
 #    By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/10/01 15:58:46 by hoigag            #+#    #+#              #
-#    Updated: 2022/10/19 23:22:19 by hoigag           ###   ########.fr        #
+#    Updated: 2022/10/20 20:59:09 by hoigag           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,10 +32,10 @@ BONUS_OBJS =  $(BONUS_SRCS:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	ar rcs $(NAME) $^
+	ar -rcs $@ $^
 
 bonus: $(NAME) $(BONUS_OBJS)
-	ar rcs $(NAME) $(BONUS_OBJS)
+	ar -rcs $< $(BONUS_OBJS)
 
 %.o : %.c
 	$(CC) $(CFLAGS) -c $^

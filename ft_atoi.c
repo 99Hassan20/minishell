@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/03 15:12:14 by hoigag            #+#    #+#             */
-/*   Updated: 2022/10/03 16:13:59 by hoigag           ###   ########.fr       */
+/*   Updated: 2022/10/20 12:45:38 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ int	ft_atoi(const char *str)
 			sign *= -1;
 		i++;
 	}
-	while (str[i] && str[i] >= '0' && str[i] <= '9')
+	while (str[i] && ft_isdigit(str[i]))
 	{
-		res = res * 10 + (str[i] - '0');
+		res = res * 10 + (str[i] - 48);
 		i++;
 	}
 	return (res * sign);
