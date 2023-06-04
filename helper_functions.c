@@ -1,18 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar_fd.c                                    :+:      :+:    :+:   */
+/*   helper_functions.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/04 20:57:01 by hoigag            #+#    #+#             */
-/*   Updated: 2022/10/05 15:48:24 by hoigag           ###   ########.fr       */
+/*   Created: 2023/05/31 14:45:51 by hoigag            #+#    #+#             */
+/*   Updated: 2023/06/01 11:27:58 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-void	ft_putchar_fd(char c, int fd)
+int	is_char_in_str(char *s, int c)
 {
-	write(fd, &c, 1);
+	int	i;
+
+	i = 0;
+	while (s[i] && s[i] != c)
+		i++;
+	return (s[i] == c);
 }
