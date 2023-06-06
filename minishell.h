@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/06 13:09:18 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/06 20:19:23 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@
 # include <readline/history.h>
 # include "libft/libft.h"
 
-# define SPECIALS "|$ ><\"'"
-# define DELIMITERS "| ><"
 
 typedef	enum
 {
