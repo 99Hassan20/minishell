@@ -6,15 +6,23 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 11:10:03 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/03 17:17:23 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/06 19:51:09 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	is_char(int c)
+static int	is_char(int c, t_shell *shell)
 {
-	return (!ft_strchr(SPECIALS, c));
+	char	*specials;
+
+	if (shell->in_quotes && shell->in_quotes == INDQOUTES)
+		specials = "\" $";
+	else if (shell->in_quotes && shell->in_quotes == INSQOUTES)
+		specials = "\' $";
+	else
+		specials = "|$ ><\"'";
+	return (!ft_strchr(specials, c));
 }
 
 static char	*is_delim(int c)
@@ -22,53 +30,48 @@ static char	*is_delim(int c)
 	return (ft_strchr(DELIMITERS, c));
 }
 
-static char	*parse_string(char *s)
+static char	*parse_string(char *s, t_shell *shell)
 {
-	int	i;
+	int		i;
+	char	*delims;
 
 	i = 0;
-	while (s[i] && !is_delim(s[i]) && s[i] != '\"')
+	if (shell->in_quotes && shell->q_type == INDQOUTES)
+		delims = " \"";
+	else if (shell->in_quotes && shell->q_type == INSQOUTES)
+		delims = " '";
+	else
+		delims = "| ><\"'";
+	printf("%s\n", delims);
+	while (s[i] && !ft_strchr(delims, s[i]))
 	{
-		if (s[i] == '$' && (is_char(s[i + 1]) || s[i + 1] == '$'))
+		if (s[i] == '$' && (is_char(s[i + 1], shell) || s[i + 1] == '$'))
 			break ;
 		i++;
 	}
 	return (ft_substr(s, 0, i));
 }
 
-static char	*parse_var(char *s)
+static char	*parse_var(char *s, t_shell *shell)
 {
-	int	i;
+	int		i;
+	char	*delim;
 
 	i = 1;
+	if (shell->in_quotes)
+		delim = " \"'";
+	else
+		delim = "| ><\"'";
 	if (s[i] == '$')
 		return (ft_substr(s, 0, i + 1));
 	while (s[i])
 	{
-		if (is_delim(s[i]) || s[i] == '$')
+		if (ft_strchr(delim, s[i]) || s[i] == '$')
 			break ;
 		i++;
 	}
 	return (ft_substr(s, 0, i));
 }
-
-// static char	*parse_double_quotes(t_shell *shell, char *s)
-// {
-// 	int		i;
-// 	char	*word;
-// 	t_token	*token;
-
-// 	i = 1;
-// 	while (s[i] && s[i] != '\"')
-// 	{
-// 		if (is_char(*s))
-// 		{
-// 			word = parse_string(s);
-// 			token = new_token(STR, word, ft_strlen(word), DQUOTES);
-// 		}
-// 	}
-// 	return (ft_substr(s, 0, i + 1));
-// }
 
 void	lexer(t_shell *shell, char *s)
 {
@@ -76,25 +79,27 @@ void	lexer(t_shell *shell, char *s)
 	t_token	*token;
 
 	shell->tokens = NULL;
+	shell->in_quotes = 0;
+	shell->q_type = -1;
 	while (*s)
 	{
-		if (is_char(*s))
+		if (is_char(*s, shell))
 		{
-			word = parse_string(s);
-			if (shell->qstate)
-				token = new_token(STR, word, ft_strlen(word), INDQOUTES);
+			word = parse_string(s, shell);
+			if (shell->in_quotes)
+				token = new_token(STR, word, ft_strlen(word), shell->q_type);
 			else
 				token = new_token(STR, word, ft_strlen(word), DFAULT);
 		}
 		else if (*s == ' ')
 		{
 			word = ft_strdup(" ");
-			if (shell->qstate)
-				token = new_token(SPACE, word, 1, INDQOUTES);
+			if (shell->in_quotes)
+				token = new_token(SPACE, word, 1, shell->q_type);
 			else
 				token = new_token(SPACE, word, 1, DFAULT);
 		}
-		else if (*s == '|')
+		else if (*s == '|' && !shell->in_quotes)
 		{
 				word = ft_strdup("|");
 				token = new_token(PIPE, word, 1, DFAULT);
@@ -109,12 +114,12 @@ void	lexer(t_shell *shell, char *s)
 			word = ft_strdup("<<");
 			token = new_token(ALRED, word, 2, DFAULT);
 		}
-		else if (*s == '>')
+		else if (*s == '>' && !shell->in_quotes)
 		{
 			word = ft_strdup(">");
 			token = new_token(RRED, word, 1, DFAULT);
 		}
-		else if (*s == '<')
+		else if (*s == '<' && !shell->in_quotes)
 		{
 			word = ft_strdup("<");
 			token = new_token(LRED, word, 1, DFAULT);
@@ -124,14 +129,25 @@ void	lexer(t_shell *shell, char *s)
 			if (!*(s + 1) || is_delim(*(s + 1)))
 				word = ft_strdup("$");
 			else
-				word = parse_var(s);
-			token = new_token(VAR, word, ft_strlen(word), DFAULT);
+				word = parse_var(s, shell);
+			if (shell->in_quotes)
+				token = new_token(VAR, word, ft_strlen(word), shell->q_type);
+			else
+				token = new_token(VAR, word, ft_strlen(word), DFAULT);
 		}
 		else if (*s == '\"')
 		{
 			word = ft_strdup("\"");
 			token = new_token(DQUOTES, word, 1, INDQOUTES);
-			shell->qstate = !shell->qstate;
+			shell->in_quotes = !shell->in_quotes;
+			shell->q_type = INDQOUTES;
+		}
+		else if (*s == '\'')
+		{
+			word = ft_strdup("\'");
+			token = new_token(SQUOTES, word, 1, INSQOUTES);
+			shell->in_quotes = !shell->in_quotes;
+			shell->q_type = INSQOUTES;
 		}
 		append_token(&shell->tokens, token);
 		s += ft_strlen(word);

@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/03 16:46:41 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/06 13:09:18 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ typedef struct s_token
 
 typedef struct s_shell
 {
-	int		qstate;
+	int		in_quotes;
+	int		q_type;
 	t_token	*tokens;
 }	t_shell;
 
