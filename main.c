@@ -6,21 +6,17 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/02 12:18:33 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/07 20:24:51 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-int	main(void)
+void	shell_loop(t_shell *shell, char *prompt)
 {
 	char	*line;
-	char	*prompt;
-	t_shell	shell;
 	char	*trimmed;
 
-	prompt = "\033[38;5;206mhoigag@minishell$\033[0m ";
 	while (1)
 	{
 		line = readline(prompt);
@@ -28,7 +24,7 @@ int	main(void)
 		{
 			printf("%sexit\n", prompt);
 			free(line);
-			return (0);
+			exit(0);
 		}
 		trimmed = ft_strtrim(line, " \t\n\r");
 		free(line);
@@ -38,10 +34,19 @@ int	main(void)
 			continue ;
 		}
 		add_history(trimmed);
-		lexer(&shell, trimmed);
-		print_tokens(shell.tokens);
+		if (!lexer(shell, trimmed))
+			printf("minishell: syntax error unclosed quote\n");
+		print_tokens(shell->tokens);
 		free(trimmed);
 	}
-	return (0);
 }
 
+int	main(void)
+{
+	t_shell	shell;
+	char	*prompt;
+
+	prompt = "\033[38;5;206mhoigag@minishell$\033[0m ";
+	shell_loop(&shell, prompt);
+	return (0);
+}

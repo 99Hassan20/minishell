@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/06 20:19:23 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/07 20:22:08 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,14 @@
 # include <readline/history.h>
 # include "libft/libft.h"
 
-
-typedef	enum
+typedef enum e_state
 {
 	INDQOUTES,
 	INSQOUTES,
 	DFAULT,
-} State;
+}	t_state;
 
-typedef enum
+typedef enum e_toketype
 {
 	PIPE,
 	SPACE,
@@ -39,14 +38,14 @@ typedef enum
 	ALRED,
 	DQUOTES,
 	SQUOTES,
-}	TokenType;
+}	t_tokentype;
 
 typedef struct s_token
 {
-	TokenType		type;
+	t_tokentype		type;
 	char			*content;
 	int				length;
-	State			state;
+	t_state			state;
 	struct s_token	*next;
 }	t_token;
 
@@ -57,11 +56,17 @@ typedef struct s_shell
 	t_token	*tokens;
 }	t_shell;
 
+//prsing utilities
+int		is_char(int c, t_shell *shell);
+int		is_delim(int c, t_shell *shell);
+char	*get_word(char *s, t_shell *shell);
+char	*get_var(char *s, t_shell *shell);
+void	set_value(char **w, t_token **token, char *value, t_tokentype tt);
+int		lexer(t_shell *shell, char *s);
+
 //token methods
-t_token	*new_token(TokenType type, char *content, int length, State state);
-// void	append_token_v2(t_token **tokens, TokenType type, char *content, int length, State state);
+t_token	*new_token(t_tokentype type, char *content, int length, t_state state);
 void	append_token(t_token **tokens, t_token *new);
 void	print_tokens(t_token *tokens);
-void	lexer(t_shell *shell, char *s);
 
 #endif
