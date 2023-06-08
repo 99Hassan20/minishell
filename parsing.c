@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 11:10:03 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/07 20:22:53 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/08 11:35:47 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void	parse_quotes(t_shell *shell, char c, char **w, t_token **t)
 	}
 }
 
-int	lexer(t_shell *shell, char *s)
+void	lexer(t_shell *shell, char *s)
 {
 	char	*word;
 	t_token	*token;
@@ -117,7 +117,4 @@ int	lexer(t_shell *shell, char *s)
 		append_token(&shell->tokens, token);
 		s += ft_strlen(word);
 	}
-	if (shell->in_quotes)
-		return (0);
-	return (1);
 }

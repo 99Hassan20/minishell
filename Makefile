@@ -3,7 +3,7 @@ CFLAGS = -Wall -Werror -Wextra
 NAME = minishell
 READLINE = -L/Users/hoigag/.brew/opt/readline/lib -lreadline
 LIBFT = -L./libft -lft
-SRCS = main.c list_utils.c parsing.c parsing_utils.c
+SRCS = main.c list_utils.c parsing.c parsing_utils.c error_handler.c
 OBJS = $(SRCS:.c=.o)
 
 all : $(NAME)

@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/07 20:22:08 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/08 13:09:55 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,14 @@ int		is_delim(int c, t_shell *shell);
 char	*get_word(char *s, t_shell *shell);
 char	*get_var(char *s, t_shell *shell);
 void	set_value(char **w, t_token **token, char *value, t_tokentype tt);
-int		lexer(t_shell *shell, char *s);
+void	lexer(t_shell *shell, char *s);
 
 //token methods
 t_token	*new_token(t_tokentype type, char *content, int length, t_state state);
 void	append_token(t_token **tokens, t_token *new);
 void	print_tokens(t_token *tokens);
+t_token	*get_last_token(t_token *tokens);
+
+int		has_error(t_shell *shell);
 
 #endif

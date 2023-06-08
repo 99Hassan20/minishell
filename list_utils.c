@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 15:10:06 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/07 20:19:52 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/08 13:09:29 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,16 @@ void	append_token(t_token **tokens, t_token *new)
 		return ;
 	}
 	*tokens = new;
+}
+
+t_token	*get_last_token(t_token *tokens)
+{
+	t_token	*last;
+
+	last = tokens;
+	while (last->next)
+		last = last->next;
+	return (last);
 }
 // void	append_token_v2(t_token **tokens, TokenType type, char *content, int length, State state)
 // {

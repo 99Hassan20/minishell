@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/07 20:24:51 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/08 11:43:12 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ void	shell_loop(t_shell *shell, char *prompt)
 			continue ;
 		}
 		add_history(trimmed);
-		if (!lexer(shell, trimmed))
-			printf("minishell: syntax error unclosed quote\n");
-		print_tokens(shell->tokens);
+		lexer(shell, trimmed);
+		if (!has_error(shell))
+			print_tokens(shell->tokens);
 		free(trimmed);
 	}
 }
