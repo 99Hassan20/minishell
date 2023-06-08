@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 11:24:28 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/08 13:11:18 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/08 15:06:43 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@ int	has_error(t_shell *shell)
 		|| shell->tokens->content[0] == '<')
 	{
 		printf("minishell: syntax error near unexpected token\n");
+		error = 1;
+	}
+	else if (shell->in_quotes)
+	{
+		printf("minishell: syntax error unclosed quote\n");
 		error = 1;
 	}
 	else if (last->content[0] == '|'
