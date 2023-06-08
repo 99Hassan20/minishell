@@ -3,13 +3,14 @@ CFLAGS = -Wall -Werror -Wextra
 NAME = minishell
 READLINE = -L/Users/hoigag/.brew/opt/readline/lib -lreadline
 LIBFT = -L./libft -lft
-SRCS = main.c list_utils.c parsing.c parsing_utils.c error_handler.c
+SRCS = main.c list_utils.c parsing.c parsing_utils.c error_handler.c\
+	env.c env2.c expand.c
 OBJS = $(SRCS:.c=.o)
 
 all : $(NAME)
 
 $(NAME) : $(OBJS)
-	make -C libft bonus
+	make -C libft all
 	$(CC) $(CFLAGS) $(READLINE) $(LIBFT) $^ -o $@
 
 clean:

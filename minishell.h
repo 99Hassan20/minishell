@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/08 13:09:55 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/08 19:07:08 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,13 @@ typedef enum e_toketype
 	SQUOTES,
 }	t_tokentype;
 
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}	t_env;
+
 typedef struct s_token
 {
 	t_tokentype		type;
@@ -54,6 +61,7 @@ typedef struct s_shell
 	int		in_quotes;
 	int		q_type;
 	t_token	*tokens;
+	t_env	*env;
 }	t_shell;
 
 //prsing utilities
@@ -63,7 +71,7 @@ char	*get_word(char *s, t_shell *shell);
 char	*get_var(char *s, t_shell *shell);
 void	set_value(char **w, t_token **token, char *value, t_tokentype tt);
 void	lexer(t_shell *shell, char *s);
-
+void	expand(t_shell *shell);
 //token methods
 t_token	*new_token(t_tokentype type, char *content, int length, t_state state);
 void	append_token(t_token **tokens, t_token *new);
@@ -71,5 +79,14 @@ void	print_tokens(t_token *tokens);
 t_token	*get_last_token(t_token *tokens);
 
 int		has_error(t_shell *shell);
+
+//env utils
+t_env	*new_env(char *key, char *value);
+int		push_env(t_env **env, char *key, char *value);
+void	env_to_list(t_shell *shell, char **env);
+void	print_env(t_env *head);
+char	*get_env(t_env *env, char *key);
+int		set_env(t_env **env, char *key, char *value, int overrite);
+int		unset_env(t_env **env, char *key);
 
 #endif
