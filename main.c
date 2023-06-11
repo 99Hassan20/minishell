@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/08 19:08:04 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/11 14:53:40 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,9 @@ void	shell_loop(t_shell *shell, char *prompt)
 			free(trimmed);
 			continue ;
 		}
-		expand(shell);
 		print_tokens(shell->tokens);
+		expand(shell);
+		execute_builtins(shell);
 		free(trimmed);
 	}
 }

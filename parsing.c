@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 11:10:03 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/08 11:35:47 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/11 14:15:31 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ void	parse_single_tokens(t_shell *shell, char *s, char **w, t_token **t)
 	char	*word;
 	t_token	*token;
 
+	word = NULL;
+	token = NULL;
 	if (*s == ' ')
 	{
 		word = ft_strdup(" ");
@@ -106,7 +108,12 @@ void	lexer(t_shell *shell, char *s)
 	shell->q_type = -1;
 	while (*s)
 	{
-		if (is_char(*s, shell))
+		if (*s == ' ' && *(s + 1) == ' ' && !shell->in_quotes)
+		{
+			s++;
+			continue ;
+		}
+		else if (is_char(*s, shell))
 			parse_word(shell, s, &word, &token);
 		else if (ft_strchr("><| ", *s))
 			parse_single_tokens(shell, s, &word, &token);

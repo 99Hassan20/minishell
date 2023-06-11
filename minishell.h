@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/08 19:07:08 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/11 12:08:42 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef struct s_shell
 	int		q_type;
 	t_token	*tokens;
 	t_env	*env;
+	char	**cmd_table;
 }	t_shell;
 
 //prsing utilities
@@ -72,11 +73,14 @@ char	*get_var(char *s, t_shell *shell);
 void	set_value(char **w, t_token **token, char *value, t_tokentype tt);
 void	lexer(t_shell *shell, char *s);
 void	expand(t_shell *shell);
+
 //token methods
 t_token	*new_token(t_tokentype type, char *content, int length, t_state state);
 void	append_token(t_token **tokens, t_token *new);
 void	print_tokens(t_token *tokens);
 t_token	*get_last_token(t_token *tokens);
+int		get_list_size(t_token *head);
+void	print_echo(t_token *tmp);
 
 int		has_error(t_shell *shell);
 
@@ -88,5 +92,12 @@ void	print_env(t_env *head);
 char	*get_env(t_env *env, char *key);
 int		set_env(t_env **env, char *key, char *value, int overrite);
 int		unset_env(t_env **env, char *key);
+//builtins
+void	execute_builtins(t_shell *shell);
 
+//array utils
+int		array_size(char **arr);
+char	**append_to_array(char **arr, char *value);
+// char	**get_command_table(t_shell *shell);
+void	print_cmd_table(t_shell *shell);
 #endif

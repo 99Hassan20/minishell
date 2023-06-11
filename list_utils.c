@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 15:10:06 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/08 13:09:29 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/09 17:45:32 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,21 @@ t_token	*get_last_token(t_token *tokens)
 		last = last->next;
 	return (last);
 }
+
+int	get_list_size(t_token *head)
+{
+	t_token	*tmp;
+	int		i;
+
+	i = 0;
+	tmp = head;
+	while (tmp)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	return (i);
+}
 // void	append_token_v2(t_token **tokens, TokenType type, char *content, int length, State state)
 // {
 // 	t_token *head;
@@ -65,6 +80,17 @@ t_token	*get_last_token(t_token *tokens)
 // 	}
 // 	*tokens = new;
 // }
+
+void	print_echo(t_token *tmp)
+{
+	while (tmp)
+	{
+		printf("%s", tmp->content);
+		if (tmp->next)
+			printf(" ");
+		tmp = tmp->next;
+	}
+}
 
 void	print_tokens(t_token *tokens)
 {
