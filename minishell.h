@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/11 12:08:42 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/13 20:30:11 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ typedef struct s_shell
 	t_token	*tokens;
 	t_env	*env;
 	char	**cmd_table;
+	char	*last_dir;
+	char	cwd[1024];
 }	t_shell;
 
 //prsing utilities
@@ -94,10 +96,9 @@ int		set_env(t_env **env, char *key, char *value, int overrite);
 int		unset_env(t_env **env, char *key);
 //builtins
 void	execute_builtins(t_shell *shell);
-
 //array utils
 int		array_size(char **arr);
 char	**append_to_array(char **arr, char *value);
-// char	**get_command_table(t_shell *shell);
+void	get_command_table(t_shell *shell);
 void	print_cmd_table(t_shell *shell);
 #endif

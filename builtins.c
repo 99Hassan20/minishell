@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 12:09:59 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/11 12:16:05 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/13 20:31:43 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ int	is_valid_echo_option(char *option)
 	if (option[0] != '-')
 		return (0);
 	i = 1;
+	if (!option[i])
+		return (0);
 	while (option[i] && option[i] == 'n')
 		i++;
 	if (!option[i])
@@ -50,7 +52,6 @@ static void	ft_echo(t_shell *shell)
 
 	i = 1;
 	print_nl = 1;
-	print_cmd_table(shell);
 	if (!shell->cmd_table[1])
 	{
 		printf("\n");
@@ -72,10 +73,35 @@ static void	ft_echo(t_shell *shell)
 		printf("\n");
 }
 
+void	ft_pwd(t_shell *shell)
+{
+	if (getcwd(shell->cwd, sizeof(shell->cwd)))
+		printf("%s\n", shell->cwd);
+	else
+		printf("pwd: error\n");
+}
+void	ft_chdir(t_shell *shell)
+{
+	char	*path;
+
+	if (!shell->cmd_table[1])
+		path = get_env(shell->env, "HOME");
+	else
+		path = shell->cmd_table[1];
+	if (chdir(path) == -1)
+		printf("minishell: cd: %s: No such file or directory\n", path);
+	else
+		shell->last_dir = path;
+}
+
 void	execute_builtins(t_shell *shell)
 {
 	if (ft_strcmp(shell->cmd_table[0], "env") == 0)
 		ft_env(shell);
 	else if (ft_strcmp(shell->cmd_table[0], "echo") == 0)
 		ft_echo(shell);
+	else if (ft_strcmp(shell->cmd_table[0], "pwd") == 0)
+		ft_pwd(shell);
+	else if (ft_strcmp(shell->cmd_table[0], "cd") == 0)
+		ft_chdir(shell);
 }

@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 15:09:38 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/11 15:18:00 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/13 21:04:47 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,29 @@ void	get_command_table(t_shell *shell)
 {
 	char	**cmd_table;
 	t_token	*tmp;
+	char	*str;
 
 	tmp = shell->tokens;
 	cmd_table = NULL;
 	while (tmp)
 	{
-		if (tmp->type == DQUOTES || tmp->type == SQUOTES)
-			cmd_table = append_to_array(cmd_table, get_quoted_string(&tmp->next));
-		else if (tmp->type == STR || tmp->type == PIPE || tmp->type == ARRED
+		str = ft_strdup("");
+		if (tmp->type == PIPE || tmp->type == ARRED
 			|| tmp->type == LRED || tmp->type == RRED || tmp->type == ALRED)
-			cmd_table = append_to_array(cmd_table, tmp->content);
-		tmp = tmp->next;
+			str = ft_strjoin(str, tmp->content);
+		while (tmp && (tmp->type == STR || (tmp->type == SPACE && (tmp->state == INDQOUTES || tmp->state == INSQOUTES)) || tmp->type == VAR || tmp->type == DQUOTES || tmp->type == SQUOTES))
+		{
+			if (!(tmp->type == DQUOTES || tmp->type == SQUOTES))
+				str = ft_strjoin(str, tmp->content);
+			tmp = tmp->next;
+		}
+		if (str[0])
+			cmd_table = append_to_array(cmd_table, str);
+		if (tmp && tmp->next)
+			tmp = tmp->next;
 	}
 	shell->cmd_table = cmd_table;
+	// print_cmd_table(shell);
 }
 
 void	expand(t_shell *shell)
@@ -73,5 +83,3 @@ void	expand(t_shell *shell)
 	}
 	get_command_table(shell);
 }
-
-
