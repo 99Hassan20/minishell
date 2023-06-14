@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 15:09:38 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/13 21:04:47 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/14 19:48:24 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,19 +44,24 @@ void	get_command_table(t_shell *shell)
 	while (tmp)
 	{
 		str = ft_strdup("");
-		if (tmp->type == PIPE || tmp->type == ARRED
+		if (tmp->type == PIPE || tmp->type == ARRED || tmp->type == SPACE
 			|| tmp->type == LRED || tmp->type == RRED || tmp->type == ALRED)
-			str = ft_strjoin(str, tmp->content);
-		while (tmp && (tmp->type == STR || (tmp->type == SPACE && (tmp->state == INDQOUTES || tmp->state == INSQOUTES)) || tmp->type == VAR || tmp->type == DQUOTES || tmp->type == SQUOTES))
 		{
-			if (!(tmp->type == DQUOTES || tmp->type == SQUOTES))
-				str = ft_strjoin(str, tmp->content);
+			if (tmp->type != SPACE)
+				str = tmp->content;
 			tmp = tmp->next;
+		}
+		else
+		{
+			while (tmp && (tmp->type == STR || (tmp->type == SPACE && (tmp->state == INDQOUTES || tmp->state == INSQOUTES)) || tmp->type == VAR || tmp->type == DQUOTES || tmp->type == SQUOTES))
+			{
+				if (!(tmp->type == DQUOTES || tmp->type == SQUOTES))
+					str = ft_strjoin(str, tmp->content);
+				tmp = tmp->next;
+			}
 		}
 		if (str[0])
 			cmd_table = append_to_array(cmd_table, str);
-		if (tmp && tmp->next)
-			tmp = tmp->next;
 	}
 	shell->cmd_table = cmd_table;
 	// print_cmd_table(shell);

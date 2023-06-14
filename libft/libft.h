@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/30 17:21:06 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/08 18:52:16 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/14 18:57:49 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 int		ft_count(char *s, char c);
 void	ft_free_2d(char **str);
+int		ft_get_index_of(char *s, int c);
 // ----------------------- bonus part -----------------------//
 t_list	*ft_lstnew(void *content);
 void	ft_lstadd_front(t_list **lst, t_list *new);

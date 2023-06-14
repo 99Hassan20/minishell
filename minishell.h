@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/13 20:30:11 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/14 16:00:20 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ typedef struct s_shell
 	t_token	*tokens;
 	t_env	*env;
 	char	**cmd_table;
-	char	*last_dir;
 	char	cwd[1024];
 }	t_shell;
 
@@ -90,7 +89,7 @@ int		has_error(t_shell *shell);
 t_env	*new_env(char *key, char *value);
 int		push_env(t_env **env, char *key, char *value);
 void	env_to_list(t_shell *shell, char **env);
-void	print_env(t_env *head);
+void	print_env(t_env *head, int flag);
 char	*get_env(t_env *env, char *key);
 int		set_env(t_env **env, char *key, char *value, int overrite);
 int		unset_env(t_env **env, char *key);
