@@ -6,11 +6,11 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 11:10:03 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/11 14:15:31 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/17 15:00:57 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	parse_word(t_shell *shell, char *s, char **w, t_token **t)
 {

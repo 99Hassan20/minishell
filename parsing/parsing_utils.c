@@ -6,11 +6,11 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 20:15:37 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/17 12:38:41 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/17 15:00:53 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	is_char(int c, t_shell *shell)
 {

@@ -4,10 +4,11 @@ NAME = minishell
 READLINE = -L/Users/hoigag/.brew/opt/readline/lib -lreadline
 LIBFT = -L./libft -lft
 
-BUILIN_SRCS = builtins/ft_echo.c builtins/ft_env.c builtins/ft_pwd.c builtins/ft_cd.c builtins/ft_export_unset.c builtins/ft_exit.c 
+BUILIN_SRCS = builtins/ft_echo.c builtins/ft_env.c builtins/ft_pwd.c builtins/ft_cd.c builtins/ft_export_unset.c builtins/ft_exit.c builtins/exec_builtin.c
+PARSING_SRCS = parsing/expand.c parsing/parsing_utils.c parsing/parsing.c parsing/tokenizer.c
+ENV_SCRS = env/env.c env/env_utils.c
 
-SRCS = main.c list_utils.c parsing.c parsing_utils.c error_handler.c\
-	env.c env2.c expand.c builtins.c array_utils.c $(BUILIN_SRCS)
+SRCS = main.c  error_handler.c array_utils.c $(BUILIN_SRCS) $(PARSING_SRCS) $(ENV_SCRS)
 OBJS = $(SRCS:.c=.o)
 
 all : $(NAME)
