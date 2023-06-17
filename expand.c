@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 15:09:38 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/14 19:48:24 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/17 13:11:28 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,10 @@ void	get_command_table(t_shell *shell)
 		}
 		else
 		{
-			while (tmp && (tmp->type == STR || (tmp->type == SPACE && (tmp->state == INDQOUTES || tmp->state == INSQOUTES)) || tmp->type == VAR || tmp->type == DQUOTES || tmp->type == SQUOTES))
+			while (tmp && (tmp->type == STR || (tmp->type == SPACE
+						&& (tmp->state == INDQOUTES || tmp->state == INSQOUTES))
+					|| tmp->type == VAR || tmp->type == DQUOTES
+					|| tmp->type == SQUOTES))
 			{
 				if (!(tmp->type == DQUOTES || tmp->type == SQUOTES))
 					str = ft_strjoin(str, tmp->content);
@@ -64,7 +67,6 @@ void	get_command_table(t_shell *shell)
 			cmd_table = append_to_array(cmd_table, str);
 	}
 	shell->cmd_table = cmd_table;
-	// print_cmd_table(shell);
 }
 
 void	expand(t_shell *shell)
@@ -77,7 +79,10 @@ void	expand(t_shell *shell)
 	{
 		if (tmp->type == VAR && (tmp->state == INDQOUTES || tmp->state == DFAULT))
 		{
-			value = get_env(shell->env, tmp->content + 1);
+			if (ft_strcmp(tmp->content, "$?") == 0)
+				value = ft_itoa(shell->exit_status);
+			else
+				value = get_env(shell->env, tmp->content + 1);
 			if (!value)
 				value = "";
 			tmp->content = value;

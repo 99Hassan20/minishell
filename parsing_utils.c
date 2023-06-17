@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/07 20:15:37 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/09 16:29:24 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/17 12:38:41 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ char	*get_var(char *s, t_shell *shell)
 	else
 		delim = "| ><\"'$";
 	if (s[i] == '$')
+		return (ft_substr(s, 0, i + 1));
+	if (s[i] == '?')
 		return (ft_substr(s, 0, i + 1));
 	while (s[i])
 	{

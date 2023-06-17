@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/14 16:05:25 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/15 18:57:23 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void	shell_loop(t_shell *shell, char *prompt)
 
 	while (1)
 	{
+		getcwd(shell->cwd, sizeof(shell->cwd));
+		set_env(&shell->env, "PWD", shell->cwd, 1);
 		line = readline(prompt);
 		if (!line)
 		{

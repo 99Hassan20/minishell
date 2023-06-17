@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/14 16:00:20 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/17 13:25:51 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ typedef struct s_shell
 	t_token	*tokens;
 	t_env	*env;
 	char	**cmd_table;
+	int		exit_status;
 	char	cwd[1024];
 }	t_shell;
 
@@ -100,4 +101,13 @@ int		array_size(char **arr);
 char	**append_to_array(char **arr, char *value);
 void	get_command_table(t_shell *shell);
 void	print_cmd_table(t_shell *shell);
+
+//* builtins
+void	ft_echo(t_shell *shell);
+void	ft_export(t_shell *shell);
+void	ft_env(t_shell *shell);
+void	ft_pwd(t_shell *shell);
+void	ft_chdir(t_shell *shell);
+void	ft_unset(t_shell *shell);
+void	ft_exit(t_shell *shell);
 #endif

@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 15:15:36 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/14 14:34:10 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/15 11:41:22 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,12 +78,18 @@ void	print_env(t_env *head, int flag)
 {
 	while (head)
 	{
-		if (!head->value)
-			head->value = "";
 		if (flag == 1)
-			printf("%s=%s\n", head->key, head->value);
+		{
+			if (head->value)
+				printf("%s=%s\n", head->key, head->value);
+		}
 		else
-			printf("declare -x %s=\"%s\"\n", head->key, head->value);
+		{
+			if (head->value)
+				printf("declare -x %s=\"%s\"\n", head->key, head->value);
+			else
+				printf("declare -x %s\n", head->key);
+		}
 		head = head->next;
 	}
 }
