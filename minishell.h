@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/17 13:25:51 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/06/24 09:16:40 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,13 @@ typedef struct s_shell
 	t_token	*tokens;
 	t_env	*env;
 	char	**cmd_table;
+	int		cmd_count;
 	int		exit_status;
+	t_token	**commands;
 	char	cwd[1024];
 }	t_shell;
+
+void	split_cmds(t_shell	*shell);
 
 //prsing utilities
 int		is_char(int c, t_shell *shell);
