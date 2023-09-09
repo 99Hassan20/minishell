@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 13:22:27 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/17 13:47:24 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/09 14:02:11 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,10 @@ void	ft_export(t_shell *shell)
 			pair = ft_split(shell->cmd_table[i], '=');
 			if (!pair[1] && ft_get_index_of(shell->cmd_table[i], '=') != -1)
 				pair[1] = ft_strdup("");
-			set_env(&shell->env, pair[0], pair[1], 1);
+			if (ft_get_index_of(shell->cmd_table[i], '=') != -1)
+				set_env(&shell->env, pair[0], pair[1], 1);
+			else
+				set_env(&shell->env, pair[0], pair[1], 0);
 		}
 		else
 		{

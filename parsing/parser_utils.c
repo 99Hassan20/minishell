@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:00:56 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/24 22:23:39 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/09 11:43:12 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	split_cmds(t_shell	*shell)
 	int		i;
 
 	count_pipes(shell);
-	printf("commands: %d\n", shell->cmd_count);
+	// printf("commands: %d\n", shell->cmd_count);
 	shell->commands = malloc(sizeof(t_token *) * shell->cmd_count);
 	if (!shell->commands)
 		return ;

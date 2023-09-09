@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 13:24:44 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/17 13:25:28 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/09 12:54:54 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ static int	is_valid_exit_status(char *status)
 void	ft_exit(t_shell *shell)
 {
 	if (!shell->cmd_table[1])
-		shell->exit_status = 0;
-	else if (!is_valid_exit_status(shell->cmd_table[1]))
+		exit(shell->exit_status);
+	if (!is_valid_exit_status(shell->cmd_table[1]))
 	{
 		shell->exit_status = 255;
 		printf("bash: exit: \
