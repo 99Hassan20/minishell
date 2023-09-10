@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 17:55:58 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/24 09:27:27 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/10 13:37:09 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,31 @@ char	**append_to_array(char **arr, char *value)
 	return (new);
 }
 
-void	print_cmd_table(t_shell *shell)
+void	print_cmd_table(char **args)
 {
 	int	i;
 
 	i = 0;
-	while (shell->cmd_table[i])
+	if (!args || !args[0])
 	{
-		printf("[%s]", shell->cmd_table[i]);
+		printf("cmd_table is empty\n");
+		return ;
+	}
+	while (args[i])
+	{
+		printf("[%s]", args[i]);
 		i++;
 	}
 	printf("\n");
 }
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (shell->cmd_table[i])
+// 	{
+// 		printf("[%s]", shell->cmd_table[i]);
+// 		i++;
+// 	}
+// 	printf("\n");
+// }

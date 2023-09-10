@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:00:56 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/09 11:43:12 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/10 12:10:32 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,21 @@ void	count_pipes(t_shell *shell)
 	shell->cmd_count = count + 1;
 }
 
+t_token *remove_space_from_tokens(t_token *tokens)
+{
+	t_token *new;
+	t_token *tmp;
+
+	new = NULL;
+	tmp = tokens;
+	while (tmp)
+	{
+		if (!(tmp->type == SPACE && tmp->state == DFAULT))
+			append_token(&new, copy_token(tmp));
+		tmp = tmp->next;
+	}
+	return (new);
+}
 void	split_cmds(t_shell	*shell)
 {	
 	t_token	*tmp;
@@ -61,7 +76,7 @@ void	split_cmds(t_shell	*shell)
 		shell->commands[i] = NULL;
 		while (tmp && tmp->type != PIPE)
 		{
-			if (!(tmp->type == SPACE && tmp->state == DFAULT))
+			// if (!(tmp->type == SPACE && tmp->state == DFAULT))
 				append_token(&shell->commands[i], copy_token(tmp));
 			tmp = tmp->next;
 		}
@@ -70,6 +85,7 @@ void	split_cmds(t_shell	*shell)
 		i++;
 	}
 }
+
 
 // t_cmds	*new_cmd(char *cmd, char **args, int argc)
 // {

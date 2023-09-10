@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 15:09:38 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/17 15:00:44 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/09 19:08:16 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ char	*get_quoted_string(t_token **head)
 	return (str);
 }
 
-void	get_command_table(t_shell *shell)
+char	**get_command_table(t_token *tokens)
 {
 	char	**cmd_table;
 	t_token	*tmp;
 	char	*str;
 
-	tmp = shell->tokens;
+	tmp = tokens;
 	cmd_table = NULL;
 	while (tmp)
 	{
@@ -66,7 +66,7 @@ void	get_command_table(t_shell *shell)
 		if (str[0])
 			cmd_table = append_to_array(cmd_table, str);
 	}
-	shell->cmd_table = cmd_table;
+	return (cmd_table);
 }
 
 void	expand(t_shell *shell)
@@ -91,5 +91,5 @@ void	expand(t_shell *shell)
 		}
 		tmp = tmp->next;
 	}
-	get_command_table(shell);
+	// get_command_table(shell);
 }

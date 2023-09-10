@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/24 09:16:40 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/10 10:50:18 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,20 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
+typedef struct s_redirec
+{
+	char 		*file;
+	t_tokentype type;
+	struct s_redirec *next;
+}	t_redirec;
+
+typedef struct s_command
+{
+	char *cmd;
+	char **args;
+	t_redirec *redirections;
+}	t_command;
+
 typedef struct s_shell
 {
 	int		in_quotes;
@@ -66,8 +80,11 @@ typedef struct s_shell
 	int		cmd_count;
 	int		exit_status;
 	t_token	**commands;
+	t_command *ready_commands;
 	char	cwd[1024];
 }	t_shell;
+
+
 
 void	split_cmds(t_shell	*shell);
 
@@ -79,6 +96,8 @@ char	*get_var(char *s, t_shell *shell);
 void	set_value(char **w, t_token **token, char *value, t_tokentype tt);
 void	lexer(t_shell *shell, char *s);
 void	expand(t_shell *shell);
+int is_redirection(t_token *token);
+t_token *remove_space_from_tokens(t_token *tokens);
 
 //token methods
 t_token	*new_token(t_tokentype type, char *content, int length, t_state state);
@@ -87,6 +106,7 @@ void	print_tokens(t_token *tokens);
 t_token	*get_last_token(t_token *tokens);
 int		get_list_size(t_token *head);
 void	print_echo(t_token *tmp);
+void delete_token(t_token **head, char *content);
 
 int		has_error(t_shell *shell);
 
@@ -103,8 +123,8 @@ void	execute_builtins(t_shell *shell);
 //array utils
 int		array_size(char **arr);
 char	**append_to_array(char **arr, char *value);
-void	get_command_table(t_shell *shell);
-void	print_cmd_table(t_shell *shell);
+char	**get_command_table(t_token *tokens);
+void	print_cmd_table(char **args);
 
 //* builtins
 void	ft_echo(t_shell *shell);

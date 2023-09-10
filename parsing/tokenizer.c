@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 15:10:06 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/17 15:22:13 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/09 17:28:09 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,27 @@ int	get_list_size(t_token *head)
 		tmp = tmp->next;
 	}
 	return (i);
+}
+
+void delete_token(t_token **head, char *content)
+{
+	t_token *tmp;
+	t_token *to_delete;
+
+	tmp = *head;
+	if (tmp && ft_strcmp(tmp->content, content) == 0)
+	{
+		*head = NULL;
+		return;
+	}
+	while (tmp && tmp->next && ft_strcmp(tmp->next->content, content) != 0)
+		tmp = tmp->next;
+	if (tmp && tmp->next)
+	{
+		to_delete = tmp->next;
+		tmp->next = to_delete->next;
+		to_delete->next = NULL;
+	}
 }
 // void	append_token_v2(t_token **tokens, TokenType type, char *content, int length, State state)
 // {

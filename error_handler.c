@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 11:24:28 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/09 13:20:40 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/10 11:44:08 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,16 @@ int is_redirection(t_token *token)
 int has_redirection_error(t_shell *shell)
 {
 	t_token *tmp;
-
-	tmp = shell->tokens;
+	t_token *next;
+	tmp = remove_space_from_tokens(shell->tokens);
+	// print_tokens(tmp);
 	while (tmp)
 	{
 		if (is_redirection(tmp))
 		{
-			if (!tmp->next || tmp->next->type != STR)
+			next = tmp->next;
+			if (!next || (next->type != STR && next->type != VAR && next->type != DQUOTES && next->type != SQUOTES))
 				return (1);
-			tmp = tmp->next;
 		}
 		tmp = tmp->next;
 	}
