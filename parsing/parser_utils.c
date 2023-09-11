@@ -6,13 +6,13 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:00:56 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/10 12:10:32 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/10 17:30:59 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_token *copy_token(t_token *token)
+t_token	*copy_token(t_token *token)
 {
 	t_token	*copy;
 
@@ -43,10 +43,10 @@ void	count_pipes(t_shell *shell)
 	shell->cmd_count = count + 1;
 }
 
-t_token *remove_space_from_tokens(t_token *tokens)
+t_token	*remove_space_from_tokens(t_token *tokens)
 {
-	t_token *new;
-	t_token *tmp;
+	t_token	*new;
+	t_token	*tmp;
 
 	new = NULL;
 	tmp = tokens;
@@ -58,13 +58,13 @@ t_token *remove_space_from_tokens(t_token *tokens)
 	}
 	return (new);
 }
+
 void	split_cmds(t_shell	*shell)
-{	
+{
 	t_token	*tmp;
 	int		i;
 
 	count_pipes(shell);
-	// printf("commands: %d\n", shell->cmd_count);
 	shell->commands = malloc(sizeof(t_token *) * shell->cmd_count);
 	if (!shell->commands)
 		return ;
@@ -72,12 +72,11 @@ void	split_cmds(t_shell	*shell)
 	i = 0;
 	while (i < shell->cmd_count)
 	{
-		// cmd = NULL;
 		shell->commands[i] = NULL;
 		while (tmp && tmp->type != PIPE)
 		{
 			// if (!(tmp->type == SPACE && tmp->state == DFAULT))
-				append_token(&shell->commands[i], copy_token(tmp));
+			append_token(&shell->commands[i], copy_token(tmp));
 			tmp = tmp->next;
 		}
 		if (tmp && tmp->type == PIPE && tmp->next)
@@ -85,33 +84,3 @@ void	split_cmds(t_shell	*shell)
 		i++;
 	}
 }
-
-
-// t_cmds	*new_cmd(char *cmd, char **args, int argc)
-// {
-// 	t_cmds	*new;
-
-// 	new = malloc(sizeof(t_cmds));
-// 	if (!new)
-// 		return (NULL);
-// 	new->cmd = cmd;
-// 	new->args = args;
-// 	new->argc = argc;
-// 	new->next = NULL;
-// 	return (new);
-// }
-
-// void	append_cmd(t_cmds	**head, t_cmds *new)
-// {
-// 	t_cmds	*tmp;
-
-// 	if (!*head)
-// 		*head = new;
-// 	else
-// 	{
-// 		tmp = *head;
-// 		while (tmp->next)
-// 			tmp = tmp->next;
-// 		tmp->next = new;
-// 	}
-// }

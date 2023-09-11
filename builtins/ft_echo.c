@@ -6,13 +6,13 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 13:14:29 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/17 13:37:57 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/11 09:47:04 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	is_valid_echo_option(char *option)
+int	is_valid_echo_option(char *option)
 {
 	int	i;
 
@@ -28,27 +28,56 @@ static int	is_valid_echo_option(char *option)
 	return (0);
 }
 
-void	ft_echo(t_shell *shell)
+// void	ft_echo(t_shell *shell)
+// {
+// 	int		i;
+// 	int		print_nl;
+
+// 	i = 1;
+// 	print_nl = 1;
+// 	if (!shell->cmd_table[1])
+// 	{
+// 		printf("\n");
+// 		return ;
+// 	}
+// 	while (shell->cmd_table[i] && is_valid_echo_option(shell->cmd_table[i]))
+// 	{
+// 		print_nl = 0;
+// 		i++;
+// 	}
+// 	while (shell->cmd_table[i])
+// 	{
+// 		printf("%s", shell->cmd_table[i]);
+// 		if (shell->cmd_table[i + 1])
+// 			printf(" ");
+// 		i++;
+// 	}
+// 	if (print_nl)
+// 		printf("\n");
+// 	shell->exit_status = 0;
+// }
+
+void	ft_echo(t_shell *shell, t_command command)
 {
 	int		i;
 	int		print_nl;
 
 	i = 1;
 	print_nl = 1;
-	if (!shell->cmd_table[1])
+	if (!command.args[1])
 	{
 		printf("\n");
 		return ;
 	}
-	while (shell->cmd_table[i] && is_valid_echo_option(shell->cmd_table[i]))
+	while (command.args[i] && is_valid_echo_option(command.args[i]))
 	{
 		print_nl = 0;
 		i++;
 	}
-	while (shell->cmd_table[i])
+	while (command.args[i])
 	{
-		printf("%s", shell->cmd_table[i]);
-		if (shell->cmd_table[i + 1])
+		printf("%s", command.args[i]);
+		if (command.args[i + 1])
 			printf(" ");
 		i++;
 	}

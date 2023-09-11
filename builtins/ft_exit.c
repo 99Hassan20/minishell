@@ -6,13 +6,13 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 13:24:44 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/09 12:54:54 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/11 09:50:50 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	is_valid_exit_status(char *status)
+int	is_valid_exit_status(char *status)
 {
 	int		i;
 	char	*trimmed;
@@ -31,17 +31,39 @@ static int	is_valid_exit_status(char *status)
 	return (1);
 }
 
-void	ft_exit(t_shell *shell)
+// void	ft_exit(t_shell *shell)
+// {
+// 	if (!shell->cmd_table[1])
+// 		exit(shell->exit_status);
+// 	if (!is_valid_exit_status(shell->cmd_table[1]))
+// 	{
+// 		shell->exit_status = 255;
+// 		printf("bash: exit: \
+// %s: numeric argument required\n", shell->cmd_table[1]);
+// 	}
+// 	else if (shell->cmd_table[2])
+// 	{
+// 		printf("exit\n");
+// 		printf("minishell: exit: too many arguments\n");
+// 		shell->exit_status = 1;
+// 		return ;
+// 	}
+// 	else
+// 		shell->exit_status = ft_atoi(shell->cmd_table[1]);
+// 	exit(shell->exit_status);
+// }
+
+void	ft_exit(t_shell *shell, t_command command)
 {
-	if (!shell->cmd_table[1])
+	if (!command.args[1])
 		exit(shell->exit_status);
-	if (!is_valid_exit_status(shell->cmd_table[1]))
+	if (!is_valid_exit_status(command.args[1]))
 	{
 		shell->exit_status = 255;
 		printf("bash: exit: \
-%s: numeric argument required\n", shell->cmd_table[1]);
+%s: numeric argument required\n", command.args[1]);
 	}
-	else if (shell->cmd_table[2])
+	else if (command.args[2])
 	{
 		printf("exit\n");
 		printf("minishell: exit: too many arguments\n");
@@ -49,6 +71,6 @@ void	ft_exit(t_shell *shell)
 		return ;
 	}
 	else
-		shell->exit_status = ft_atoi(shell->cmd_table[1]);
+		shell->exit_status = ft_atoi(command.args[1]);
 	exit(shell->exit_status);
 }

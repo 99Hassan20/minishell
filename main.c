@@ -6,11 +6,12 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/10 17:16:08 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/11 09:45:21 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 
 void print_final_command(t_command *command)
 {
@@ -38,117 +39,6 @@ void print_final_command(t_command *command)
 	printf("args: ");
 	print_cmd_table(command->args);
 	printf("-------------------------------------------------------------\n");
-}
-
-
-void remove_all_redir(t_token **token)
-{
-	t_token *tmp;
-	t_token *red;
-	t_token *file;
-
-	tmp = *token;
-	if (is_redirection(tmp))
-	{
-		red = tmp;
-		file = tmp->next;
-		if (file && (file->type == STR || file->type == VAR))
-			*token = file->next;
-		else if (file && file->type == SPACE)
-		{
-			file = file->next;
-			if (file && (file->type == STR || file->type == VAR))
-				*token = file->next;
-			else
-				*token = tmp->next;
-		}
-		else
-			*token = tmp->next;
-	}
-	while (tmp && tmp->next)
-	{
-		red = tmp->next;
-		file = red->next;
-		if (is_redirection(red) && file && (file->type == STR || file->type == VAR))
-			tmp->next = file->next;
-		else if (is_redirection(red) && file && file->type == SPACE)
-		{
-			file = file->next;
-			if (file && (file->type == STR || file->type == VAR))
-				tmp->next = file->next;
-			else
-				tmp = tmp->next;
-		}
-		else
-			tmp = tmp->next;
-	}
-	
-}
-
-void	append_redirec(t_redirec **head, char *file, int type)
-{
-	t_redirec *tmp;
-	t_redirec *new;
-
-	
-	tmp = *head;
-	new = malloc(sizeof(t_redirec));
-	if (!new)
-		return ;
-	new->file = file;
-	new->type = type;
-	new->next = NULL;
-	if (!tmp)
-	{
-		*head = new;
-		return;
-	}
-	while (tmp && tmp->next)
-		tmp = tmp->next;
-	tmp->next = new;
-}
-
-
-
-t_command get_final_command(t_token *cmd)
-{
-	t_command command;
-	t_token *tmp;
-	t_token *nospace;
-
-	nospace = remove_space_from_tokens(cmd);
-	tmp = nospace;
-	if (cmd->type == SPACE)
-		cmd = cmd->next;
-	command.redirections = NULL;
-	if (is_redirection(cmd))
-		command.cmd = NULL;
-	else
-	command.cmd = ft_strdup(cmd->content);
-	while (tmp)
-	{
-		if (is_redirection(tmp) && tmp->next)
-			append_redirec(&command.redirections, tmp->next->content, tmp->type);
-		tmp = tmp->next;
-	}
-	remove_all_redir(&cmd);
-	command.args = get_command_table(cmd);
-	return command;
-}
-
-void get_ready_commands(t_shell *shell)
-{
-	int i;
-
-	shell->ready_commands = malloc(sizeof(t_command) * shell->cmd_count );
-	if (!shell->ready_commands)
-		return ;
-	i = 0;
-	while (i < shell->cmd_count)
-	{
-		shell->ready_commands[i] = get_final_command(shell->commands[i]);
-		i++;
-	}
 }
 
 void	shell_loop(t_shell *shell, char *prompt)
@@ -183,13 +73,8 @@ void	shell_loop(t_shell *shell, char *prompt)
 		}
 		expand(shell);
 		split_cmds(shell);
-		int i = 0;
 		get_ready_commands(shell);
-		while (i < shell->cmd_count)
-		{
-			print_final_command(&shell->ready_commands[i]);
-			i++;
-		}
+		execute_builtins2(shell, shell->ready_commands[0]);
 		free(trimmed);
 	}
 }
@@ -199,8 +84,9 @@ int	main(int __attribute__((unused))argc, char __attribute__((unused))**argv, ch
 	t_shell	shell;
 	char	*prompt;
 
-	prompt = "\033[38;5;206mhoigag@minishell$\033[0m ";
+	prompt = "\033[38;5;206mminishell $>\033[0m ";
 	shell.env = NULL;
+	shell.exit_status = 0;
 	env_to_list(&shell, env);
 	shell_loop(&shell, prompt);
 	return (shell.exit_status);
