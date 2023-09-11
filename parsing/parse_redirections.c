@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 17:24:00 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/10 17:26:50 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/11 15:50:08 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,8 @@ t_command	get_final_command(t_token *cmd)
 	}
 	remove_all_redir(&cmd);
 	command.args = get_command_table(cmd);
+	if (!command.args[0][0])
+		printf("command.args[0][0] is empty\n");
 	return (command);
 }
 

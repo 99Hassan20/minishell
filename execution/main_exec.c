@@ -1,33 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/17 13:19:55 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/11 13:25:01 by hoigag           ###   ########.fr       */
+/*   Created: 2023/07/02 09:12:05 by abdelmajid        #+#    #+#             */
+/*   Updated: 2023/09/11 10:06:02 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	ft_pwd(t_shell *shell)
-{
-	shell->exit_status = 0;
-	if (getcwd(shell->cwd, sizeof(shell->cwd)))
-		printf("%s\n", shell->cwd);
-	else
-	{
-		printf("pwd: error\n");
-		shell->exit_status = 1;	
-	}
+int main(int argc, char** argv , char **env){
+  (void)argc;
+
+  (void)argv;
+    
+      char* buf;
+   char ***cmd;
+
+  while (1) {
+    buf = readline(">> ");
+      
+    cmd = to3d_arr(buf);
+
+
+    if (strlen(buf) > 0) 
+    {
+      add_history(buf);
+    }
+     execline(cmd,env);
+
+    
+  }
+  return 0;
 }
 
-// void	ft_pwd(t_shell *shell)
-// {
-// 	if (getcwd(shell->cwd, sizeof(shell->cwd)))
-// 		printf("%s\n", shell->cwd);
-// 	else
-// 		printf("pwd: error\n");
-// }
+
+    
+    

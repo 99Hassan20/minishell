@@ -7,8 +7,8 @@ LIBFT = -L./libft -lft
 BUILIN_SRCS = $(addprefix builtins/, ft_echo.c ft_env.c ft_pwd.c ft_cd.c ft_export_unset.c ft_exit.c exec_builtin.c)
 PARSING_SRCS = $(addprefix parsing/, expand.c parsing_utils.c parsing.c tokenizer.c parser_utils.c parse_redirections.c)
 ENV_SCRS = $(addprefix env/, env.c env_utils.c)
-
-SRCS = main.c  error_handler.c array_utils.c $(BUILIN_SRCS) $(PARSING_SRCS) $(ENV_SCRS)
+EXEC_SRCS = $(addprefix execution/, 3d_split.c get_path.c tools.c)
+SRCS = main.c  error_handler.c array_utils.c $(BUILIN_SRCS) $(PARSING_SRCS) $(ENV_SCRS) $(EXEC_SRCS)
 OBJS = $(SRCS:.c=.o)
 
 all : $(NAME)

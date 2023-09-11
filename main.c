@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/11 09:45:21 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/11 15:32:48 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,14 @@ void	shell_loop(t_shell *shell, char *prompt)
 			continue ;
 		}
 		expand(shell);
+		print_tokens(shell->tokens);
 		split_cmds(shell);
 		get_ready_commands(shell);
-		execute_builtins2(shell, shell->ready_commands[0]);
+		print_final_command(&shell->ready_commands[0]);
+			char ***to_3d;
+		to_3d = to3d_arr(shell);
+		execline(shell, to_3d, env_to_array(shell->env));;
+		// execute_builtins2(shell, shell->ready_commands[0]);
 		free(trimmed);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/11 09:54:07 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/11 13:46:55 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,9 @@ void	print_env(t_env *head, int flag);
 char	*get_env(t_env *env, char *key);
 int		set_env(t_env **env, char *key, char *value, int overrite);
 int		unset_env(t_env **env, char *key);
+char **env_to_array(t_env *env);
 //builtins
-void	execute_builtins(t_shell *shell);
+void	execute_builtins(t_shell *shell, char **command);
 //array utils
 int		array_size(char **arr);
 char	**append_to_array(char **arr, char *value);
@@ -130,11 +131,20 @@ void	print_cmd_table(char **args);
 void	get_ready_commands(t_shell *shell);
 
 //* builtins
-void	ft_echo(t_shell *shell, t_command command);
-void	ft_export(t_shell *shell, t_command command);
-void	ft_env(t_shell *shell, t_command command);
+void	ft_echo(t_shell *shell, char **command);
+void	ft_export(t_shell *shell, char **command);
+void	ft_env(t_shell *shell, char **command);
 void	ft_pwd(t_shell *shell);
-void	ft_chdir(t_shell *shell, t_command command);
-void	ft_unset(t_shell *shell, t_command command);
-void	ft_exit(t_shell *shell, t_command command);
+void	ft_chdir(t_shell *shell, char **command);
+void	ft_unset(t_shell *shell, char **command);
+void	ft_exit(t_shell *shell, char **command);
+
+//*excution
+char* getCommandPath(const char* command);
+char ***to3d_arr(t_shell *shell);
+char	**ft_splitt(char const *s, char c);
+void execline(t_shell *shell, char ***cmd , char **env);
+void execute_builtins_new(t_shell *shell, char **command);
+int is_builtin(char *cmd);
+int is_child_builtin(char *cmd);
 #endif
