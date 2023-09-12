@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 15:09:38 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/11 15:57:11 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/12 14:05:02 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,12 @@ char	**get_command_table(t_token *tokens)
 		if (str[0])
 			cmd_table = append_to_array(cmd_table, str);
 	}
-	int i = 0;
-	while (cmd_table[i])
-	{
-		printf("cmd_table[%d]: %s\n", i, cmd_table[i]);
-		i++;
-	}
+	// int i = 0;
+	// while (cmd_table[i])
+	// {
+	// 	printf("cmd_table[%d]: %s\n", i, cmd_table[i]);
+	// 	i++;
+	// }
 	return (cmd_table);
 }
 

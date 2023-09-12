@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 17:24:00 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/11 15:50:08 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/12 14:47:32 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ t_command	get_final_command(t_token *cmd)
 		command.cmd = NULL;
 	else
 		command.cmd = ft_strdup(cmd->content);
-	while (tmp)
+	while (tmp && tmp->next)
 	{
 		if (is_redirection(tmp) && tmp->next)
 			append_redirec(&command.redirections,
@@ -102,8 +102,9 @@ t_command	get_final_command(t_token *cmd)
 	}
 	remove_all_redir(&cmd);
 	command.args = get_command_table(cmd);
-	if (!command.args[0][0])
-		printf("command.args[0][0] is empty\n");
+	// if (!command.args[0][0])
+	// 	printf("command.args[0][0] is empty\n");
+	// exit(124);
 	return (command);
 }
 

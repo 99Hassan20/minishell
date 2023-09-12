@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 11:24:28 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/10 17:23:16 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/12 14:42:30 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	is_redirection(t_token *token)
 {
+	if (!token)
+		return (0);
 	if (token->type == RRED || token->type == LRED
 		|| token->type == ARRED || token->type == ALRED)
 		return (1);
