@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 15:09:38 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/12 14:05:02 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/13 11:33:58 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,20 @@ char	**get_command_table(t_token *tokens)
 	char	**cmd_table;
 	t_token	*tmp;
 	char	*str;
+	int     is_space;
 
 	tmp = tokens;
 	cmd_table = NULL;
 	while (tmp)
 	{
+		is_space = 0;
 		str = ft_strdup("");
 		if (tmp->type == PIPE || tmp->type == ARRED || tmp->type == SPACE
 			|| tmp->type == LRED || tmp->type == RRED || tmp->type == ALRED)
 		{
-			if (tmp->type != SPACE)
-				str = tmp->content;
-			tmp = tmp->next;
+			if (tmp->type == SPACE)
+				is_space = 1;
+			tmp = tmp->next;			
 		}
 		else
 		{
@@ -63,15 +65,9 @@ char	**get_command_table(t_token *tokens)
 				tmp = tmp->next;
 			}
 		}
-		if (str[0])
+		if (is_space == 0)
 			cmd_table = append_to_array(cmd_table, str);
 	}
-	// int i = 0;
-	// while (cmd_table[i])
-	// {
-	// 	printf("cmd_table[%d]: %s\n", i, cmd_table[i]);
-	// 	i++;
-	// }
 	return (cmd_table);
 }
 
@@ -79,8 +75,10 @@ void	expand(t_shell *shell)
 {
 	t_token	*tmp;
 	char	*value;
+	t_token *new;
 
 	tmp = shell->tokens;
+	new = NULL;
 	while (tmp)
 	{
 		if (tmp->type == VAR && (tmp->state == INDQOUTES || tmp->state == DFAULT))
@@ -91,11 +89,19 @@ void	expand(t_shell *shell)
 				value = get_env(shell->env, tmp->content + 1);
 			if (!value)
 				value = "";
-			tmp->content = value;
-			tmp->length = ft_strlen(tmp->content);
-			tmp->type = STR;
+			char **values = ft_split(ft_strtrim(value, " \t"), ' ');
+			int i = 0;
+			while (values[i])
+			{
+				append_token(&new, new_token(STR, values[i], ft_strlen(values[i]), tmp->state));
+				if (values[i + 1])
+					append_token(&new, new_token(SPACE, " ", 1, DFAULT));
+				i++;
+			}
 		}
+		else
+			append_token(&new, new_token(tmp->type, tmp->content, ft_strlen(tmp->content), tmp->state));
 		tmp = tmp->next;
 	}
-	// get_command_table(shell);
+	shell->tokens = new;
 }

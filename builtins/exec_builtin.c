@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 12:09:59 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/11 13:08:01 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/13 11:19:07 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,15 @@ int is_builtin(char *cmd)
 
 int is_child_builtin(char *cmd)
 {
-	char *builtins[4];
+	char *builtins[5];
 	int  i;
 
 	i = 0;
 	builtins[0] = "echo";
 	builtins[1] = "pwd";
 	builtins[2] = "env";
-	builtins[3] = NULL;
+	builtins[3] = "export";
+	builtins[4] = NULL;
 	while (builtins[i])
 	{
 		if (ft_strcmp(builtins[i], cmd) == 0)

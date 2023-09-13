@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 11:24:28 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/12 14:42:30 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/12 17:40:48 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	has_error(t_shell *shell)
 	}
 	else if (shell->in_quotes)
 	{
-		printf("minishell: syntax error unclosed quote\n");
+		printf("minishell: unexpected EOF while looking for matching\n");
 		error = 1;
 	}
 	else if (has_redirection_error(shell))

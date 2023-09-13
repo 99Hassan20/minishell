@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 13:22:27 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/11 12:26:13 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/13 12:21:27 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	check_valid_variable(char *var)
 {
 	int	i;
 
-	if (var[0] != '_' && !ft_isalpha(var[0]))
+	if (!var || (var[0] != '_' && !ft_isalpha(var[0])))
 		return (0);
 	i = 1;
 	while (var[i] && var[i] != '=')
@@ -32,7 +32,6 @@ void	ft_export(t_shell *shell, char **command)
 {
 	int		i;
 	char	**pair;
-
 	shell->exit_status = 0;
 	i = 1;
 	if (!command[1])
@@ -55,7 +54,7 @@ void	ft_export(t_shell *shell, char **command)
 		else
 		{
 			shell->exit_status = 1;
-			printf("minishell: export: `%s': not a valid identifier\n", shell->cmd_table[i]);
+			printf("minishell: export: `%s': not a valid identifier\n", command[i]);
 		}
 		i++;
 	}
@@ -99,6 +98,7 @@ void	ft_unset(t_shell *shell, char **command)
 {
 	int	i;
 
+	// printf("unset\n");
 	shell->exit_status = 0;
 	if (!command[1])
 		return ;

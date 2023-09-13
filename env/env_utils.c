@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 15:15:36 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/21 19:45:08 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/13 12:35:24 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ char	*get_env(t_env *env, char *key)
 	tmp = env;
 	while (tmp)
 	{
-		if (ft_strcmp(tmp->key, key) == 0)
+		if (key && ft_strcmp(tmp->key, key) == 0)
 			return (tmp->value);
 		tmp = tmp->next;
 	}

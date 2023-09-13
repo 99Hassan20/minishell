@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 13:24:44 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/11 12:24:45 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/12 19:00:52 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	ft_exit(t_shell *shell, char **command)
 	}
 	else if (command[2])
 	{
-		printf("exit\n");
+		// printf("exit\n");
 		printf("minishell: exit: too many arguments\n");
 		shell->exit_status = 1;
 		return ;

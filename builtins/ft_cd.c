@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 13:20:47 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/11 12:24:10 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/13 13:56:04 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,12 @@ void	ft_chdir(t_shell *shell, char **command)
 		path = get_env(shell->env, "HOME");
 	else
 		path = command[1];
+	if (!path)
+	{
+		printf("minishell: cd: HOME not set\n");
+		shell->exit_status = 1;
+		return ;
+	}
 	if (chdir(path) == -1)
 	{
 		printf("minishell: cd: %s: No such file or directory\n", path);

@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 18:45:33 by abdelmajid        #+#    #+#             */
-/*   Updated: 2023/09/11 10:06:27 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/13 15:55:50 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,7 @@ char *ft_strpbrk(const char *s1, const char *s2)
 	int i = 0;
 	
 	if (!s1 || !s2)
-	{
 		return (0);
-	}
 	while(*s1)
 	{
 		i = 0;
@@ -59,23 +57,24 @@ char* strtok_custom(char* str, const char* delimiters) {
     }
 }
 
-char* getCommandPath(const char* command) 
+char* getCommandPath(t_env *env, const char* command) 
 {
     char* commandPath = NULL;
-    char* pathEnv = getenv("PATH");
-    char* pathCopy = strdup(pathEnv);
+    char* pathEnv = get_env(env, "PATH");
+    char* pathCopy = ft_strdup(pathEnv);
     char* dir = strtok_custom(pathCopy, ":");
 
+    if (!command || !command[0])
+        return (NULL);
     while (dir != NULL) {
         char fullPath[MAX_PATH_LENGTH];
         snprintf(fullPath, sizeof(fullPath), "%s/%s", dir, command);
 
         // Check if the command exists at the current path
         if (access(fullPath, X_OK) == 0) {
-            commandPath = strdup(fullPath);
+            commandPath = ft_strdup(fullPath);
             break;
         }
-
         dir = strtok_custom(NULL, ":");
     }
 

@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/12 14:40:08 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/13 16:03:44 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,11 @@ void	shell_loop(t_shell *shell, char *prompt)
 			continue ;
 		}
 		expand(shell);
-		print_tokens(shell->tokens);
+		// print_tokens(shell->tokens);
 		split_cmds(shell);
 		get_ready_commands(shell);
-		print_final_command(&shell->ready_commands[0]);
-			char ***to_3d;
+		// print_final_command(&shell->ready_commands[0]);
+		char ***to_3d;
 		to_3d = to3d_arr(shell);
 		execline(shell, to_3d, env_to_array(shell->env));;
 		// execute_builtins2(shell, shell->ready_commands[0]);
@@ -89,7 +89,8 @@ int	main(int __attribute__((unused))argc, char __attribute__((unused))**argv, ch
 	t_shell	shell;
 	char	*prompt;
 
-	prompt = "\033[38;5;206mminishell $>\033[0m ";
+	// prompt = "\033[38;5;206mminishell $>\033[0m ";÷
+	prompt = "minishell$> ";
 	shell.env = NULL;
 	shell.exit_status = 0;
 	env_to_list(&shell, env);

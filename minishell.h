@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/11 13:46:55 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/13 15:00:14 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,11 +140,12 @@ void	ft_unset(t_shell *shell, char **command);
 void	ft_exit(t_shell *shell, char **command);
 
 //*excution
-char* getCommandPath(const char* command);
+char* getCommandPath(t_env *env, const char* command);
 char ***to3d_arr(t_shell *shell);
 char	**ft_splitt(char const *s, char c);
 void execline(t_shell *shell, char ***cmd , char **env);
 void execute_builtins_new(t_shell *shell, char **command);
 int is_builtin(char *cmd);
 int is_child_builtin(char *cmd);
+char *get_full_path(t_env *env, char **tokens);
 #endif

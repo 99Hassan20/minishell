@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:00:56 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/12 14:37:49 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/12 15:10:48 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void	split_cmds(t_shell	*shell)
 		while (tmp && tmp->type != PIPE)
 		{
 			// if (!(tmp->type == SPACE && tmp->state == DFAULT))
-			
 			append_token(&shell->commands[i], copy_token(tmp));
 			tmp = tmp->next;
 		}
