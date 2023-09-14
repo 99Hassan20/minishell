@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 13:18:19 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/13 19:12:58 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/14 14:54:14 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ void	ft_env(t_shell *shell, char **command)
 		if (ft_strcmp(command[i], "env") != 0)
 		{
 			printf("env: %s: No such file or directory\n", command[i]);
-			shell->exit_status = 127;
+			g_exit_status = 127;
 			return ;
 		}
 		i++;
 	}
 	print_env(shell->env, 1);
-	shell->exit_status = 0;
+	g_exit_status = 0;
 }

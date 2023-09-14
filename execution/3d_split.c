@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 13:34:01 by abdelmajid        #+#    #+#             */
-/*   Updated: 2023/09/13 20:44:31 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/14 14:54:14 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	execline(t_shell *shell, char ***cmd, char **env)
 		if (!is_builtin(*cmd[0]) && !executable)
 		{
 			printf("minishell: %s: command not found\n", *cmd[0]);
-			shell->exit_status = 127;
+			g_exit_status = 127;
 			cmd++;
 			continue ;
 		}
@@ -70,15 +70,15 @@ void	execline(t_shell *shell, char ***cmd, char **env)
 				execute_builtins(shell, *cmd);
 			else
 				execve(executable, *cmd, env);
-			exit(shell->exit_status);
+			exit(g_exit_status);
 		}
 		else
 		{
-			waitpid(pid, &shell->exit_status, 0);
+			waitpid(pid, &g_exit_status, 0);
 			close(fd[1]);
 			fdd = fd[0];
 			cmd++;
 		}
 	}
-	shell->exit_status %= 255;
+	g_exit_status %= 255;
 }

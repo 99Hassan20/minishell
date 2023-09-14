@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/14 14:50:10 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/14 14:54:14 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	signal_handler(int sig)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
-		// g_exit_status = 1;
+		g_exit_status = 1;
 	}
 }
 
@@ -56,7 +56,7 @@ int	parse_line(t_shell *shell, char *line)
 {
 	char	*trimmed;
 
-	// shell->exit_status = g_exit_status;
+	// g_exit_status = g_exit_status;
 	trimmed = ft_strtrim(line, " \t\n\r");
 	free(line);
 	if (!*trimmed)
@@ -69,7 +69,7 @@ int	parse_line(t_shell *shell, char *line)
 	if (has_error(shell))
 	{
 		free(trimmed);
-		shell->exit_status = 2;
+		g_exit_status = 2;
 		return (0);
 	}
 	expand(shell);
@@ -92,7 +92,7 @@ void	shell_loop(t_shell *shell, char *prompt)
 		if (!line)
 		{
 			free(line);
-			exit(shell->exit_status);
+			exit(g_exit_status);
 		}
 		if (!parse_line(shell, line))
 			continue ;

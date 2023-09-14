@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 13:14:29 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/13 19:12:32 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/14 14:58:55 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	is_valid_echo_option(char *option)
 	return (0);
 }
 
-void	ft_echo(t_shell *shell, char **command)
+void	ft_echo(t_shell __attribute__((unused))*shell, char **command)
 {
 	int		i;
 	int		print_nl;
@@ -54,5 +54,5 @@ void	ft_echo(t_shell *shell, char **command)
 	}
 	if (print_nl)
 		printf("\n");
-	shell->exit_status = 0;
+	g_exit_status = 0;
 }

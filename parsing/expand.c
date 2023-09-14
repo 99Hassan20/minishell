@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 15:09:38 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/13 22:24:13 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/14 14:54:14 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	expand(t_shell *shell)
 			&& (tmp->state == INDQOUTES || tmp->state == DFAULT))
 		{
 			if (ft_strcmp(tmp->content, "$?") == 0)
-				value = ft_itoa(shell->exit_status);
+				value = ft_itoa(g_exit_status);
 			else
 				value = get_env(shell->env, tmp->content + 1);
 			if (!value)
