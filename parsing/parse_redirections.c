@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 17:24:00 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/13 11:22:06 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/14 11:19:11 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	remove_all_redir(t_token **token)
 		file = tmp->next;
 		if (file && (file->type == STR || file->type == VAR))
 			*token = file->next;
-		else if (file && file->type == SPACE)
+		else if (file && file->type == _SPACE)
 		{
 			file = file->next;
 			if (file && (file->type == STR || file->type == VAR))
@@ -40,9 +40,10 @@ void	remove_all_redir(t_token **token)
 	{
 		red = tmp->next;
 		file = red->next;
-		if (is_redirection(red) && file && (file->type == STR || file->type == VAR))
+		if (is_redirection(red) && file
+			&& (file->type == STR || file->type == VAR))
 			tmp->next = file->next;
-		else if (is_redirection(red) && file && file->type == SPACE)
+		else if (is_redirection(red) && file && file->type == _SPACE)
 		{
 			file = file->next;
 			if (file && (file->type == STR || file->type == VAR))
@@ -60,7 +61,6 @@ void	append_redirec(t_redirec **head, char *file, int type)
 	t_redirec	*tmp;
 	t_redirec	*new;
 
-	
 	tmp = *head;
 	new = malloc(sizeof(t_redirec));
 	if (!new)
@@ -86,13 +86,9 @@ t_command	get_final_command(t_token *cmd)
 
 	nospace = remove_space_from_tokens(cmd);
 	tmp = nospace;
-	if (cmd->type == SPACE)
+	if (cmd && cmd->type == _SPACE)
 		cmd = cmd->next;
 	command.redirections = NULL;
-	if (is_redirection(cmd))
-		command.cmd = NULL;
-	else
-		command.cmd = ft_strdup(cmd->content);
 	while (tmp && tmp->next)
 	{
 		if (is_redirection(tmp) && tmp->next)
@@ -102,10 +98,8 @@ t_command	get_final_command(t_token *cmd)
 	}
 	remove_all_redir(&cmd);
 	command.args = get_command_table(cmd);
-	// print_cmd_table(command.args);
-	// if (!command.args[0][0])
-	// 	printf("command.args[0][0] is empty\n");
-	// exit(124);
+	if (command.args && command.args[0])
+		command.cmd = command.args[0];
 	return (command);
 }
 
@@ -113,6 +107,8 @@ void	get_ready_commands(t_shell *shell)
 {
 	int	i;
 
+	if (shell->cmd_count == 0)
+		return ;
 	shell->ready_commands = malloc(sizeof(t_command) * shell->cmd_count);
 	if (!shell->ready_commands)
 		return ;

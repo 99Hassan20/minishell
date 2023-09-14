@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 18:45:33 by abdelmajid        #+#    #+#             */
-/*   Updated: 2023/09/13 15:55:50 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/13 19:32:24 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "../minishell.h"
 
 #define MAX_PATH_LENGTH 1024
-
 
 char *ft_strpbrk(const char *s1, const char *s2)
 {

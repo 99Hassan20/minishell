@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 13:14:29 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/11 12:27:04 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/13 19:12:32 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,32 +56,3 @@ void	ft_echo(t_shell *shell, char **command)
 		printf("\n");
 	shell->exit_status = 0;
 }
-
-// void	ft_echo(t_shell *shell, t_command command)
-// {
-// 	int		i;
-// 	int		print_nl;
-
-// 	i = 1;
-// 	print_nl = 1;
-// 	if (!command.args[1])
-// 	{
-// 		printf("\n");
-// 		return ;
-// 	}
-// 	while (command.args[i] && is_valid_echo_option(command.args[i]))
-// 	{
-// 		print_nl = 0;
-// 		i++;
-// 	}
-// 	while (command.args[i])
-// 	{
-// 		printf("%s", command.args[i]);
-// 		if (command.args[i + 1])
-// 			printf(" ");
-// 		i++;
-// 	}
-// 	if (print_nl)
-// 		printf("\n");
-// 	shell->exit_status = 0;
-// }

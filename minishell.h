@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/13 15:00:14 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/13 22:54:02 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
+# include "signal.h"
+
+int	g_exit_status;
 
 typedef enum e_state
 {
@@ -29,7 +32,7 @@ typedef enum e_state
 typedef enum e_toketype
 {
 	PIPE,
-	SPACE,
+	_SPACE,
 	STR,
 	VAR,
 	RRED,

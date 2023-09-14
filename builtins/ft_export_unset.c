@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 13:22:27 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/13 12:21:27 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/14 14:44:08 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,34 @@ int	check_valid_variable(char *var)
 	return (1);
 }
 
+char	*get_joinded_strings(char **strings)
+{
+	int		i;
+	char	*joined;
+
+	i = 0;
+	joined = ft_strdup("");
+	if (!strings || !strings[0])
+		return (NULL);
+	if (!strings[0][0])
+		return (joined);
+	while (strings[i])
+	{
+		if (strings[i + 1])
+			strings[i] = ft_strjoin(strings[i], "=");
+		joined = ft_strjoin(joined, strings[i]);
+		i++;
+	}
+	return (joined);
+}
+
 void	ft_export(t_shell *shell, char **command)
 {
 	int		i;
 	char	**pair;
+
 	shell->exit_status = 0;
 	i = 1;
-	if (!command[1])
-	{
-		print_env(shell->env, 2);
-		return ;
-	}
 	while (command[i])
 	{
 		if (check_valid_variable(command[i]))
@@ -47,58 +64,24 @@ void	ft_export(t_shell *shell, char **command)
 			if (!pair[1] && ft_get_index_of(command[i], '=') != -1)
 				pair[1] = ft_strdup("");
 			if (ft_get_index_of(command[i], '=') != -1)
-				set_env(&shell->env, pair[0], pair[1], 1);
+				set_env(&shell->env, pair[0], get_joinded_strings(pair + 1), 1);
 			else
-				set_env(&shell->env, pair[0], pair[1], 0);
+				set_env(&shell->env, pair[0], get_joinded_strings(pair + 1), 0);
 		}
 		else
 		{
 			shell->exit_status = 1;
-			printf("minishell: export: `%s': not a valid identifier\n", command[i]);
+			printf("minishell: export: `%s':\
+ not a valid identifier\n", command[i]);
 		}
 		i++;
 	}
 }
 
-// void	ft_export(t_shell *shell, t_command command)
-// {
-// 	int		i;
-// 	char	**pair;
-
-// 	shell->exit_status = 0;
-// 	i = 1;
-// 	if (!command.args[1])
-// 	{
-// 		print_env(shell->env, 2);
-// 		return ;
-// 	}
-// 	while (command.args[i])
-// 	{
-// 		if (check_valid_variable(command.args[i]))
-// 		{
-// 			pair = ft_split(command.args[i], '=');
-// 			if (!pair[1] && ft_get_index_of(command.args[i], '=') != -1)
-// 				pair[1] = ft_strdup("");
-// 			if (ft_get_index_of(command.args[i], '=') != -1)
-// 				set_env(&shell->env, pair[0], pair[1], 1);
-// 			else
-// 				set_env(&shell->env, pair[0], pair[1], 0);
-// 		}
-// 		else
-// 		{
-// 			shell->exit_status = 1;
-// 			printf("minishell: export: `%s': not a valid identifier\n", command.args[i]);
-// 		}
-// 		i++;
-// 	}
-// }
-
-
 void	ft_unset(t_shell *shell, char **command)
 {
 	int	i;
 
-	// printf("unset\n");
 	shell->exit_status = 0;
 	if (!command[1])
 		return ;
@@ -117,26 +100,3 @@ void	ft_unset(t_shell *shell, char **command)
 		i++;
 	}
 }
-
-// void	ft_unset(t_shell *shell, t_command command)
-// {
-// 	int	i;
-
-// 	shell->exit_status = 0;
-// 	if (!command.args[1])
-// 		return ;
-// 	i = 1;
-// 	while (command.args[i])
-// 	{
-// 		if (check_valid_variable(command.args[i])
-// 			&& ft_get_index_of(command.args[i], '=') == -1)
-// 			unset_env(&shell->env, command.args[i]);
-// 		else
-// 		{
-// 			printf("minishell: unset: \
-// `%s': not a valid identifier\n", command.args[i]);
-// 			shell->exit_status = 1;
-// 		}
-// 		i++;
-// 	}
-// }

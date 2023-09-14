@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 11:10:03 by hoigag            #+#    #+#             */
-/*   Updated: 2023/06/17 15:00:57 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/13 22:24:13 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@ void	parse_single_tokens(t_shell *shell, char *s, char **w, t_token **t)
 	{
 		word = ft_strdup(" ");
 		if (shell->in_quotes)
-			token = new_token(SPACE, word, 1, shell->q_type);
+			token = new_token(_SPACE, word, 1, shell->q_type);
 		else
-			token = new_token(SPACE, word, 1, DFAULT);
+			token = new_token(_SPACE, word, 1, DFAULT);
 		*w = word;
 		*t = token;
 	}

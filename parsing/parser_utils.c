@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:00:56 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/12 15:10:48 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/13 22:24:13 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_token	*remove_space_from_tokens(t_token *tokens)
 	tmp = tokens;
 	while (tmp)
 	{
-		if (!(tmp->type == SPACE && tmp->state == DFAULT))
+		if (!(tmp->type == _SPACE && tmp->state == DFAULT))
 			append_token(&new, copy_token(tmp));
 		tmp = tmp->next;
 	}
@@ -75,7 +75,6 @@ void	split_cmds(t_shell	*shell)
 		shell->commands[i] = NULL;
 		while (tmp && tmp->type != PIPE)
 		{
-			// if (!(tmp->type == SPACE && tmp->state == DFAULT))
 			append_token(&shell->commands[i], copy_token(tmp));
 			tmp = tmp->next;
 		}

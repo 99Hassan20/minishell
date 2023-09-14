@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 15:10:06 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/10 17:32:38 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/13 22:24:13 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void	print_echo(t_token *tmp)
 void	print_tokens(t_token *tokens)
 {
 	char *state[] = {"INDQOUTES", "INSQOUTES", "DFAULT"};
-	char *type[] = {"PIPE", "SPACE", "STR", "VAR", "RRED", "LRED", "ARRED", "ALRED", "DQUOTES", "SQUOTES"};
+	char *type[] = {"PIPE", "_SPACE", "STR", "VAR", "RRED", "LRED", "ARRED", "ALRED", "DQUOTES", "SQUOTES"};
 
 	printf("\033[1;33m"); // Set the color to yellow (for table headers)
 	printf("\033[1;35m"); // Set the color to magenta (for table border)

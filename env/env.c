@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 17:34:56 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/11 10:33:34 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/13 19:22:40 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,11 @@ int	unset_env(t_env **env, char *key)
 	return (-1);
 }
 
-char **env_to_array(t_env *env)
+char	**env_to_array(t_env *env)
 {
-	char **env_array;
-	int i;
-	t_env *tmp;
+	char	**env_array;
+	int		i;
+	t_env	*tmp;
 
 	tmp = env;
 	i = 0;

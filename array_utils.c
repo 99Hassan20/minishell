@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 17:55:58 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/10 13:37:09 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/13 19:36:15 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ char	**append_to_array(char **arr, char *value)
 	}
 	new[i] = value;
 	new[i + 1] = NULL;
-	// ft_free_2d(arr);
 	return (new);
 }
 

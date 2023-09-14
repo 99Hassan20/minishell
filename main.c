@@ -6,14 +6,25 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/13 16:03:44 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/14 14:50:10 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	signal_handler(int sig)
+{
+	if (sig == SIGINT)
+	{
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+		// g_exit_status = 1;
+	}
+}
 
-void print_final_command(t_command *command)
+void	print_final_command(t_command *command)
 {
 	printf("-------------------------------------------------------------\n");
 	if (command->cmd)
@@ -41,10 +52,37 @@ void print_final_command(t_command *command)
 	printf("-------------------------------------------------------------\n");
 }
 
+int	parse_line(t_shell *shell, char *line)
+{
+	char	*trimmed;
+
+	// shell->exit_status = g_exit_status;
+	trimmed = ft_strtrim(line, " \t\n\r");
+	free(line);
+	if (!*trimmed)
+	{
+		free(trimmed);
+		return (0);
+	}
+	add_history(trimmed);
+	lexer(shell, trimmed);
+	if (has_error(shell))
+	{
+		free(trimmed);
+		shell->exit_status = 2;
+		return (0);
+	}
+	expand(shell);
+	split_cmds(shell);
+	get_ready_commands(shell);
+	free(trimmed);
+	return (1);
+}
+
 void	shell_loop(t_shell *shell, char *prompt)
 {
 	char	*line;
-	char	*trimmed;
+	char	***to_3d;
 
 	while (1)
 	{
@@ -56,40 +94,22 @@ void	shell_loop(t_shell *shell, char *prompt)
 			free(line);
 			exit(shell->exit_status);
 		}
-		trimmed = ft_strtrim(line, " \t\n\r");
-		free(line);
-		if (!*trimmed)
-		{
-			free(trimmed);
+		if (!parse_line(shell, line))
 			continue ;
-		}
-		add_history(trimmed);
-		lexer(shell, trimmed);
-		if (has_error(shell))
-		{
-			free(trimmed);
-			shell->exit_status = 2;
-			continue ;
-		}
-		expand(shell);
-		// print_tokens(shell->tokens);
-		split_cmds(shell);
-		get_ready_commands(shell);
-		// print_final_command(&shell->ready_commands[0]);
-		char ***to_3d;
 		to_3d = to3d_arr(shell);
-		execline(shell, to_3d, env_to_array(shell->env));;
-		// execute_builtins2(shell, shell->ready_commands[0]);
-		free(trimmed);
+		execline(shell, to_3d, env_to_array(shell->env));
 	}
 }
 
-int	main(int __attribute__((unused))argc, char __attribute__((unused))**argv, char __attribute__((unused))*env[])
+int	main(int __attribute__((unused))argc, char __attribute__((unused))**argv, char *env[])
 {
 	t_shell	shell;
 	char	*prompt;
 
 	// prompt = "\033[38;5;206mminishell $>\033[0m ";÷
+	// sigaction(SIGINT, &(struct sigaction){signal_handler}, NULL);
+	signal(SIGINT, signal_handler);
+	sigignore(SIGQUIT);
 	prompt = "minishell$> ";
 	shell.env = NULL;
 	shell.exit_status = 0;
