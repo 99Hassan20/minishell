@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 14:50:57 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/13 19:31:53 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/14 17:20:52 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,14 @@ char	*get_full_path(t_env *env, char **cmd)
 			&& access(cmd[0], X_OK) == 0)
 		full_path = ft_strdup(cmd[0]);
 	else if (cmd[0][0] == '.'
-			&& cmd[0][1] == '.' && cmd[0][1] == '.'
+			&& cmd[0][1] == '.' && cmd[0][2] == '/'
 			&& access(cmd[0], F_OK) == 0
 			&& access(cmd[0], X_OK) == 0)
 		full_path = ft_strdup(cmd[0]);
+	else if (cmd[0][0] == '/' && cmd[0][1] == '/'
+		&& access(cmd[0], F_OK) != 0
+		&& access(cmd[0], X_OK) != 0)
+		return (NULL);
 	else if (cmd[0][0] == '/' && access(cmd[0], F_OK) == 0
 		&& access(cmd[0], X_OK) == 0)
 		full_path = ft_strdup(cmd[0]);

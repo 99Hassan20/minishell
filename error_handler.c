@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 11:24:28 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/13 19:36:24 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/14 16:34:35 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,32 +42,47 @@ int	has_redirection_error(t_shell *shell)
 	return (0);
 }
 
+int	has_pipe_error(t_shell *shell)
+{
+	t_token	*tmp;
+
+	tmp = shell->tokens;
+	while (tmp && tmp->next)
+	{
+		if (tmp->next && tmp->content[0] == '|'
+			&& tmp->next->content[0] == '|')
+			return (1);
+		tmp = tmp->next;
+	}
+	if (tmp && tmp->content[0] == '|')
+		return (1);
+	return (0);
+}
+
 int	has_error(t_shell *shell)
 {
-	int		error;
 	t_token	*last;
 
-	error = 0;
 	last = get_last_token(shell->tokens);
 	if (shell->tokens->content[0] == '|')
 	{
 		printf("minishell: syntax error near unexpected token\n");
-		error = 1;
+		return (1);
 	}
 	else if (shell->in_quotes)
 	{
 		printf("minishell: unexpected EOF while looking for matching\n");
-		error = 1;
+		return (1);
 	}
 	else if (has_redirection_error(shell))
 	{
 		printf("minishell: syntax error near unexpected token\n");
-		error = 1;
+		return (1);
 	}
-	else if (last->content[0] == '|')
+	else if (has_pipe_error(shell))
 	{
 		printf("minishell: syntax error near unexpected token\n");
-		error = 1;
+		return (1);
 	}
-	return (error);
+	return (0);
 }

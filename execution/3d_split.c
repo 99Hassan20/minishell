@@ -6,11 +6,32 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 13:34:01 by abdelmajid        #+#    #+#             */
-/*   Updated: 2023/09/14 14:54:14 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/14 18:48:03 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	is_relative_path(char *file)
+{
+	if ((file[0] == '.' && file[1] == '/')
+		|| (file[0] == '.' && file[1] == '.' && file[1] == '/')
+		|| file[0] == '/')
+	{
+		if (access(file, F_OK) != 0)
+		{
+			printf("minishell: %s: No such file or directory\n", file);
+			g_exit_status = 127;
+		}
+		else if (access(file, X_OK) != 0)
+		{
+			printf("minishell: %s: Permission denied\n", file);
+			g_exit_status = 126;
+		}
+		return (0);
+	}
+	return (1);
+}
 
 void	execute_parent_builtin(t_shell *shell, char **cmd)
 {
@@ -27,12 +48,27 @@ void	execline(t_shell *shell, char ***cmd, char **env)
 	pid_t	pid;
 	int		fdd;	
 	char	*executable;
+	DIR		*dir;
 
 	fdd = 0;
 	while (*cmd)
 	{
+		dir = opendir((*cmd)[0]);
+		if (dir)
+		{
+			closedir(dir);
+			printf("minishell: %s: is a directory\n", (*cmd)[0]);
+			g_exit_status = 126;
+			cmd++;
+			continue ;
+		}
 		executable = get_full_path(shell->env, *cmd);
-		if (ft_strcmp((*cmd)[0], "cd") == 0 && shell->cmd_count != 1)
+		if (!executable && !is_relative_path((*cmd)[0]))
+		{
+			cmd++;
+			continue ;
+		}
+		if ((ft_strcmp((*cmd)[0], "cd") == 0 && shell->cmd_count != 1))
 		{
 			cmd++;
 			continue ;
