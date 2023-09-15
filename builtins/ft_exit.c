@@ -6,11 +6,11 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 13:24:44 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/14 14:59:13 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/15 08:48:52 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 int	is_valid_exit_status(char *status)
 {

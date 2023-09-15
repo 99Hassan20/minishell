@@ -6,11 +6,11 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 13:34:01 by abdelmajid        #+#    #+#             */
-/*   Updated: 2023/09/14 18:48:03 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/15 09:01:34 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 int	is_relative_path(char *file)
 {
@@ -54,7 +54,7 @@ void	execline(t_shell *shell, char ***cmd, char **env)
 	while (*cmd)
 	{
 		dir = opendir((*cmd)[0]);
-		if (dir)
+		if (!is_builtin(*cmd[0]) && dir)
 		{
 			closedir(dir);
 			printf("minishell: %s: is a directory\n", (*cmd)[0]);

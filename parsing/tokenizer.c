@@ -6,11 +6,11 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 15:10:06 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/13 22:24:13 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/15 08:48:52 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 t_token	*new_token(t_tokentype type, char *content, int length, t_state state)
 {

@@ -6,11 +6,11 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 15:15:36 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/13 12:35:24 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/15 08:48:52 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 t_env	*new_env(char *key, char *value)
 {

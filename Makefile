@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -fsanitize=address -g
+CFLAGS = -Wall -Werror -Wextra -fsanitize=address -g -I./includes
 NAME = minishell
 READLINE =  -L/Users/hoigag/.brew/opt/readline/lib -I/Users/hoigag/.brew/opt/readline/include
 LIBFT = -L./libft -lft
@@ -16,9 +16,9 @@ OBJS = $(SRCS:.c=.o)
 
 all : $(NAME)
 
-$(NAME) : $(OBJS)
+$(NAME) : $(OBJS) 
 	make -C libft all
-	$(CC) $(CFLAGS)  $(LIBFT) $(RLFLGS) $^ -o $@
+	$(CC) $(CFLAGS) $(LIBFT) $(RLFLGS) $^ -o $@
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(RLOFLGS) -c $< -o $@

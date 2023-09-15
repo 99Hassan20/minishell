@@ -6,11 +6,11 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:00:56 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/13 22:24:13 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/15 08:48:52 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 t_token	*copy_token(t_token *token)
 {

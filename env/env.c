@@ -6,11 +6,11 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 17:34:56 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/13 19:22:40 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/15 08:48:52 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "minishell.h"
 
 int	set_env(t_env **env, char *key, char *value, int overrite)
 {

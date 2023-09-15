@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 11:24:28 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/14 16:34:35 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/15 11:59:07 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,26 +45,26 @@ int	has_redirection_error(t_shell *shell)
 int	has_pipe_error(t_shell *shell)
 {
 	t_token	*tmp;
+	t_token	*next;
 
-	tmp = shell->tokens;
+	tmp = remove_space_from_tokens(shell->tokens);
 	while (tmp && tmp->next)
 	{
-		if (tmp->next && tmp->content[0] == '|'
-			&& tmp->next->content[0] == '|')
+		next = tmp->next;
+		if (tmp->type == PIPE && next->type != STR
+			&& next->type != VAR && next->type != DQUOTES
+			&& next->type != SQUOTES)
 			return (1);
 		tmp = tmp->next;
 	}
-	if (tmp && tmp->content[0] == '|')
+	if (tmp && tmp->type == PIPE)
 		return (1);
 	return (0);
 }
 
 int	has_error(t_shell *shell)
 {
-	t_token	*last;
-
-	last = get_last_token(shell->tokens);
-	if (shell->tokens->content[0] == '|')
+	if (shell->tokens->type == PIPE)
 	{
 		printf("minishell: syntax error near unexpected token\n");
 		return (1);

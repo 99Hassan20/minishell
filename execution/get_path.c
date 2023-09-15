@@ -6,12 +6,12 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/01 18:45:33 by abdelmajid        #+#    #+#             */
-/*   Updated: 2023/09/13 19:32:24 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/15 08:48:52 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
-#include "../minishell.h"
+#include "minishell.h"
 
 #define MAX_PATH_LENGTH 1024
 

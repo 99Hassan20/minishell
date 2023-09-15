@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/14 18:34:10 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/15 08:48:11 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include "libft/libft.h"
-#include <dirent.h>
+# include "../libft/libft.h"
+# include <dirent.h>
 # include "signal.h"
 
 int	g_exit_status;
