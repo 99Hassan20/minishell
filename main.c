@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/15 12:08:58 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/18 09:54:47 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ int	parse_line(t_shell *shell, char *line)
 		return (0);
 	}
 	expand(shell);
+	// print_tokens(shell->tokens);
 	split_cmds(shell);
 	get_ready_commands(shell);
 	free(trimmed);
@@ -82,7 +83,6 @@ int	parse_line(t_shell *shell, char *line)
 void	shell_loop(t_shell *shell, char *prompt)
 {
 	char	*line;
-	char	***to_3d;
 
 	while (1)
 	{
@@ -96,8 +96,7 @@ void	shell_loop(t_shell *shell, char *prompt)
 		}
 		if (!parse_line(shell, line))
 			continue ;
-		to_3d = to3d_arr(shell);
-		execline(shell, to_3d, env_to_array(shell->env));
+		execline(shell, env_to_array(shell->env));
 	}
 }
 
