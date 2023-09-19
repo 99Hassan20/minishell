@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/18 09:53:58 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/18 10:12:54 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef struct s_command
 	char		*cmd;
 	char		**args;
 	t_redirec	*redirections;
+	t_redirec	*herdocs;
 }	t_command;
 
 typedef struct s_shell
@@ -123,7 +124,7 @@ void	print_env(t_env *head, int flag);
 char	*get_env(t_env *env, char *key);
 int		set_env(t_env **env, char *key, char *value, int overrite);
 int		unset_env(t_env **env, char *key);
-char 	**env_to_array(t_env *env);
+char	**env_to_array(t_env *env);
 //builtins
 void	execute_builtins(t_shell *shell, char **command);
 //array utils

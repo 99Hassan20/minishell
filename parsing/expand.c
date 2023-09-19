@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 15:09:38 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/18 09:54:14 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/18 10:05:01 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,7 @@ void	expand(t_shell *shell)
 	while (tmp)
 	{
 		if (tmp->type == ALRED)
-		{
-			printf("ALRED\n");
 			to_expand = 0;
-		}
 		if (tmp->type == VAR
 			&& (tmp->state == INDQOUTES || tmp->state == DFAULT) && to_expand)
 		{
