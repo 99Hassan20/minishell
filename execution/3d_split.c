@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   3d_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 13:34:01 by abdelmajid        #+#    #+#             */
-/*   Updated: 2023/09/15 09:01:34 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/19 16:00:05 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,26 @@ void	execute_parent_builtin(t_shell *shell, char **cmd)
 		execute_builtins(shell, cmd);
 }
 
+void	red(t_shell *shell , int i)
+{
+	if (shell->ready_commands[i].redirections->type == RRED)
+	{
+		int frred = open(shell->ready_commands[i].redirections->file ,O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		dup2(frred, 1);
+	}
+	if (shell->ready_commands[i].redirections->type == ARRED)
+	{
+		int farred = open(shell->ready_commands[i].redirections->file, O_APPEND | O_WRONLY | O_CREAT, 0644);
+		dup2(farred, 1);
+	}
+	
+}
+
 void	execline(t_shell *shell, char ***cmd, char **env)
 {
 	int		fd[2];
-	pid_t	pid;
+	pid_t	*pid;
+	int		i = 0;
 	int		fdd;	
 	char	*executable;
 	DIR		*dir;
@@ -54,6 +70,7 @@ void	execline(t_shell *shell, char ***cmd, char **env)
 	while (*cmd)
 	{
 		dir = opendir((*cmd)[0]);
+		pid = (pid_t *)malloc(sizeof(pid_t) * shell->cmd_count);
 		if (!is_builtin(*cmd[0]) && dir)
 		{
 			closedir(dir);
@@ -89,32 +106,75 @@ void	execline(t_shell *shell, char ***cmd, char **env)
 			cmd++;
 			continue ;
 		}
+		fd[1] = dup(0);
+    	fd[0] = dup(1);
 		pipe(fd);
-		pid = fork();
-		if (pid == -1)
+		pid[i] = fork();
+		if (pid[i] == -1)
 		{
 			perror("fork");
 			exit(1);
 		}
-		else if (pid == 0)
+		else if (pid[i] == 0)
 		{
 			dup2(fdd, 0);
 			if (*(cmd + 1) != NULL)
+			{
+				
 				dup2(fd[1], 1);
+				
+			}
 			close(fd[0]);
+	
 			if (is_child_builtin(*cmd[0]))
 				execute_builtins(shell, *cmd);
 			else
-				execve(executable, *cmd, env);
+			{
+				if (!shell->ready_commands[i].redirections)
+				{
+					execve(executable, *cmd, env);
+				}
+					red(shell ,i);
+					execve(executable, *cmd, env);
+				if (shell->ready_commands[i].redirections->type == LRED)
+				{
+					int flred = open(shell->ready_commands[i].redirections->file ,O_RDONLY, 0644);
+					if (flred == -1)
+					{
+						printf("%s: No such file or directory \n",shell->ready_commands[i].redirections->file);
+						exit(g_exit_status);
+					}
+					else
+					{
+					dup2(flred,0);
+					execve(executable, *cmd, env);
+					}
+					
+					
+
+
+
+
+
+
+
+	
+				}
+				
+			}	
 			exit(g_exit_status);
 		}
 		else
 		{
-			waitpid(pid, &g_exit_status, 0);
+			// printf("\n %d pid = %d \n",i,pid[i]);
+// waitpid(pid[i], &g_exit_status, 0);
 			close(fd[1]);
 			fdd = fd[0];
 			cmd++;
+			i++;
 		}
 	}
+	while(wait(&g_exit_status) > 0);
+		
 	g_exit_status %= 255;
 }
