@@ -6,7 +6,7 @@
 /*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/17 11:53:17 by abdel-ou         ###   ########.fr       */
+/*   Updated: 2023/09/21 16:26:30 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ typedef struct s_command
 	char		*cmd;
 	char		**args;
 	t_redirec	*redirections;
+	t_redirec	*herdocs;
 }	t_command;
 
 typedef struct s_shell
@@ -124,7 +125,7 @@ void	print_env(t_env *head, int flag);
 char	*get_env(t_env *env, char *key);
 int		set_env(t_env **env, char *key, char *value, int overrite);
 int		unset_env(t_env **env, char *key);
-char **env_to_array(t_env *env);
+char	**env_to_array(t_env *env);
 //builtins
 void	execute_builtins(t_shell *shell, char **command);
 //array utils
@@ -145,12 +146,13 @@ void	ft_unset(t_shell *shell, char **command);
 void	ft_exit(t_shell *shell, char **command);
 
 //*excution
-char* getCommandPath(t_env *env, const char* command);
+char	*getCommandPath(t_env *env, const char* command);
 char ***to3d_arr(t_shell *shell);
 char	**ft_splitt(char const *s, char c);
-void execline(t_shell *shell, char ***cmd , char **env);
+void 	execline(t_shell *shell, char **env);
 void execute_builtins_new(t_shell *shell, char **command);
 int is_builtin(char *cmd);
 int is_child_builtin(char *cmd);
 char *get_full_path(t_env *env, char **tokens);
+void	herdocs(t_shell *shell, int i);
 #endif

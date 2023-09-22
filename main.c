@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/15 12:08:58 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/22 11:04:45 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,11 @@ void	print_final_command(t_command *command)
 		printf("cmd: NULL\n");
 	printf("redirections: ");
 	t_redirec *tmp = command->redirections;
+	t_redirec *herdocs = command->herdocs;
 	if (!tmp)
 		printf("No redirecitons\n");
+	if (!herdocs)
+		printf("No herdocs\n");
 	while (tmp)
 	{
 		if (tmp->type == RRED)
@@ -46,6 +49,12 @@ void	print_final_command(t_command *command)
 		else if (tmp->type == ALRED)
 			printf("file: %s | type: ALRED\n", tmp->file);
 		tmp = tmp->next;
+	}
+	printf("herdocs: \n");
+	while (herdocs)
+	{
+		printf("file: %s | type: HERDOC\n", herdocs->file);
+		herdocs = herdocs->next;
 	}
 	printf("args: ");
 	print_cmd_table(command->args);
@@ -73,8 +82,18 @@ int	parse_line(t_shell *shell, char *line)
 		return (0);
 	}
 	expand(shell);
+	// print_tokens(shell->tokens);
 	split_cmds(shell);
 	get_ready_commands(shell);
+	// print_final_command(&shell->ready_commands[0]);
+	
+	int i = 0; 
+	// while (i < shell->cmd_count)
+	// {
+		print_final_command(&shell->ready_commands[i]);
+	// 	i++;
+	// }
+	// print_final_command(&shell->ready_commands[0]);
 	free(trimmed);
 	return (1);
 }
@@ -82,7 +101,6 @@ int	parse_line(t_shell *shell, char *line)
 void	shell_loop(t_shell *shell, char *prompt)
 {
 	char	*line;
-	char	***to_3d;
 
 	while (1)
 	{
@@ -96,8 +114,9 @@ void	shell_loop(t_shell *shell, char *prompt)
 		}
 		if (!parse_line(shell, line))
 			continue ;
-		to_3d = to3d_arr(shell);
-		execline(shell, to_3d, env_to_array(shell->env));
+		execline(shell, env_to_array(shell->env));
+		
+	
 	}
 }
 

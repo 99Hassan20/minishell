@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 12:09:59 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/15 08:48:52 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/17 16:06:57 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	is_builtin(char *cmd)
 	char	*builtins[8];
 	int		i;
 
+	if (!cmd)
+		return (0);
 	builtins[0] = "echo";
 	builtins[1] = "cd";
 	builtins[2] = "pwd";

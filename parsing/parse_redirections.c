@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 17:24:00 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/15 08:48:52 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/18 10:14:55 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,13 @@ t_command	get_final_command(t_token *cmd)
 	if (cmd && cmd->type == _SPACE)
 		cmd = cmd->next;
 	command.redirections = NULL;
+	command.herdocs = NULL;
 	while (tmp && tmp->next)
 	{
-		if (is_redirection(tmp) && tmp->next)
+		if (tmp->type == ALRED && tmp->next)
+			append_redirec(&command.herdocs,
+				tmp->next->content, tmp->type);
+		else if (is_redirection(tmp) && tmp->next)
 			append_redirec(&command.redirections,
 				tmp->next->content, tmp->type);
 		tmp = tmp->next;
@@ -100,6 +104,8 @@ t_command	get_final_command(t_token *cmd)
 	command.args = get_command_table(cmd);
 	if (command.args && command.args[0])
 		command.cmd = command.args[0];
+	else
+		command.cmd = NULL;
 	return (command);
 }
 

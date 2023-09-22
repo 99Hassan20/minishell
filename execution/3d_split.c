@@ -6,7 +6,7 @@
 /*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 13:34:01 by abdelmajid        #+#    #+#             */
-/*   Updated: 2023/09/19 16:00:05 by abdel-ou         ###   ########.fr       */
+/*   Updated: 2023/09/22 11:03:38 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	is_relative_path(char *file)
 {
+	if (!file)
+		return (0);
 	if ((file[0] == '.' && file[1] == '/')
 		|| (file[0] == '.' && file[1] == '.' && file[1] == '/')
 		|| file[0] == '/')
@@ -42,139 +44,203 @@ void	execute_parent_builtin(t_shell *shell, char **cmd)
 		execute_builtins(shell, cmd);
 }
 
-void	red(t_shell *shell , int i)
+void	redirection(t_shell *shell , int i)
 {
 	if (shell->ready_commands[i].redirections->type == RRED)
 	{
-		int frred = open(shell->ready_commands[i].redirections->file ,O_WRONLY | O_CREAT | O_TRUNC, 0644);
+				int frred; 
+		while (shell->ready_commands[i].redirections->next)
+		{
+			frred = open(shell->ready_commands[i].redirections->file ,O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			close(frred);
+			shell->ready_commands[i].redirections = shell->ready_commands[i].redirections->next;
+		}
+		frred = open(shell->ready_commands[i].redirections->file ,O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		
 		dup2(frred, 1);
 	}
+
+	
 	if (shell->ready_commands[i].redirections->type == ARRED)
 	{
-		int farred = open(shell->ready_commands[i].redirections->file, O_APPEND | O_WRONLY | O_CREAT, 0644);
+		int farred; 
+		while (shell->ready_commands[i].redirections->next)
+		{
+			farred = open(shell->ready_commands[i].redirections->file, O_APPEND | O_WRONLY | O_CREAT, 0644);;
+			close(farred);
+			shell->ready_commands[i].redirections = shell->ready_commands[i].redirections->next;
+		}
+		farred = open(shell->ready_commands[i].redirections->file, O_APPEND | O_WRONLY | O_CREAT, 0644);
+		
 		dup2(farred, 1);
+		
+	
 	}
+
+		// int farred = open(shell->ready_commands[i].redirections->file, O_APPEND | O_WRONLY | O_CREAT, 0644);
+
 	
-}
-
-void	execline(t_shell *shell, char ***cmd, char **env)
-{
-	int		fd[2];
-	pid_t	*pid;
-	int		i = 0;
-	int		fdd;	
-	char	*executable;
-	DIR		*dir;
-
-	fdd = 0;
-	while (*cmd)
+	if (shell->ready_commands[i].redirections->type == LRED)
 	{
-		dir = opendir((*cmd)[0]);
-		pid = (pid_t *)malloc(sizeof(pid_t) * shell->cmd_count);
-		if (!is_builtin(*cmd[0]) && dir)
+		int flred = open(shell->ready_commands[i].redirections->file ,O_RDONLY, 0644);
+		if (flred == -1)
 		{
-			closedir(dir);
-			printf("minishell: %s: is a directory\n", (*cmd)[0]);
-			g_exit_status = 126;
-			cmd++;
-			continue ;
-		}
-		executable = get_full_path(shell->env, *cmd);
-		if (!executable && !is_relative_path((*cmd)[0]))
-		{
-			cmd++;
-			continue ;
-		}
-		if ((ft_strcmp((*cmd)[0], "cd") == 0 && shell->cmd_count != 1))
-		{
-			cmd++;
-			continue ;
-		}
-		if (((ft_strcmp((*cmd)[0], "export") == 0) && cmd[0][1]) 
-			|| ((ft_strcmp((*cmd)[0], "unset") == 0) && cmd[0][1])
-			|| ((ft_strcmp((*cmd)[0], "exit") == 0))
-			|| ((ft_strcmp((*cmd)[0], "cd") == 0) && shell->cmd_count == 1))
-		{
-			execute_builtins(shell, *cmd);
-			cmd++;
-			continue ;
-		}
-		if (!is_builtin(*cmd[0]) && !executable)
-		{
-			printf("minishell: %s: command not found\n", *cmd[0]);
-			g_exit_status = 127;
-			cmd++;
-			continue ;
-		}
-		fd[1] = dup(0);
-    	fd[0] = dup(1);
-		pipe(fd);
-		pid[i] = fork();
-		if (pid[i] == -1)
-		{
-			perror("fork");
-			exit(1);
-		}
-		else if (pid[i] == 0)
-		{
-			dup2(fdd, 0);
-			if (*(cmd + 1) != NULL)
-			{
-				
-				dup2(fd[1], 1);
-				
-			}
-			close(fd[0]);
-	
-			if (is_child_builtin(*cmd[0]))
-				execute_builtins(shell, *cmd);
-			else
-			{
-				if (!shell->ready_commands[i].redirections)
-				{
-					execve(executable, *cmd, env);
-				}
-					red(shell ,i);
-					execve(executable, *cmd, env);
-				if (shell->ready_commands[i].redirections->type == LRED)
-				{
-					int flred = open(shell->ready_commands[i].redirections->file ,O_RDONLY, 0644);
-					if (flred == -1)
-					{
-						printf("%s: No such file or directory \n",shell->ready_commands[i].redirections->file);
-						exit(g_exit_status);
-					}
-					else
-					{
-					dup2(flred,0);
-					execve(executable, *cmd, env);
-					}
-					
-					
-
-
-
-
-
-
-
-	
-				}
-				
-			}	
+			printf("%s: No such file or directory \n",shell->ready_commands[i].redirections->file);
 			exit(g_exit_status);
 		}
 		else
 		{
-			// printf("\n %d pid = %d \n",i,pid[i]);
-// waitpid(pid[i], &g_exit_status, 0);
-			close(fd[1]);
-			fdd = fd[0];
-			cmd++;
-			i++;
-		}
+		dup2(flred,0);
+		}	
 	}
-	while(wait(&g_exit_status) > 0);
+}
+
+void	herdocs(t_shell *shell, int i)
+{
+		char *delimiter;
+				int tmp1 = open("/tmp/tmpp" ,O_WRONLY | O_CREAT | O_TRUNC, 0777);
+				while (1)
+				{
+					delimiter = readline("> ");
+					if (ft_strcmp(shell->ready_commands[i].herdocs->file,delimiter) == 0)
+					{
+						break;
+					}
+					ft_putstr_fd(delimiter,tmp1);
+					ft_putchar_fd('\n',tmp1);
+				}
+				close(tmp1);
+				int tmp2 = open("/tmp/tmpp",O_RDONLY);
+				unlink("/tmp/tmpp");
+				dup2(tmp2,0);
+				// printf("hello herdoc  %s \n",shell->ready_commands[i].herdocs->file);
+				close(tmp2);
+				shell->ready_commands[i].herdocs = shell->ready_commands[i].herdocs->next;
+}
+
+void	execline(t_shell *shell, char **env)
+{
+	int		fd[2];
+	pid_t	pid;
+	int		i = 0;
+	int		fdd;	
+	char	*executable;
+	DIR		*dir;
+	int		iter = 0;
+
+	fdd = 0;
+	// 
+	while (i < shell->cmd_count)
+	{
 		
+			
+		
+				
+		dir = opendir(shell->ready_commands[i].cmd);
+		if (!is_builtin(shell->ready_commands[i].cmd) && dir)
+		{
+			closedir(dir);
+			printf("minishell: %s: is a directory\n", shell->ready_commands[i].cmd);
+			g_exit_status = 126;
+			i++;
+			continue ;
+		}
+		executable = get_full_path(shell->env, shell->ready_commands[i].args);
+		if (!executable && !is_relative_path(shell->ready_commands[i].cmd) && shell->ready_commands[i].herdocs)
+		{
+			char *lol[2];
+			lol[0] = "cat";
+			lol[1] = NULL;
+			herdocs(shell,i);
+			execve("/bin/cat", lol, env);
+			continue;
+		}
+	
+		if (!executable && !is_relative_path(shell->ready_commands[i].cmd))
+		{
+			i++;
+			continue ;
+		}
+		if ((ft_strcmp(shell->ready_commands[i].cmd, "cd") == 0 && shell->cmd_count != 1))
+		{
+			i++;
+			continue ;
+		}
+		if (((ft_strcmp(shell->ready_commands[i].cmd, "export") == 0) && shell->ready_commands[i].args[1]) 
+			|| ((ft_strcmp(shell->ready_commands[i].cmd, "unset") == 0) && shell->ready_commands[i].args[1])
+			|| ((ft_strcmp(shell->ready_commands[i].cmd, "exit") == 0))
+			|| ((ft_strcmp(shell->ready_commands[i].cmd, "cd") == 0) && shell->cmd_count == 1))
+		{
+			execute_builtins(shell, shell->ready_commands[i].args);
+			i++;
+			continue ;
+		}
+		if (!is_builtin(shell->ready_commands[i].cmd) && !executable )
+		{
+			printf("minishell: %s: command not found\n", shell->ready_commands[i].cmd);
+			g_exit_status = 127;
+			i++;
+			continue ;
+		}
+		
+
+
+		if ((i + 1) < shell->cmd_count)
+				pipe(fd);	
+		pid = fork();
+		if (pid == -1)
+		{
+			perror("fork");
+			exit(1);
+		}
+		else if (pid == 0)
+		{
+			close(fd[0]);
+			dup2(fdd, 0);
+			if (i + 1 < shell->cmd_count)
+			{
+				dup2(fd[1], 1);
+				close(fd[1]);
+			}
+				
+			if(shell->ready_commands[i].herdocs && shell->ready_commands[i].cmd )
+			{
+				herdocs(shell,i);
+				execve(executable, shell->ready_commands[i].args, env);
+			}
+			
+		if (is_child_builtin(shell->ready_commands->cmd))
+				execute_builtins(shell,	shell->ready_commands[i].args);
+
+		if (!shell->ready_commands[i].redirections && !shell->ready_commands[i].herdocs 
+			&& !is_child_builtin(shell->ready_commands->cmd))
+					execve(executable, shell->ready_commands[i].args, env);
+				
+		if (shell->ready_commands[i].redirections)
+			{
+				redirection(shell ,i);
+				execve(executable, shell->ready_commands[i].args, env);
+			}
+
+			exit(g_exit_status);
+		}
+		else
+		{
+			if (i + 1 == shell->cmd_count)
+				waitpid(pid, &g_exit_status, 0);
+			if (fdd)
+				close(fdd);
+			
+		if (i + 1 < shell->cmd_count)
+				fdd = dup(fd[0]);	
+			close(fd[1]);
+			close(fd[0]);
+		}
+		iter++;
+		i++;
+	}
+	
+	while (wait(NULL) > 0);
+	
 	g_exit_status %= 255;
 }

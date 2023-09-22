@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 15:09:38 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/15 08:48:52 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/18 10:05:01 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,13 +78,17 @@ void	expand(t_shell *shell)
 	t_token	*new;
 	char	**values;
 	int		i;
+	int		to_expand;
 
+	to_expand = 1;
 	tmp = shell->tokens;
 	new = NULL;
 	while (tmp)
 	{
+		if (tmp->type == ALRED)
+			to_expand = 0;
 		if (tmp->type == VAR
-			&& (tmp->state == INDQOUTES || tmp->state == DFAULT))
+			&& (tmp->state == INDQOUTES || tmp->state == DFAULT) && to_expand)
 		{
 			if (ft_strcmp(tmp->content, "$?") == 0)
 				value = ft_itoa(g_exit_status);
@@ -102,10 +106,19 @@ void	expand(t_shell *shell)
 					append_token(&new, new_token(_SPACE, " ", 1, DFAULT));
 				i++;
 			}
+			to_expand = !to_expand;
+		}
+		else if (tmp->type == VAR && !to_expand)
+		{
+			append_token(&new, new_token(STR, tmp->content,
+					ft_strlen(tmp->content), tmp->state));
+			to_expand = 1;
 		}
 		else
+		{
 			append_token(&new, new_token(tmp->type, tmp->content,
 					ft_strlen(tmp->content), tmp->state));
+		}
 		tmp = tmp->next;
 	}
 	shell->tokens = new;
