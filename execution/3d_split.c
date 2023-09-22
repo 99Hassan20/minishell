@@ -6,7 +6,7 @@
 /*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 13:34:01 by abdelmajid        #+#    #+#             */
-/*   Updated: 2023/09/22 11:03:38 by abdel-ou         ###   ########.fr       */
+/*   Updated: 2023/09/22 13:07:53 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,25 +97,31 @@ void	redirection(t_shell *shell , int i)
 
 void	herdocs(t_shell *shell, int i)
 {
-		char *delimiter;
-				int tmp1 = open("/tmp/tmpp" ,O_WRONLY | O_CREAT | O_TRUNC, 0777);
-				while (1)
-				{
-					delimiter = readline("> ");
-					if (ft_strcmp(shell->ready_commands[i].herdocs->file,delimiter) == 0)
-					{
-						break;
-					}
-					ft_putstr_fd(delimiter,tmp1);
-					ft_putchar_fd('\n',tmp1);
-				}
-				close(tmp1);
-				int tmp2 = open("/tmp/tmpp",O_RDONLY);
-				unlink("/tmp/tmpp");
-				dup2(tmp2,0);
-				// printf("hello herdoc  %s \n",shell->ready_commands[i].herdocs->file);
-				close(tmp2);
-				shell->ready_commands[i].herdocs = shell->ready_commands[i].herdocs->next;
+	char *delimiter;
+	int tmp1 = open("/tmp/tmpp" ,O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	rl_catch_signals = 1;
+	while (1)
+	{
+		delimiter = readline("> ");
+		if (ft_strcmp(shell->ready_commands[i].herdocs->file,delimiter) == 0)
+			break;
+		if (delimiter[0] == '$' && (delimiter + 1))
+			ft_putstr_fd(get_env(shell->env, delimiter + 1),tmp1);
+		else
+		{
+			ft_putstr_fd(delimiter,tmp1);
+			ft_putchar_fd('\n',tmp1);
+		}
+	}
+	// open(0, O_RDONLY);
+	close(tmp1);
+	int tmp2 = open("/tmp/tmpp",O_RDONLY);
+	unlink("/tmp/tmpp");
+	dup2(tmp2,0);
+	// printf("hello herdoc  %s \n",shell->ready_commands[i].herdocs->file);
+	close(tmp2);
+	shell->ready_commands[i].herdocs = shell->ready_commands[i].herdocs->next;
+	rl_catch_signals = 0;
 }
 
 void	execline(t_shell *shell, char **env)
@@ -151,11 +157,21 @@ void	execline(t_shell *shell, char **env)
 			char *lol[2];
 			lol[0] = "cat";
 			lol[1] = NULL;
-			herdocs(shell,i);
-			execve("/bin/cat", lol, env);
+			int fd;
+
+			fd = fork();
+			if (fd < 0)
+				exit(255);
+			else if (fd == 0)
+			{
+				herdocs(shell,i);
+				execve("/bin/cat", lol, env);	
+			}
+			else
+				waitpid(fd, &g_exit_status, 0);
+			i++;
 			continue;
 		}
-	
 		if (!executable && !is_relative_path(shell->ready_commands[i].cmd))
 		{
 			i++;
@@ -182,8 +198,6 @@ void	execline(t_shell *shell, char **env)
 			i++;
 			continue ;
 		}
-		
-
 
 		if ((i + 1) < shell->cmd_count)
 				pipe(fd);	

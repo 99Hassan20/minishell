@@ -6,7 +6,7 @@
 /*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/21 16:26:30 by abdel-ou         ###   ########.fr       */
+/*   Updated: 2023/09/22 12:14:21 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ typedef struct s_shell
 	int			exit_status;
 	t_token		**commands;
 	t_command	*ready_commands;
+	int			in_herdoc;
 	char		cwd[1024];
 }	t_shell;
 int		is_valid_echo_option(char *option);

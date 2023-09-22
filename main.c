@@ -6,7 +6,7 @@
 /*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/22 11:04:45 by abdel-ou         ###   ########.fr       */
+/*   Updated: 2023/09/22 12:44:26 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,21 @@ void	signal_handler(int sig)
 {
 	if (sig == SIGINT)
 	{
-		printf("\n");
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-		g_exit_status = 1;
+		if (rl_catch_signals)
+		{
+			close(0);
+			g_exit_status = 1;
+
+		}
+		else
+		{	
+			printf("\n");
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_redisplay();
+			g_exit_status = 1;
+		}
+		// printf("%d\n", g_exit_status);
 	}
 }
 
@@ -87,10 +97,10 @@ int	parse_line(t_shell *shell, char *line)
 	get_ready_commands(shell);
 	// print_final_command(&shell->ready_commands[0]);
 	
-	int i = 0; 
+	// int i = 0; 
 	// while (i < shell->cmd_count)
 	// {
-		print_final_command(&shell->ready_commands[i]);
+		// print_final_command(&shell->ready_commands[i]);
 	// 	i++;
 	// }
 	// print_final_command(&shell->ready_commands[0]);
@@ -131,7 +141,7 @@ int	main(int __attribute__((unused))argc, char __attribute__((unused))**argv, ch
 	sigignore(SIGQUIT);
 	prompt = "minishell$> ";
 	shell.env = NULL;
-	shell.exit_status = 0;
+	rl_catch_signals = 0;
 	env_to_list(&shell, env);
 	shell_loop(&shell, prompt);
 	return (shell.exit_status);
