@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/22 12:14:21 by abdel-ou         ###   ########.fr       */
+/*   Updated: 2023/09/23 11:07:52 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ typedef struct s_redirec
 	char				*file;
 	t_tokentype			type;
 	struct s_redirec	*next;
+	int					expand_herdoc;
 }	t_redirec;
 
 typedef struct s_command
@@ -156,4 +157,5 @@ int is_builtin(char *cmd);
 int is_child_builtin(char *cmd);
 char *get_full_path(t_env *env, char **tokens);
 void	herdocs(t_shell *shell, int i);
+char	*get_var(char *s, t_shell *shell);
 #endif
