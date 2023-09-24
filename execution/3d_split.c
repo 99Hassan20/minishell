@@ -6,11 +6,23 @@
 /*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 13:34:01 by abdelmajid        #+#    #+#             */
-/*   Updated: 2023/09/22 13:07:53 by abdel-ou         ###   ########.fr       */
+/*   Updated: 2023/09/24 13:45:13 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void error_log(char *file_name)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(file_name, 2);
+	if (access(file_name, F_OK) != 0)
+		ft_putstr_fd(": No such file or directory\n", 2);
+	else
+		ft_putstr_fd(": Permission denied\n", 2);
+		
+	
+}
 
 int	is_relative_path(char *file)
 {
@@ -46,61 +58,118 @@ void	execute_parent_builtin(t_shell *shell, char **cmd)
 
 void	redirection(t_shell *shell , int i)
 {
-	if (shell->ready_commands[i].redirections->type == RRED)
-	{
-				int frred; 
-		while (shell->ready_commands[i].redirections->next)
+	
+		if (shell->ready_commands[i].redirections->type == RRED)
 		{
+			int frred; 
+			while (shell->ready_commands[i].redirections->next)
+			{
+				
+				frred = open(shell->ready_commands[i].redirections->file ,O_WRONLY | O_CREAT | O_TRUNC, 0644);
+				if(frred == -1)
+			{
+				error_log(shell->ready_commands[i].redirections->file);
+				g_exit_status = 1;
+				exit(g_exit_status);	
+			}
+				close(frred);
+				if (shell->ready_commands[i].redirections->next->type == RRED)
+				{
+					shell->ready_commands[i].redirections = shell->ready_commands[i].redirections->next;
+				}
+				else
+				{
+					break;
+				}
+			}
 			frred = open(shell->ready_commands[i].redirections->file ,O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			close(frred);
-			shell->ready_commands[i].redirections = shell->ready_commands[i].redirections->next;
+			if(frred == -1)
+			{
+				error_log(shell->ready_commands[i].redirections->file);
+				g_exit_status = 1;
+				exit(g_exit_status);	
+			}
+			dup2(frred, 1);
 		}
-		frred = open(shell->ready_commands[i].redirections->file ,O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		
-		dup2(frred, 1);
-	}
+		if (shell->ready_commands[i].redirections->type == ARRED)
+		{
+			
+			int farred; 
+			while (shell->ready_commands[i].redirections->next)
+			{
+				farred = open(shell->ready_commands[i].redirections->file ,O_WRONLY | O_APPEND | O_CREAT, 0644);
+				
+				if (farred == -1)
+				{
+					error_log(shell->ready_commands[i].redirections->file);
+					g_exit_status = 1;
+					exit(g_exit_status);
+				}
+				close(farred);
+				if (shell->ready_commands[i].redirections->next->type == ARRED)
+				{
+					shell->ready_commands[i].redirections = shell->ready_commands[i].redirections->next;
+				}
+				else
+				{
+					break;
+				}
+			}
+			
+			farred = open(shell->ready_commands[i].redirections->file ,O_WRONLY | O_CREAT | O_APPEND, 0644);
+			if(farred == -1)
+			{
+				error_log(shell->ready_commands[i].redirections->file);
+				g_exit_status = 1;
+				exit(g_exit_status);	
+			}
+			
+			dup2(farred, 1);
+		}
 
+		if (shell->ready_commands[i].redirections->type == LRED)
+		{
+			
+			while (shell->ready_commands[i].redirections->next )
+			{
+				if (shell->ready_commands[i].redirections->next->type == LRED)
+				{
+					shell->ready_commands[i].redirections = shell->ready_commands[i].redirections->next;
+				}
+				else
+				{
+					break;
+				}
+			}
+			int flred = open(shell->ready_commands[i].redirections->file ,O_RDONLY, 0644);
+			if (flred == -1)
+			{
+				// printf("%s: No such file or directory \n",shell->ready_commands[i].redirections->file);
+				error_log(shell->ready_commands[i].redirections->file);
+				g_exit_status = 1;
+				exit(g_exit_status);
+			}
+			else
+			{
+			dup2(flred,0);
+			}
+		}
+
+	shell->ready_commands[i].redirections = shell->ready_commands[i].redirections->next;
 	
-	if (shell->ready_commands[i].redirections->type == ARRED)
+	if (shell->ready_commands[i].redirections)
 	{
-		int farred; 
-		while (shell->ready_commands[i].redirections->next)
-		{
-			farred = open(shell->ready_commands[i].redirections->file, O_APPEND | O_WRONLY | O_CREAT, 0644);;
-			close(farred);
-			shell->ready_commands[i].redirections = shell->ready_commands[i].redirections->next;
-		}
-		farred = open(shell->ready_commands[i].redirections->file, O_APPEND | O_WRONLY | O_CREAT, 0644);
-		
-		dup2(farred, 1);
-		
-	
-	}
-
-		// int farred = open(shell->ready_commands[i].redirections->file, O_APPEND | O_WRONLY | O_CREAT, 0644);
-
-	
-	if (shell->ready_commands[i].redirections->type == LRED)
-	{
-		int flred = open(shell->ready_commands[i].redirections->file ,O_RDONLY, 0644);
-		if (flred == -1)
-		{
-			printf("%s: No such file or directory \n",shell->ready_commands[i].redirections->file);
-			exit(g_exit_status);
-		}
-		else
-		{
-		dup2(flred,0);
-		}	
+		redirection(shell ,i);
 	}
 }
 
 void	herdocs(t_shell *shell, int i)
 {
 	char *delimiter;
-	int tmp1 = open("/tmp/tmpp" ,O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	int tmp1 = open("/tmp/tmpp" , O_APPEND | O_WRONLY | O_CREAT, 0777);
 	rl_catch_signals = 1;
-	while (1)
+	while (shell->ready_commands[i].herdocs)
 	{
 		delimiter = readline("> ");
 		if (ft_strcmp(shell->ready_commands[i].herdocs->file,delimiter) == 0)
@@ -113,14 +182,17 @@ void	herdocs(t_shell *shell, int i)
 			ft_putchar_fd('\n',tmp1);
 		}
 	}
-	// open(0, O_RDONLY);
+	shell->ready_commands[i].herdocs = shell->ready_commands[i].herdocs->next;
+	if (shell->ready_commands[i].herdocs)
+		herdocs(shell , i);
 	close(tmp1);
 	int tmp2 = open("/tmp/tmpp",O_RDONLY);
 	unlink("/tmp/tmpp");
-	dup2(tmp2,0);
-	// printf("hello herdoc  %s \n",shell->ready_commands[i].herdocs->file);
+	if (shell->ready_commands[i].cmd)
+	{
+		dup2(tmp2,0);
+	}
 	close(tmp2);
-	shell->ready_commands[i].herdocs = shell->ready_commands[i].herdocs->next;
 	rl_catch_signals = 0;
 }
 
@@ -135,13 +207,9 @@ void	execline(t_shell *shell, char **env)
 	int		iter = 0;
 
 	fdd = 0;
-	// 
+
 	while (i < shell->cmd_count)
-	{
-		
-			
-		
-				
+	{		
 		dir = opendir(shell->ready_commands[i].cmd);
 		if (!is_builtin(shell->ready_commands[i].cmd) && dir)
 		{
@@ -154,23 +222,14 @@ void	execline(t_shell *shell, char **env)
 		executable = get_full_path(shell->env, shell->ready_commands[i].args);
 		if (!executable && !is_relative_path(shell->ready_commands[i].cmd) && shell->ready_commands[i].herdocs)
 		{
-			char *lol[2];
-			lol[0] = "cat";
-			lol[1] = NULL;
-			int fd;
-
-			fd = fork();
-			if (fd < 0)
-				exit(255);
-			else if (fd == 0)
-			{
 				herdocs(shell,i);
-				execve("/bin/cat", lol, env);	
-			}
-			else
-				waitpid(fd, &g_exit_status, 0);
-			i++;
 			continue;
+		}
+		if (!executable && !is_relative_path(shell->ready_commands[i].cmd) && shell->ready_commands[i].redirections)
+		{
+				redirection(shell, i);
+				continue;
+				i++;
 		}
 		if (!executable && !is_relative_path(shell->ready_commands[i].cmd))
 		{
@@ -222,19 +281,18 @@ void	execline(t_shell *shell, char **env)
 				herdocs(shell,i);
 				execve(executable, shell->ready_commands[i].args, env);
 			}
-			
-		if (is_child_builtin(shell->ready_commands->cmd))
-				execute_builtins(shell,	shell->ready_commands[i].args);
-
-		if (!shell->ready_commands[i].redirections && !shell->ready_commands[i].herdocs 
-			&& !is_child_builtin(shell->ready_commands->cmd))
-					execve(executable, shell->ready_commands[i].args, env);
-				
-		if (shell->ready_commands[i].redirections)
+			if (shell->ready_commands[i].redirections)
 			{
 				redirection(shell ,i);
 				execve(executable, shell->ready_commands[i].args, env);
 			}
+		
+		if (!shell->ready_commands[i].redirections && !shell->ready_commands[i].herdocs)
+					execve(executable, shell->ready_commands[i].args, env);
+				
+		if (is_child_builtin(shell->ready_commands->cmd))
+				execute_builtins(shell,	shell->ready_commands[i].args);
+
 
 			exit(g_exit_status);
 		}
@@ -255,6 +313,5 @@ void	execline(t_shell *shell, char **env)
 	}
 	
 	while (wait(NULL) > 0);
-	
 	g_exit_status %= 255;
 }
