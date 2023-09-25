@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/24 14:44:23 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/25 13:20:32 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,6 @@
 
 void	signal_handler(int sig)
 {
-	if (sig == SIGTERM)
-	{
-		printf("hello \n");
-			// printf("\n");
-			// rl_on_new_line();
-			// rl_replace_line("", 0);
-			// rl_redisplay();
-			// g_exit_status = 1;
-	}
-	
 	if (sig == SIGINT)
 	{
 		
@@ -106,7 +96,7 @@ int	parse_line(t_shell *shell, char *line)
 	get_ready_commands(shell);
 	// print_final_command(&shell->ready_commands[0]);
 	
-	// int i = 0; 
+	// int i = 0;
 	// while (i < shell->cmd_count)
 	// {
 		// print_final_command(&shell->ready_commands[i]);
@@ -134,8 +124,6 @@ void	shell_loop(t_shell *shell, char *prompt)
 		if (!parse_line(shell, line))
 			continue ;
 		execline(shell, env_to_array(shell->env));
-		
-	
 	}
 }
 
@@ -144,11 +132,11 @@ int	main(int __attribute__((unused))argc, char __attribute__((unused))**argv, ch
 	t_shell	shell;
 	char	*prompt;
 
-	prompt = "\033[38;5;206mminishell $>\033[0m ";
+	// prompt = "\033[38;5;206mminishell $>\033[0m ";
 	// sigaction(SIGINT, &(struct sigaction){signal_handler}, NULL);
 	signal(SIGINT, signal_handler);
 	sigignore(SIGQUIT);
-	// prompt = "minishell$> ";
+	prompt = "minishell $> ";
 	shell.env = NULL;
 	rl_catch_signals = 0;
 	env_to_list(&shell, env);

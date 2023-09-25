@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 11:24:28 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/15 11:59:07 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/24 20:45:37 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	has_pipe_error(t_shell *shell)
 		next = tmp->next;
 		if (tmp->type == PIPE && next->type != STR
 			&& next->type != VAR && next->type != DQUOTES
-			&& next->type != SQUOTES)
+			&& next->type != SQUOTES && next->type != RRED)
 			return (1);
 		tmp = tmp->next;
 	}

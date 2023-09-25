@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -I./includes #fsanitize=address -g
+CFLAGS = -Wall -Werror -Wextra -I./includes -fsanitize=address -g
 NAME = minishell
 READLINE =  -L/Users//.brew/opt/readline/lib -I/Users/hoigag/.brew/opt/readline/include
 LIBFT = -L./libft -lft

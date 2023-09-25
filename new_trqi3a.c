@@ -66,3 +66,31 @@ t_command	get_final_command(t_token *cmd)
 		command.cmd = NULL;
 	return (command);
 }
+
+void ft_print_line_fd(t_shell *shell, int fd, char *str)
+// {
+// 	int i = 0;
+// 	char *var_name;
+
+// 	while (str[i])
+// 	{
+// 		if (str[i] == '$' && str[i + 1])
+// 		{
+// 			var_name = get_var(str + i + 1, shell);
+// 			ft_putstr_fd(get_env(shell->env, var_name), fd);
+// 			i += ft_strlen(var_name);
+// 		}
+// 		else
+// 			ft_putchar_fd(str[i], fd);
+// 		i++;
+// 	}
+// 	ft_putchar_fd('\n', fd);
+// }
+
+		if (shell->ready_commands[i].herdocs->expand_herdoc)
+			ft_print_line_fd(shell, tmp1, delimiter);
+		else
+		{
+			ft_putstr_fd(delimiter, tmp1);
+			ft_putchar_fd('\n', tmp1);
+		}

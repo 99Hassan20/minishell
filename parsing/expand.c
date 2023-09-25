@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 15:09:38 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/18 10:05:01 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/25 10:07:38 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,17 +96,26 @@ void	expand(t_shell *shell)
 				value = get_env(shell->env, tmp->content + 1);
 			if (!value)
 				value = "";
-			values = ft_split(ft_strtrim(value, " \t"), ' ');
-			i = 0;
-			while (values[i])
+			if (tmp->state == INDQOUTES)
 			{
-				append_token(&new, new_token(STR, values[i],
-						ft_strlen(values[i]), tmp->state));
-				if (values[i + 1])
-					append_token(&new, new_token(_SPACE, " ", 1, DFAULT));
-				i++;
+				append_token(&new, new_token(STR, value,
+					ft_strlen(value), tmp->state));
+				// to_expand = !to_expand;
 			}
-			to_expand = !to_expand;
+			else
+			{
+				values = ft_split(ft_strtrim(value, " \t"), ' ');
+				i = 0;
+				while (values[i])
+				{
+					append_token(&new, new_token(STR, values[i],
+							ft_strlen(values[i]), tmp->state));
+					if (values[i + 1])
+						append_token(&new, new_token(_SPACE, " ", 1, DFAULT));
+					i++;	
+				}
+				// to_expand = !to_expand;
+			}
 		}
 		else if (tmp->type == VAR && !to_expand)
 		{

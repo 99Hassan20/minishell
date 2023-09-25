@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 13:34:01 by abdelmajid        #+#    #+#             */
-/*   Updated: 2023/09/24 14:44:46 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/25 13:56:29 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,25 +164,25 @@ void	redirection(t_shell *shell , int i)
 	}
 }
 
-void ft_print_line_fd(t_shell *shell, int fd, char *str)
-{
-	int i = 0;
-	char *var_name;
+// void ft_print_line_fd(t_shell *shell, int fd, char *str)
+// {
+// 	int i = 0;
+// 	char *var_name;
 
-	while (str[i])
-	{
-		if (str[i] == '$' && str[i + 1])
-		{
-			var_name = get_var(str + i + 1, shell);
-			ft_putstr_fd(get_env(shell->env, var_name), fd);
-			i += ft_strlen(var_name);
-		}
-		else
-			ft_putchar_fd(str[i], fd);
-		i++;
-	}
-	ft_putchar_fd('\n', fd);
-}
+// 	while (str[i])
+// 	{
+// 		if (str[i] == '$' && str[i + 1])
+// 		{
+// 			var_name = get_var(str + i + 1, shell);
+// 			ft_putstr_fd(get_env(shell->env, var_name), fd);
+// 			i += ft_strlen(var_name);
+// 		}
+// 		else
+// 			ft_putchar_fd(str[i], fd);
+// 		i++;
+// 	}
+// 	ft_putchar_fd('\n', fd);
+// }
 
 void	herdocs(t_shell *shell, int i)
 {
@@ -192,6 +192,8 @@ void	herdocs(t_shell *shell, int i)
 	while (shell->ready_commands[i].herdocs)
 	{
 		delimiter = readline("> ");
+		if (!delimiter)
+			break ;
 		if (ft_strcmp(shell->ready_commands[i].herdocs->file,delimiter) == 0)
 			break;
 		if (shell->ready_commands[i].herdocs->expand_herdoc)
@@ -227,7 +229,6 @@ void	execline(t_shell *shell, char **env)
 	int		iter = 0;
 
 	fdd = 0;
-
 	while (i < shell->cmd_count)
 	{		
 		dir = opendir(shell->ready_commands[i].cmd);
@@ -324,9 +325,11 @@ void	execline(t_shell *shell, char **env)
 				close(fdd);
 			
 		if (i + 1 < shell->cmd_count)
-				fdd = dup(fd[0]);	
+		{
+			fdd = dup(fd[0]);
 			close(fd[1]);
-			close(fd[0]);
+			close(fd[0]);	
+		}
 		}
 		iter++;
 		i++;
