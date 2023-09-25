@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 13:34:01 by abdelmajid        #+#    #+#             */
-/*   Updated: 2023/09/25 13:56:29 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/25 19:17:49 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,8 @@ void	redirection(t_shell *shell , int i)
 				g_exit_status = 1;
 				exit(g_exit_status);	
 			}
-			dup2(frred, 1);
+			if (shell->ready_commands[i].cmd)
+				dup2(frred, 1);
 		}
 		
 		if (shell->ready_commands[i].redirections->type == ARRED)
@@ -124,8 +125,8 @@ void	redirection(t_shell *shell , int i)
 				g_exit_status = 1;
 				exit(g_exit_status);	
 			}
-			
-			dup2(farred, 1);
+			if (shell->ready_commands[i].cmd)
+				dup2(farred, 1);
 		}
 
 		if (shell->ready_commands[i].redirections->type == LRED)
@@ -152,7 +153,8 @@ void	redirection(t_shell *shell , int i)
 			}
 			else
 			{
-			dup2(flred,0);
+			if (shell->ready_commands[i].cmd)
+				dup2(flred,0);
 			}
 		}
 
@@ -164,25 +166,30 @@ void	redirection(t_shell *shell , int i)
 	}
 }
 
-// void ft_print_line_fd(t_shell *shell, int fd, char *str)
-// {
-// 	int i = 0;
-// 	char *var_name;
+void ft_print_line_fd(t_shell *shell, int fd, char *str)
+{
+	int i = 0;
+	char *var_name;
 
-// 	while (str[i])
-// 	{
-// 		if (str[i] == '$' && str[i + 1])
-// 		{
-// 			var_name = get_var(str + i + 1, shell);
-// 			ft_putstr_fd(get_env(shell->env, var_name), fd);
-// 			i += ft_strlen(var_name);
-// 		}
-// 		else
-// 			ft_putchar_fd(str[i], fd);
-// 		i++;
-// 	}
-// 	ft_putchar_fd('\n', fd);
-// }
+	while (str[i])
+	{
+		if (str[i] == '$' && str[i + 1] && str[i + 1] == '?')
+		{
+			ft_putnbr_fd(g_exit_status, fd);
+			i += 2;
+		}
+		if (str[i] == '$' && str[i + 1])
+		{
+			var_name = get_var(str + i + 1, shell);
+			ft_putstr_fd(get_env(shell->env, var_name), fd);
+			i += ft_strlen(var_name);
+		}
+		else
+			ft_putchar_fd(str[i], fd);
+		i++;
+	}
+	ft_putchar_fd('\n', fd);
+}
 
 void	herdocs(t_shell *shell, int i)
 {
@@ -267,11 +274,12 @@ void	execline(t_shell *shell, char **env)
 			|| ((ft_strcmp(shell->ready_commands[i].cmd, "exit") == 0))
 			|| ((ft_strcmp(shell->ready_commands[i].cmd, "cd") == 0) && shell->cmd_count == 1))
 		{
+			// printf("is parent builtin\n");
 			execute_builtins(shell, shell->ready_commands[i].args);
 			i++;
 			continue ;
 		}
-		if (!is_builtin(shell->ready_commands[i].cmd) && !executable )
+		if (!is_builtin(shell->ready_commands[i].cmd) && !executable)
 		{
 			printf("minishell: %s: command not found\n", shell->ready_commands[i].cmd);
 			g_exit_status = 127;
@@ -289,7 +297,8 @@ void	execline(t_shell *shell, char **env)
 		}
 		else if (pid == 0)
 		{
-			close(fd[0]);
+			if (fd[0])
+				close(fd[0]);
 			dup2(fdd, 0);
 			if (i + 1 < shell->cmd_count)
 			{
@@ -300,21 +309,20 @@ void	execline(t_shell *shell, char **env)
 			if(shell->ready_commands[i].herdocs && shell->ready_commands[i].cmd )
 			{
 				herdocs(shell,i);
-				execve(executable, shell->ready_commands[i].args, env);
+				
 			}
 			if (shell->ready_commands[i].redirections)
 			{
 				redirection(shell ,i);
-				execve(executable, shell->ready_commands[i].args, env);
 			}
-		
-		if (!shell->ready_commands[i].redirections && !shell->ready_commands[i].herdocs)
-					execve(executable, shell->ready_commands[i].args, env);
-				
-		if (is_child_builtin(shell->ready_commands->cmd))
+			if (!is_child_builtin(shell->ready_commands[i].cmd))
+						execve(executable, shell->ready_commands[i].args, env);
+					
+			if (is_child_builtin(shell->ready_commands[i].cmd))
+			{
+				// printf("is child builtin\n");
 				execute_builtins(shell,	shell->ready_commands[i].args);
-
-
+			}
 			exit(g_exit_status);
 		}
 		else
@@ -323,18 +331,16 @@ void	execline(t_shell *shell, char **env)
 				waitpid(pid, &g_exit_status, 0);
 			if (fdd)
 				close(fdd);
-			
-		if (i + 1 < shell->cmd_count)
-		{
-			fdd = dup(fd[0]);
-			close(fd[1]);
-			close(fd[0]);	
-		}
+			if (i + 1 < shell->cmd_count)
+			{
+				fdd = dup(fd[0]);
+				close(fd[1]);
+				close(fd[0]);	
+			}
 		}
 		iter++;
 		i++;
 	}
-	
 	while (wait(NULL) > 0);
 	g_exit_status %= 255;
 }

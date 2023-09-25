@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 17:24:00 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/25 12:56:39 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/25 18:25:26 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_token *remove_redirections(t_token *tokens)
 				append_token(&new, new_token(tmp->type, tmp->content, tmp->length, tmp->state));
 				tmp = tmp->next;
 			}
-			while (tmp )
+			while (tmp)
 			{
 				if ((tmp->type == _SPACE || is_redirection(tmp) || tmp->type == PIPE) && tmp->state == DFAULT)
 					break ;
@@ -142,12 +142,13 @@ char	**get_file_name(t_token **tokens)
 		return (NULL);
 	if ((*tokens)->type == _SPACE)
 		(*tokens) = (*tokens)->next;
-	while ((*tokens) && (*tokens)->type != _SPACE && (*tokens)->type != RRED && (*tokens)->type != LRED
-		&& (*tokens)->type != ARRED && (*tokens)->type != ALRED)
+	while ((*tokens) && !is_redirection(*tokens))
 	{
+		if ((*tokens)->type == _SPACE && (*tokens)->state == DFAULT)
+			break ;
 		if ((*tokens)->type == DQUOTES || (*tokens)->type == SQUOTES)
 			expand_herdoc = NULL;
-		if ((*tokens)->type != DQUOTES && (*tokens)->type != SQUOTES)
+		if (((*tokens)->type != DQUOTES && (*tokens)->type != SQUOTES) || ((*tokens)->type == _SPACE && (*tokens)->state != DFAULT))
 			file_name = ft_strjoin(file_name, (*tokens)->content);
 		*tokens = (*tokens)->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/23 11:07:52 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/25 17:25:10 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <fcntl.h>
 
 int	g_exit_status;
-
+int rl_catch_signals;
 typedef enum e_state
 {
 	INDQOUTES,

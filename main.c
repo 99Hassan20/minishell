@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/25 13:20:32 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/25 18:31:47 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	signal_handler(int sig)
 		{	
 			printf("\n");
 			rl_on_new_line();
-			rl_replace_line("", 0);
+			// rl_replace_line("", 0);
 			rl_redisplay();
 			g_exit_status = 1;
 		}		
@@ -110,7 +110,10 @@ int	parse_line(t_shell *shell, char *line)
 void	shell_loop(t_shell *shell, char *prompt)
 {
 	char	*line;
+	int std_in;
 
+	std_in = dup(0);
+	// int		fd = 0;
 	while (1)
 	{
 		getcwd(shell->cwd, sizeof(shell->cwd));
@@ -124,6 +127,7 @@ void	shell_loop(t_shell *shell, char *prompt)
 		if (!parse_line(shell, line))
 			continue ;
 		execline(shell, env_to_array(shell->env));
+		dup2(std_in, 0);
 	}
 }
 

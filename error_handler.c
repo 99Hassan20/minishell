@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 11:24:28 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/24 20:45:37 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/25 17:12:02 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	has_pipe_error(t_shell *shell)
 		next = tmp->next;
 		if (tmp->type == PIPE && next->type != STR
 			&& next->type != VAR && next->type != DQUOTES
-			&& next->type != SQUOTES && next->type != RRED)
+			&& next->type != SQUOTES && next->type != RRED && !is_redirection(next))
 			return (1);
 		tmp = tmp->next;
 	}
