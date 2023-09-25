@@ -6,7 +6,7 @@
 /*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/23 22:22:57 by abdel-ou         ###   ########.fr       */
+/*   Updated: 2023/09/25 13:14:45 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,25 @@
 
 void	signal_handler(int sig)
 {
-	if (sig == SIGTERM)
-	{
-		printf("hello \n");
-			// printf("\n");
-			// rl_on_new_line();
-			// rl_replace_line("", 0);
-			// rl_redisplay();
-			// g_exit_status = 1;
-	}
+
 	
 	if (sig == SIGINT)
 	{
 		
-		if (rl_catch_signals)
-		{
-			close(0);
-			g_exit_status = 1;
-		}
-		else
-		{	
+		// if (rl_catch_signals)
+		// {
+		// 	close(0);
+		// 	g_exit_status = 1;
+		// }
+		// else
+		// {	
 			printf("\n");
 			rl_on_new_line();
 			rl_replace_line("", 0);
 			rl_redisplay();
 			g_exit_status = 1;
 		}		
-	}
+	// }
 }
 
 void	print_final_command(t_command *command)
@@ -147,7 +139,7 @@ int	main(int __attribute__((unused))argc, char __attribute__((unused))**argv, ch
 	prompt = "\033[38;5;206mminishell $>\033[0m ";
 	// sigaction(SIGINT, &(struct sigaction){signal_handler}, NULL);
 	signal(SIGINT, signal_handler);
-	sigignore(SIGQUIT);
+	// sigignore(SIGQUIT);
 	// prompt = "minishell$> ";
 	shell.env = NULL;
 	rl_catch_signals = 0;

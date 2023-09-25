@@ -6,7 +6,7 @@
 /*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 13:34:01 by abdelmajid        #+#    #+#             */
-/*   Updated: 2023/09/24 13:45:13 by abdel-ou         ###   ########.fr       */
+/*   Updated: 2023/09/25 13:43:37 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,8 @@ void	herdocs(t_shell *shell, int i)
 	while (shell->ready_commands[i].herdocs)
 	{
 		delimiter = readline("> ");
+		if (!delimiter)
+			break ;
 		if (ft_strcmp(shell->ready_commands[i].herdocs->file,delimiter) == 0)
 			break;
 		if (delimiter[0] == '$' && (delimiter + 1))
@@ -201,14 +203,13 @@ void	execline(t_shell *shell, char **env)
 	int		fd[2];
 	pid_t	pid;
 	int		i = 0;
-	int		fdd;	
+	int		fdd;
 	char	*executable;
 	DIR		*dir;
 	int		iter = 0;
-
 	fdd = 0;
 
-	while (i < shell->cmd_count)
+	while (i < shell->cmd_count )
 	{		
 		dir = opendir(shell->ready_commands[i].cmd);
 		if (!is_builtin(shell->ready_commands[i].cmd) && dir)
@@ -223,12 +224,12 @@ void	execline(t_shell *shell, char **env)
 		if (!executable && !is_relative_path(shell->ready_commands[i].cmd) && shell->ready_commands[i].herdocs)
 		{
 				herdocs(shell,i);
-			continue;
+				continue;
 		}
+		
 		if (!executable && !is_relative_path(shell->ready_commands[i].cmd) && shell->ready_commands[i].redirections)
 		{
-				redirection(shell, i);
-				continue;
+				redirection(shell, i);	
 				i++;
 		}
 		if (!executable && !is_relative_path(shell->ready_commands[i].cmd))
@@ -257,9 +258,11 @@ void	execline(t_shell *shell, char **env)
 			i++;
 			continue ;
 		}
-
 		if ((i + 1) < shell->cmd_count)
-				pipe(fd);	
+		{
+			pipe(fd);
+		}
+					
 		pid = fork();
 		if (pid == -1)
 		{
@@ -268,6 +271,10 @@ void	execline(t_shell *shell, char **env)
 		}
 		else if (pid == 0)
 		{
+			if(shell->ready_commands[i].herdocs && shell->ready_commands[i].cmd )
+			{
+				herdocs(shell,i);
+			}
 			close(fd[0]);
 			dup2(fdd, 0);
 			if (i + 1 < shell->cmd_count)
@@ -276,11 +283,7 @@ void	execline(t_shell *shell, char **env)
 				close(fd[1]);
 			}
 				
-			if(shell->ready_commands[i].herdocs && shell->ready_commands[i].cmd )
-			{
-				herdocs(shell,i);
-				execve(executable, shell->ready_commands[i].args, env);
-			}
+			
 			if (shell->ready_commands[i].redirections)
 			{
 				redirection(shell ,i);
@@ -304,9 +307,12 @@ void	execline(t_shell *shell, char **env)
 				close(fdd);
 			
 		if (i + 1 < shell->cmd_count)
+		{
 				fdd = dup(fd[0]);	
 			close(fd[1]);
 			close(fd[0]);
+		}
+			
 		}
 		iter++;
 		i++;
