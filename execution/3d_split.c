@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 13:34:01 by abdelmajid        #+#    #+#             */
-/*   Updated: 2023/09/25 19:17:49 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/26 16:10:32 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,6 +194,7 @@ void ft_print_line_fd(t_shell *shell, int fd, char *str)
 void	herdocs(t_shell *shell, int i)
 {
 	char *delimiter;
+	unlink("/tmp/tmpp");
 	int tmp1 = open("/tmp/tmpp" , O_APPEND | O_WRONLY | O_CREAT, 0777);
 	rl_catch_signals = 1;
 	while (shell->ready_commands[i].herdocs)
@@ -250,7 +251,7 @@ void	execline(t_shell *shell, char **env)
 		executable = get_full_path(shell->env, shell->ready_commands[i].args);
 		if (!executable && !is_relative_path(shell->ready_commands[i].cmd) && shell->ready_commands[i].herdocs)
 		{
-				herdocs(shell,i);
+			herdocs(shell,i);
 			continue;
 		}
 		if (!executable && !is_relative_path(shell->ready_commands[i].cmd) && shell->ready_commands[i].redirections)

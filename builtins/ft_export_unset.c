@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_unset.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 13:22:27 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/15 08:48:52 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/26 16:06:34 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,10 @@ void	ft_unset(t_shell *shell, char **command)
 	{
 		if (check_valid_variable(command[i])
 			&& ft_get_index_of(command[i], '=') == -1)
-			unset_env(&shell->env, command[i]);
+		{
+			if (ft_strcmp(command[i], "_") != 0)
+				unset_env(&shell->env, command[i]);
+		}
 		else
 		{
 			printf("minishell: unset: \
