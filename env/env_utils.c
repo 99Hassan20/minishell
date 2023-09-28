@@ -65,11 +65,12 @@ void	env_to_list(t_shell *shell, char *env[])
 		}
 		if (!pair)
 			return ;
-		if (!push_env(&shell->env, pair[0], pair[1]))
+		if (!push_env(&shell->env, ft_strdup(pair[0]), ft_strdup(pair[1])))
 		{
 			printf("could not add to env list\n");
 			return ;
 		}
+		ft_free_2d(pair);
 		i++;
 	}
 }

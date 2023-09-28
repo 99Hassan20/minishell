@@ -26,8 +26,10 @@ int	has_redirection_error(t_shell *shell)
 {
 	t_token	*tmp;
 	t_token	*next;
+	t_token *nospace;
 
-	tmp = remove_space_from_tokens(shell->tokens);
+	nospace = remove_space_from_tokens(shell->tokens);
+	tmp = nospace;
 	while (tmp)
 	{
 		if (is_redirection(tmp))
@@ -35,10 +37,14 @@ int	has_redirection_error(t_shell *shell)
 			next = tmp->next;
 			if (!next || (next->type != STR && next->type != VAR
 					&& next->type != DQUOTES && next->type != SQUOTES))
+			{
+				free_tokens(nospace);
 				return (1);
+			}
 		}
 		tmp = tmp->next;
 	}
+	free_tokens(nospace);
 	return (0);
 }
 
@@ -46,19 +52,28 @@ int	has_pipe_error(t_shell *shell)
 {
 	t_token	*tmp;
 	t_token	*next;
+	t_token *nospace;
 
-	tmp = remove_space_from_tokens(shell->tokens);
+	nospace = remove_space_from_tokens(shell->tokens);
+	tmp = nospace;
 	while (tmp && tmp->next)
 	{
 		next = tmp->next;
 		if (tmp->type == PIPE && next->type != STR
 			&& next->type != VAR && next->type != DQUOTES
 			&& next->type != SQUOTES && next->type != RRED && !is_redirection(next))
+		{
+			free_tokens(nospace);
 			return (1);
+		}
 		tmp = tmp->next;
 	}
 	if (tmp && tmp->type == PIPE)
+	{
+		free_tokens(nospace);
 		return (1);
+	}
+	free_tokens(nospace);
 	return (0);
 }
 

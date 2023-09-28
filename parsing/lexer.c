@@ -12,18 +12,21 @@
 
 #include "minishell.h"
 
-void	parse_word(t_shell *shell, char *s, char **w, t_token **t)
-{
-	char	*word;
-	t_token	*token;
 
+int	parse_word(t_shell *shell, char *s)
+{
+	t_token *token;
+	char *word;
+	int len;
 	word = get_word(s, shell);
+	len = ft_strlen(word);
 	if (shell->in_quotes)
 		token = new_token(STR, word, ft_strlen(word), shell->q_type);
 	else
 		token = new_token(STR, word, ft_strlen(word), DFAULT);
-	*w = word;
-	*t = token;
+	free(word);
+	append_token(&shell->tokens, token);
+	return (len);
 }
 
 void	parse_single_tokens(t_shell *shell, char *s, char **w, t_token **t)
@@ -114,7 +117,10 @@ void	lexer(t_shell *shell, char *s)
 			continue ;
 		}
 		else if (is_char(*s, shell))
-			parse_word(shell, s, &word, &token);
+		{
+			s += parse_word(shell, s);
+			continue;
+		}
 		else if (ft_strchr("><| ", *s))
 			parse_single_tokens(shell, s, &word, &token);
 		else if (*s == '$')
@@ -123,5 +129,6 @@ void	lexer(t_shell *shell, char *s)
 			parse_quotes(shell, *s, &word, &token);
 		append_token(&shell->tokens, token);
 		s += ft_strlen(word);
+		free(word);
 	}
 }

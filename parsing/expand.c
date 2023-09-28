@@ -39,6 +39,7 @@ char	**get_command_table(t_token *tokens)
 	t_token	*tmp;
 	char	*str;
 	int		is_space;
+	char	*tmp_str;
 
 	tmp = tokens;
 	cmd_table = NULL;
@@ -61,12 +62,17 @@ char	**get_command_table(t_token *tokens)
 					|| tmp->type == SQUOTES))
 			{
 				if (!(tmp->type == DQUOTES || tmp->type == SQUOTES))
+				{
+					tmp_str = str;
 					str = ft_strjoin(str, tmp->content);
+					free(tmp_str);
+				}
 				tmp = tmp->next;
 			}
 		}
 		if (is_space == 0)
 			cmd_table = append_to_array(cmd_table, str);
+		free(str);
 	}
 	return (cmd_table);
 }
@@ -79,6 +85,7 @@ void	expand(t_shell *shell)
 	char	**values;
 	int		i;
 	int		to_expand;
+	char	*trimmed;
 
 	to_expand = 1;
 	tmp = shell->tokens;
@@ -100,11 +107,12 @@ void	expand(t_shell *shell)
 			{
 				append_token(&new, new_token(STR, value,
 					ft_strlen(value), tmp->state));
-				// to_expand = !to_expand;
 			}
 			else
 			{
-				values = ft_split(ft_strtrim(value, " \t"), ' ');
+				trimmed = ft_strtrim(value, " \t");
+				values = ft_split(trimmed, ' ');
+				free(trimmed);
 				i = 0;
 				while (values[i])
 				{
@@ -114,7 +122,7 @@ void	expand(t_shell *shell)
 						append_token(&new, new_token(_SPACE, " ", 1, DFAULT));
 					i++;	
 				}
-				// to_expand = !to_expand;
+				ft_free_2d(values);
 			}
 		}
 		else if (tmp->type == VAR && !to_expand)

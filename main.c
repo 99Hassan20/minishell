@@ -45,24 +45,28 @@ void	print_final_command(t_command *command)
 	t_redirec *herdocs = command->herdocs;
 	if (!tmp)
 		printf("No redirecitons\n");
-	if (!herdocs)
-		printf("No herdocs\n");
+	else
+		printf("\n|%10s|%10s	|\n", "file", "type");
 	while (tmp)
 	{
 		if (tmp->type == RRED)
-			printf("file: %s | type: RRED\n", tmp->file);
+			printf("|%10s|%10s	|\n", tmp->file, "RRED");
 		else if (tmp->type == LRED)
-			printf("file: %s | type: LRED\n", tmp->file);
+			printf("|%10s|%10s	|\n", tmp->file, "LRED");
 		else if (tmp->type == ARRED)
-			printf("file: %s | type: ARRED\n", tmp->file);
+			printf("|%10s|%10s	|\n", tmp->file, "ARRED");
 		else if (tmp->type == ALRED)
-			printf("file: %s | type: ALRED\n", tmp->file);
+			printf("|%10s|%10s	|\n", tmp->file, "ALRED");
 		tmp = tmp->next;
 	}
-	printf("herdocs: \n");
+	printf("herdocs: ");
+	if (!herdocs)
+		printf("No herdocs\n");
+	else
+		printf("\n|%10s|%10s	|\n", "file", "type");
 	while (herdocs)
 	{
-		printf("file: %s | type: HERDOC\n", herdocs->file);
+		printf("|%10s|%10s	|\n", herdocs->file, "HEREDOC");
 		herdocs = herdocs->next;
 	}
 	printf("args: ");
@@ -74,7 +78,6 @@ int	parse_line(t_shell *shell, char *line)
 {
 	char	*trimmed;
 
-	// g_exit_status = g_exit_status;
 	trimmed = ft_strtrim(line, " \t\n\r");
 	free(line);
 	if (!*trimmed)
@@ -94,15 +97,18 @@ int	parse_line(t_shell *shell, char *line)
 	// print_tokens(shell->tokens);
 	split_cmds(shell);
 	get_ready_commands(shell);
-	// print_final_command(&shell->ready_commands[0]);
-	
-	// int i = 0;
-	// while (i < shell->cmd_count)
-	// {
-		// print_final_command(&shell->ready_commands[i]);
-	// 	i++;
-	// }
-	// print_final_command(&shell->ready_commands[0]);
+	int i = 0;
+	while (i < shell->cmd_count)
+	{
+		print_final_command(&shell->ready_commands[i]);
+		i++;
+	}
+	int j = 0;
+	while (j < shell->cmd_count)
+	{
+		free_tokens(shell->commands[j]);
+		j++;
+	}
 	free(trimmed);
 	return (1);
 }
@@ -117,17 +123,24 @@ void	shell_loop(t_shell *shell, char *prompt)
 	while (1)
 	{
 		getcwd(shell->cwd, sizeof(shell->cwd));
-		set_env(&shell->env, "PWD", shell->cwd, 1);
+		// set_env(&shell->env, "PWD", shell->cwd, 1);
 		line = readline(prompt);
 		if (!line)
 		{
 			free(line);
+			free_tokens(shell->tokens);
 			exit(g_exit_status);
 		}
 		if (!parse_line(shell, line))
+		{
+			free_tokens(shell->tokens);
+			shell->tokens = NULL;
 			continue ;
-		execline(shell, env_to_array(shell->env));
+		}
+		// execline(shell, env_to_array(shell->env));
 		dup2(std_in, 0);
+		free_tokens(shell->tokens);
+		shell->tokens = NULL;
 	}
 }
 
@@ -139,9 +152,10 @@ int	main(int __attribute__((unused))argc, char __attribute__((unused))**argv, ch
 	// prompt = "\033[38;5;206mminishell $>\033[0m ";
 	// sigaction(SIGINT, &(struct sigaction){signal_handler}, NULL);
 	signal(SIGINT, signal_handler);
-	sigignore(SIGQUIT);
+	// sigignore(SIGQUIT);
 	prompt = "minishell $> ";
 	shell.env = NULL;
+	shell.tokens = NULL;
 	rl_catch_signals = 0;
 	env_to_list(&shell, env);
 	shell_loop(&shell, prompt);

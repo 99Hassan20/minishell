@@ -198,12 +198,11 @@ t_command	get_final_command(t_token *cmd)
 		cmd = cmd->next;
 	command.redirections = NULL;
 	command.herdocs = NULL;
-	// print_tokens(cmd);
 	set_redirections(cmd, &command.redirections, &command.herdocs);
-	// remove_all_redir(&cpy);
 	noredir = remove_redirections(cpy);
-	// print_tokens(cpy);
+	free_tokens(cpy);
 	command.args = get_command_table(noredir);
+	free_tokens(noredir);
 	if (command.args && command.args[0])
 		command.cmd = command.args[0];
 	else

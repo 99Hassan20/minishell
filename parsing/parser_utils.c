@@ -19,7 +19,12 @@ t_token	*copy_token(t_token *token)
 	copy = malloc(sizeof(t_token));
 	if (!copy)
 		return (NULL);
-	copy->content = token->content;
+	copy->content = ft_strdup(token->content);
+	if (!copy->content)
+	{
+		free(copy);
+		return (NULL);
+	}
 	copy->length = token->length;
 	copy->state = token->state;
 	copy->type = token->type;

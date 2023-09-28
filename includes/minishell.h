@@ -21,6 +21,7 @@
 # include <dirent.h>
 # include "signal.h"
 # include <fcntl.h>
+# include <sys/wait.h>
 
 int	g_exit_status;
 int rl_catch_signals;
@@ -149,13 +150,16 @@ void	ft_exit(t_shell *shell, char **command);
 
 //*excution
 char	*getCommandPath(t_env *env, const char* command);
-char ***to3d_arr(t_shell *shell);
+char	***to3d_arr(t_shell *shell);
 char	**ft_splitt(char const *s, char c);
 void 	execline(t_shell *shell, char **env);
-void execute_builtins_new(t_shell *shell, char **command);
-int is_builtin(char *cmd);
-int is_child_builtin(char *cmd);
-char *get_full_path(t_env *env, char **tokens);
+void	execute_builtins_new(t_shell *shell, char **command);
+int		is_builtin(char *cmd);
+int		is_child_builtin(char *cmd);
+char	*get_full_path(t_env *env, char **tokens);
 void	herdocs(t_shell *shell, int i);
 char	*get_var(char *s, t_shell *shell);
+
+//*free
+void	free_tokens(t_token *token);
 #endif

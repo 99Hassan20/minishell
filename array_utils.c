@@ -36,8 +36,9 @@ char	**append_to_array(char **arr, char *value)
 		new[i] = ft_strdup(arr[i]);
 		i++;
 	}
-	new[i] = value;
+	new[i] = ft_strdup(value);
 	new[i + 1] = NULL;
+	ft_free_2d(arr);
 	return (new);
 }
 

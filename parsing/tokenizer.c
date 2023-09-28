@@ -19,7 +19,12 @@ t_token	*new_token(t_tokentype type, char *content, int length, t_state state)
 	new = malloc(sizeof(t_token));
 	if (!new)
 		return (NULL);
-	new->content = content;
+	new->content = ft_strdup(content);
+	if (!new->content)
+	{
+		free(new);
+		return (NULL);
+	}
 	new->length = length;
 	new->state = state;
 	new->type = type;
@@ -109,7 +114,6 @@ void	print_tokens(t_token *tokens)
 	printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
 	printf("| \033[1;33m%-10s\033[1;35m | \033[1;33m%-10s\033[1;35m | \033[1;33m%-10s\033[1;35m | \033[1;33m%-10s\033[1;35m |\n", "Token", "Type", "Length", "State");
 	printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-
 	while (tokens)
 	{
 		printf("\033[1;37m"); // Set the color to white (for table content)
