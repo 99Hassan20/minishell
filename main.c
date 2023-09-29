@@ -33,6 +33,20 @@ void	signal_handler(int sig)
 	}
 }
 
+void free_commands(t_token **commands, int size)
+{
+	int i = 0;
+	if (!commands)
+		return ;
+	while (i < size)
+	{
+		if (commands[i])
+			free_tokens(commands[i]);
+		i++;
+	}
+	free(commands);
+}
+
 void	print_final_command(t_command *command)
 {
 	printf("-------------------------------------------------------------\n");
@@ -46,7 +60,7 @@ void	print_final_command(t_command *command)
 	if (!tmp)
 		printf("No redirecitons\n");
 	else
-		printf("\n|%10s|%10s	|\n", "file", "type");
+		printf("\n|%10s	|%10s	|\n", "file", "type");
 	while (tmp)
 	{
 		if (tmp->type == RRED)
@@ -103,12 +117,6 @@ int	parse_line(t_shell *shell, char *line)
 		print_final_command(&shell->ready_commands[i]);
 		i++;
 	}
-	int j = 0;
-	while (j < shell->cmd_count)
-	{
-		free_tokens(shell->commands[j]);
-		j++;
-	}
 	free(trimmed);
 	return (1);
 }
@@ -129,17 +137,20 @@ void	shell_loop(t_shell *shell, char *prompt)
 		{
 			free(line);
 			free_tokens(shell->tokens);
+			free_commands(shell->commands, shell->cmd_count);
 			exit(g_exit_status);
 		}
 		if (!parse_line(shell, line))
 		{
 			free_tokens(shell->tokens);
 			shell->tokens = NULL;
+			// free_commands(shell);
 			continue ;
 		}
 		// execline(shell, env_to_array(shell->env));
 		dup2(std_in, 0);
 		free_tokens(shell->tokens);
+		// free_commands(shell->commands, shell->cmd_count);
 		shell->tokens = NULL;
 	}
 }
@@ -156,6 +167,8 @@ int	main(int __attribute__((unused))argc, char __attribute__((unused))**argv, ch
 	prompt = "minishell $> ";
 	shell.env = NULL;
 	shell.tokens = NULL;
+	shell.commands = NULL;
+	shell.ready_commands = NULL;
 	rl_catch_signals = 0;
 	env_to_list(&shell, env);
 	shell_loop(&shell, prompt);

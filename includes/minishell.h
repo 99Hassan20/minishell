@@ -60,7 +60,7 @@ typedef struct s_token
 	int				length;
 	t_state			state;
 	struct s_token	*next;
-}	t_token;
+} t_token;
 
 typedef struct s_redirec
 {
@@ -92,6 +92,7 @@ typedef struct s_shell
 	int			in_herdoc;
 	char		cwd[1024];
 }	t_shell;
+
 int		is_valid_echo_option(char *option);
 void	print_final_command(t_command *command);
 void	split_cmds(t_shell	*shell);

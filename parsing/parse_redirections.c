@@ -62,50 +62,6 @@ t_token *remove_redirections(t_token *tokens)
 	return (new);
 }
 
-// void	remove_all_redir(t_token **token)
-// {
-// 	t_token	*tmp;
-// 	t_token	*red;
-// 	t_token	*file;
-
-// 	tmp = *token;
-// 	if (is_redirection(tmp))
-// 	{
-// 		red = tmp;
-// 		file = tmp->next;
-// 		if (file && (file->type == STR || file->type == VAR))
-// 			*token = file->next;
-// 		else if (file && file->type == _SPACE)
-// 		{
-// 			file = file->next;
-// 			if (file && (file->type == STR || file->type == VAR))
-// 				*token = file->next;
-// 			else
-// 				*token = tmp->next;
-// 		}
-// 		else
-// 			*token = tmp->next;
-// 	}
-// 	while (tmp && tmp->next)
-// 	{
-// 		red = tmp->next;
-// 		file = red->next;
-// 		if (is_redirection(red) && file
-// 			&& (file->type == STR || file->type == VAR))
-// 			tmp->next = file->next;
-// 		else if (is_redirection(red) && file && file->type == _SPACE)
-// 		{
-// 			file = file->next;
-// 			if (file && (file->type == STR || file->type == VAR))
-// 				tmp->next = file->next;
-// 			else
-// 				tmp = tmp->next;
-// 		}
-// 		else
-// 			tmp = tmp->next;
-// 	}
-// }
-
 void	append_redirec(t_redirec **head, char *file, int type, int expand_herdoc)
 {
 	t_redirec	*tmp;
@@ -115,7 +71,7 @@ void	append_redirec(t_redirec **head, char *file, int type, int expand_herdoc)
 	new = malloc(sizeof(t_redirec));
 	if (!new)
 		return ;
-	new->file = file;
+	new->file = ft_strdup(file);
 	new->type = type;
 	new->expand_herdoc = expand_herdoc;
 	new->next = NULL;
@@ -134,10 +90,11 @@ char	**get_file_name(t_token **tokens)
 	char   *file_name;
 	char 	*expand_herdoc;
 	char  	**args;
+	char 	*tmp_str;
 
-	expand_herdoc = "expand";
-	file_name = "";
-	args = malloc(sizeof(char *) * 2);
+	expand_herdoc = ft_strdup("expand");
+	file_name = ft_strdup("");
+	args = malloc(sizeof(char *) * 3);
 	if (!args)
 		return (NULL);
 	if ((*tokens)->type == _SPACE)
@@ -149,11 +106,16 @@ char	**get_file_name(t_token **tokens)
 		if ((*tokens)->type == DQUOTES || (*tokens)->type == SQUOTES)
 			expand_herdoc = NULL;
 		if (((*tokens)->type != DQUOTES && (*tokens)->type != SQUOTES) || ((*tokens)->type == _SPACE && (*tokens)->state != DFAULT))
+		{
+			tmp_str = file_name;
 			file_name = ft_strjoin(file_name, (*tokens)->content);
+			free(tmp_str);
+		}
 		*tokens = (*tokens)->next;
 	}
 	args[0] = file_name;
 	args[1] = expand_herdoc;
+	args[2] = NULL;
 	return (args);
 }
 
@@ -164,6 +126,7 @@ void set_redirections(t_token *tokens, t_redirec **redirs, t_redirec **herdocs)
 	char **args;
 
 	expand_herdoc = 1;
+	args = NULL;
 	while (tokens)
 	{
 		if (tokens->type == ALRED && tokens->next)
@@ -180,8 +143,11 @@ void set_redirections(t_token *tokens, t_redirec **redirs, t_redirec **herdocs)
 			file_name = args[0];
 			append_redirec(redirs, file_name, tokens->type, expand_herdoc);		
 		}
+		ft_free_2d(args);
+		args = NULL;
 		tokens = tokens->next;
 	}
+	// args = NULL;
 }
 
 
