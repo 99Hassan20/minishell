@@ -15,7 +15,6 @@ void free_tokens(t_token *tokens)
     t_token *tmp;
     static int i = 0;
 
-    printf("%d free_tokens\n", i);
     while (tokens)
     {
         tmp = tokens->next;

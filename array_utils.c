@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   array_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 17:55:58 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/13 19:36:15 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/30 13:40:45 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	**append_to_array(char **arr, char *value)
 	int		i;
 
 	i = 0;
-	new = malloc(sizeof(char *) * (array_size(arr) + 2));
+	new = ft_malloc(sizeof(char *) * (array_size(arr) + 2));
 	if (!new)
 		return (NULL);
 	while (arr && arr[i])

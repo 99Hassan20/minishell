@@ -6,12 +6,31 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/25 18:31:47 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/30 15:38:59 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+
+
+void free_redirections(t_redirec **redirections)
+{
+	t_redirec *tmp;
+	t_redirec *next;
+
+	if (!redirections)
+		return ;
+	tmp = *redirections;
+	while (tmp)
+	{
+		next = tmp->next;
+		free(tmp->file);
+		free(tmp);
+		tmp = next;
+	}
+	*redirections = NULL;
+}
 void	signal_handler(int sig)
 {
 	if (sig == SIGINT)
@@ -33,15 +52,12 @@ void	signal_handler(int sig)
 	}
 }
 
-void free_commands(t_token **commands, int size)
+void free_commands(t_token **commands, int cmd_count)
 {
 	int i = 0;
-	if (!commands)
-		return ;
-	while (i < size)
+	while (i < cmd_count)
 	{
-		if (commands[i])
-			free_tokens(commands[i]);
+		free_tokens(commands[i]);
 		i++;
 	}
 	free(commands);
@@ -101,6 +117,7 @@ int	parse_line(t_shell *shell, char *line)
 	}
 	add_history(trimmed);
 	lexer(shell, trimmed);
+	free(trimmed);
 	if (has_error(shell))
 	{
 		free(trimmed);
@@ -109,15 +126,16 @@ int	parse_line(t_shell *shell, char *line)
 	}
 	expand(shell);
 	// print_tokens(shell->tokens);
+	// printf("-------------------------------------------------------------start\n");
 	split_cmds(shell);
+	// printf("-------------------------------------------------------------end\n");
 	get_ready_commands(shell);
-	int i = 0;
-	while (i < shell->cmd_count)
-	{
-		print_final_command(&shell->ready_commands[i]);
-		i++;
-	}
-	free(trimmed);
+	// int i = 0;
+	// while (i < shell->cmd_count)
+	// {
+	// 	print_final_command(&shell->ready_commands[i]);
+	// 	i++;
+	// }
 	return (1);
 }
 
@@ -136,13 +154,13 @@ void	shell_loop(t_shell *shell, char *prompt)
 		if (!line)
 		{
 			free(line);
-			free_tokens(shell->tokens);
-			free_commands(shell->commands, shell->cmd_count);
+			// free_tokens(shell->tokens);
+			// free_commands(shell->commands, shell->cmd_count);
 			exit(g_exit_status);
 		}
 		if (!parse_line(shell, line))
 		{
-			free_tokens(shell->tokens);
+			// free_tokens(shell->tokens);
 			shell->tokens = NULL;
 			// free_commands(shell);
 			continue ;
@@ -150,8 +168,25 @@ void	shell_loop(t_shell *shell, char *prompt)
 		// execline(shell, env_to_array(shell->env));
 		dup2(std_in, 0);
 		free_tokens(shell->tokens);
-		// free_commands(shell->commands, shell->cmd_count);
+		// int i = 0;
+		// while (i < shell->cmd_count)
+		// {
+		// 	free_redirections(&shell->ready_commands[i].redirections);
+		// 	free_redirections(&shell->ready_commands[i].herdocs);
+		// 	i++;
+		// }
+		free_commands(shell->commands, shell->cmd_count);
+		int j = 0;
+		while (j < shell->cmd_count)
+		{
+			ft_free_2d(shell->ready_commands[j].args);
+			free_redirections(&shell->ready_commands[j].redirections);
+			free_redirections(&shell->ready_commands[j].herdocs);
+			j++;
+		}
 		shell->tokens = NULL;
+		shell->commands = NULL;
+		system("leaks minishell -q");
 	}
 }
 
@@ -169,6 +204,7 @@ int	main(int __attribute__((unused))argc, char __attribute__((unused))**argv, ch
 	shell.tokens = NULL;
 	shell.commands = NULL;
 	shell.ready_commands = NULL;
+	shell.cmd_table = NULL;
 	rl_catch_signals = 0;
 	env_to_list(&shell, env);
 	shell_loop(&shell, prompt);

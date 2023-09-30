@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 15:10:06 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/15 08:48:52 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/30 13:39:33 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_token	*new_token(t_tokentype type, char *content, int length, t_state state)
 {
 	t_token	*new;
 
-	new = malloc(sizeof(t_token));
+	new = ft_malloc(sizeof(t_token));
 	if (!new)
 		return (NULL);
 	new->content = ft_strdup(content);

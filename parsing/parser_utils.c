@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:00:56 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/15 08:48:52 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/30 15:45:51 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_token	*copy_token(t_token *token)
 {
 	t_token	*copy;
 
-	copy = malloc(sizeof(t_token));
+	copy = ft_malloc(sizeof(t_token));
 	if (!copy)
 		return (NULL);
 	copy->content = ft_strdup(token->content);
@@ -70,7 +70,7 @@ void	split_cmds(t_shell	*shell)
 	int		i;
 
 	count_pipes(shell);
-	shell->commands = malloc(sizeof(t_token *) * shell->cmd_count);
+	shell->commands = ft_malloc(sizeof(t_token *) * shell->cmd_count);
 	if (!shell->commands)
 		return ;
 	tmp = shell->tokens;
@@ -78,6 +78,7 @@ void	split_cmds(t_shell	*shell)
 	while (i < shell->cmd_count)
 	{
 		shell->commands[i] = NULL;
+	printf("-------start---------\n");
 		while (tmp && tmp->type != PIPE)
 		{
 			append_token(&shell->commands[i], copy_token(tmp));
@@ -85,6 +86,7 @@ void	split_cmds(t_shell	*shell)
 		}
 		if (tmp && tmp->type == PIPE && tmp->next)
 			tmp = tmp->next;
+	printf("-------end---------\n");
 		i++;
 	}
 }

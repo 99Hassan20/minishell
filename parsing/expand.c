@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 15:09:38 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/25 10:07:38 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/30 14:11:45 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,5 +138,6 @@ void	expand(t_shell *shell)
 		}
 		tmp = tmp->next;
 	}
+	free_tokens(shell->tokens);
 	shell->tokens = new;
 }

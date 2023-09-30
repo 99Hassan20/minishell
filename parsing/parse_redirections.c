@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 17:24:00 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/25 18:25:26 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/30 13:39:33 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	append_redirec(t_redirec **head, char *file, int type, int expand_herdoc)
 	t_redirec	*new;
 
 	tmp = *head;
-	new = malloc(sizeof(t_redirec));
+	new = ft_malloc(sizeof(t_redirec));
 	if (!new)
 		return ;
 	new->file = ft_strdup(file);
@@ -94,7 +94,7 @@ char	**get_file_name(t_token **tokens)
 
 	expand_herdoc = ft_strdup("expand");
 	file_name = ft_strdup("");
-	args = malloc(sizeof(char *) * 3);
+	args = ft_malloc(sizeof(char *) * 3);
 	if (!args)
 		return (NULL);
 	if ((*tokens)->type == _SPACE)
@@ -182,7 +182,7 @@ void	get_ready_commands(t_shell *shell)
 
 	if (shell->cmd_count == 0)
 		return ;
-	shell->ready_commands = malloc(sizeof(t_command) * shell->cmd_count);
+	shell->ready_commands = ft_malloc(sizeof(t_command) * shell->cmd_count);
 	if (!shell->ready_commands)
 		return ;
 	i = 0;
