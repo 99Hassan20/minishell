@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 17:24:00 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/30 13:39:33 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/30 18:32:08 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ t_token *remove_redirections(t_token *tokens)
 			tmp = tmp->next;
 		}
 	}
-	// print_tokens(new);
 	return (new);
 }
 
@@ -91,6 +90,7 @@ char	**get_file_name(t_token **tokens)
 	char 	*expand_herdoc;
 	char  	**args;
 	char 	*tmp_str;
+	t_token *to_delete;
 
 	expand_herdoc = ft_strdup("expand");
 	file_name = ft_strdup("");
@@ -98,7 +98,12 @@ char	**get_file_name(t_token **tokens)
 	if (!args)
 		return (NULL);
 	if ((*tokens)->type == _SPACE)
+	{
+		to_delete = *tokens;
 		(*tokens) = (*tokens)->next;
+		free(to_delete->content);
+		free(to_delete);
+	}
 	while ((*tokens) && !is_redirection(*tokens))
 	{
 		if ((*tokens)->type == _SPACE && (*tokens)->state == DFAULT)
@@ -111,7 +116,10 @@ char	**get_file_name(t_token **tokens)
 			file_name = ft_strjoin(file_name, (*tokens)->content);
 			free(tmp_str);
 		}
+		to_delete = *tokens;
 		*tokens = (*tokens)->next;
+		free(to_delete->content);
+		free(to_delete);
 	}
 	args[0] = file_name;
 	args[1] = expand_herdoc;
@@ -124,29 +132,32 @@ void set_redirections(t_token *tokens, t_redirec **redirs, t_redirec **herdocs)
 	char *file_name;
 	int	expand_herdoc;
 	char **args;
+	t_token *tmp;
 
 	expand_herdoc = 1;
 	args = NULL;
-	while (tokens)
+	tmp = tokens;
+	while (tmp)
 	{
-		if (tokens->type == ALRED && tokens->next)
+		if (tmp->type == ALRED && tmp->next)
 		{
-			args = get_file_name(&tokens->next);
+			args = get_file_name(&tmp->next);
 			file_name = args[0];
 			if (!args[1])
 				expand_herdoc = 0;
-			append_redirec(herdocs, file_name, tokens->type, expand_herdoc);
+			append_redirec(herdocs, file_name, tmp->type, expand_herdoc);
 		}
-		else if (is_redirection(tokens) && tokens->next)
+		else if (is_redirection(tmp) && tmp->next)
 		{
-			args = get_file_name(&tokens->next);
+			args = get_file_name(&tmp->next);
 			file_name = args[0];
-			append_redirec(redirs, file_name, tokens->type, expand_herdoc);		
+			append_redirec(redirs, file_name, tmp->type, expand_herdoc);		
 		}
 		ft_free_2d(args);
 		args = NULL;
-		tokens = tokens->next;
+		tmp = tmp->next;
 	}
+	print_tokens(tokens);
 	// args = NULL;
 }
 
@@ -159,12 +170,14 @@ t_command	get_final_command(t_token *cmd)
 
 	// nospace = remove_space_from_tokens(cmd);
 	// tmp = nospace;
+	print_tokens(cmd);
 	cpy = copy_tokens(cmd);
 	if (cmd && cmd->type == _SPACE)
 		cmd = cmd->next;
 	command.redirections = NULL;
 	command.herdocs = NULL;
 	set_redirections(cmd, &command.redirections, &command.herdocs);
+	print_tokens(cmd);
 	noredir = remove_redirections(cpy);
 	free_tokens(cpy);
 	command.args = get_command_table(noredir);
@@ -173,13 +186,25 @@ t_command	get_final_command(t_token *cmd)
 		command.cmd = command.args[0];
 	else
 		command.cmd = NULL;
+	print_tokens(cmd);
 	return (command);
 } 
+
+void free_array_of_lists(t_shell *shell)
+{
+	int	i = 0;
+	while (i < shell->cmd_count)
+	{
+		free_tokens(shell->commands[i]);
+		i++;
+	}
+	free(shell->commands);
+}
 
 void	get_ready_commands(t_shell *shell)
 {
 	int	i;
-
+	// printf("--------start2----------\n");
 	if (shell->cmd_count == 0)
 		return ;
 	shell->ready_commands = ft_malloc(sizeof(t_command) * shell->cmd_count);
@@ -191,4 +216,6 @@ void	get_ready_commands(t_shell *shell)
 		shell->ready_commands[i] = get_final_command(shell->commands[i]);
 		i++;
 	}
+	// free_array_of_lists(shell);
+	// printf("--------end2----------\n");
 }

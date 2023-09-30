@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:00:56 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/30 15:45:51 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/30 17:47:27 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void	split_cmds(t_shell	*shell)
 {
 	t_token	*tmp;
 	int		i;
+	t_token *cpy;
 
 	count_pipes(shell);
 	shell->commands = ft_malloc(sizeof(t_token *) * shell->cmd_count);
@@ -78,15 +79,22 @@ void	split_cmds(t_shell	*shell)
 	while (i < shell->cmd_count)
 	{
 		shell->commands[i] = NULL;
-	printf("-------start---------\n");
 		while (tmp && tmp->type != PIPE)
 		{
-			append_token(&shell->commands[i], copy_token(tmp));
+			cpy = copy_token(tmp);
+			printf(">>>>>> <%p>    <%p> <<<<<<<\n", tmp, cpy);
+			append_token(&shell->commands[i], cpy);
 			tmp = tmp->next;
 		}
 		if (tmp && tmp->type == PIPE && tmp->next)
 			tmp = tmp->next;
-	printf("-------end---------\n");
 		i++;
 	}
+		t_token *tmp2 = shell->commands[0];
+		while (tmp2)
+		{
+			printf("%p ", tmp2);
+			tmp2 = tmp2->next;
+		}
+		printf("\n");
 }

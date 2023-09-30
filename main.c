@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/30 15:38:59 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/30 17:27:41 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,6 @@ int	parse_line(t_shell *shell, char *line)
 	}
 	add_history(trimmed);
 	lexer(shell, trimmed);
-	free(trimmed);
 	if (has_error(shell))
 	{
 		free(trimmed);
@@ -126,16 +125,16 @@ int	parse_line(t_shell *shell, char *line)
 	}
 	expand(shell);
 	// print_tokens(shell->tokens);
-	// printf("-------------------------------------------------------------start\n");
+
 	split_cmds(shell);
-	// printf("-------------------------------------------------------------end\n");
 	get_ready_commands(shell);
-	// int i = 0;
-	// while (i < shell->cmd_count)
-	// {
-	// 	print_final_command(&shell->ready_commands[i]);
-	// 	i++;
-	// }
+	int i = 0;
+	while (i < shell->cmd_count)
+	{
+		print_final_command(&shell->ready_commands[i]);
+		i++;
+	}
+	free(trimmed);
 	return (1);
 }
 
@@ -160,21 +159,26 @@ void	shell_loop(t_shell *shell, char *prompt)
 		}
 		if (!parse_line(shell, line))
 		{
-			// free_tokens(shell->tokens);
-			shell->tokens = NULL;
+			free_tokens(shell->tokens);	
+			// free_commands(shell->commands, shell->cmd_count);
+			// int j = 0;
+			// while (j < shell->cmd_count)
+			// {
+			// 	ft_free_2d(shell->ready_commands[j].args);
+			// 	free_redirections(&shell->ready_commands[j].redirections);
+			// 	free_redirections(&shell->ready_commands[j].herdocs);
+			// 	j++;
+			// }
+			// free(shell->ready_commands);
+			// shell->tokens = NULL;
+			// shell->commands = NULL;
+			// shell->ready_commands = NULL;
 			// free_commands(shell);
 			continue ;
 		}
 		// execline(shell, env_to_array(shell->env));
 		dup2(std_in, 0);
 		free_tokens(shell->tokens);
-		// int i = 0;
-		// while (i < shell->cmd_count)
-		// {
-		// 	free_redirections(&shell->ready_commands[i].redirections);
-		// 	free_redirections(&shell->ready_commands[i].herdocs);
-		// 	i++;
-		// }
 		free_commands(shell->commands, shell->cmd_count);
 		int j = 0;
 		while (j < shell->cmd_count)
@@ -184,8 +188,10 @@ void	shell_loop(t_shell *shell, char *prompt)
 			free_redirections(&shell->ready_commands[j].herdocs);
 			j++;
 		}
+		free(shell->ready_commands);
 		shell->tokens = NULL;
 		shell->commands = NULL;
+		shell->ready_commands = NULL;
 		system("leaks minishell -q");
 	}
 }

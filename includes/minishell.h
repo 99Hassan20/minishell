@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/30 13:41:24 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/30 17:57:28 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ char	*get_var(char *s, t_shell *shell);
 
 //*free
 void	free_tokens(t_token *token);
-
+void	free_token(t_token *token);
 
 
 
