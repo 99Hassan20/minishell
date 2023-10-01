@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:00:56 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/30 17:47:27 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 08:35:14 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_token	*copy_token(t_token *token)
 {
 	t_token	*copy;
 
-	copy = ft_malloc(sizeof(t_token));
+	copy = malloc(sizeof(t_token));
 	if (!copy)
 		return (NULL);
 	copy->content = ft_strdup(token->content);
@@ -71,7 +71,7 @@ void	split_cmds(t_shell	*shell)
 	t_token *cpy;
 
 	count_pipes(shell);
-	shell->commands = ft_malloc(sizeof(t_token *) * shell->cmd_count);
+	shell->commands = malloc(sizeof(t_token *) * shell->cmd_count);
 	if (!shell->commands)
 		return ;
 	tmp = shell->tokens;
@@ -82,7 +82,6 @@ void	split_cmds(t_shell	*shell)
 		while (tmp && tmp->type != PIPE)
 		{
 			cpy = copy_token(tmp);
-			printf(">>>>>> <%p>    <%p> <<<<<<<\n", tmp, cpy);
 			append_token(&shell->commands[i], cpy);
 			tmp = tmp->next;
 		}
@@ -90,11 +89,4 @@ void	split_cmds(t_shell	*shell)
 			tmp = tmp->next;
 		i++;
 	}
-		t_token *tmp2 = shell->commands[0];
-		while (tmp2)
-		{
-			printf("%p ", tmp2);
-			tmp2 = tmp2->next;
-		}
-		printf("\n");
 }

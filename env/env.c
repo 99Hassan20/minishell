@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 17:34:56 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/30 13:39:39 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 08:31:28 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	**env_to_array(t_env *env)
 		i++;
 		tmp = tmp->next;
 	}
-	env_array = ft_malloc(sizeof(char *) * (i + 1));
+	env_array = malloc(sizeof(char *) * (i + 1));
 	i = 0;
 	while (env)
 	{

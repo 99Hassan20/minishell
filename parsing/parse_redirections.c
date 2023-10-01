@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 17:24:00 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/30 18:32:08 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 08:33:47 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	append_redirec(t_redirec **head, char *file, int type, int expand_herdoc)
 	t_redirec	*new;
 
 	tmp = *head;
-	new = ft_malloc(sizeof(t_redirec));
+	new = malloc(sizeof(t_redirec));
 	if (!new)
 		return ;
 	new->file = ft_strdup(file);
@@ -94,7 +94,7 @@ char	**get_file_name(t_token **tokens)
 
 	expand_herdoc = ft_strdup("expand");
 	file_name = ft_strdup("");
-	args = ft_malloc(sizeof(char *) * 3);
+	args = malloc(sizeof(char *) * 3);
 	if (!args)
 		return (NULL);
 	if ((*tokens)->type == _SPACE)
@@ -157,7 +157,7 @@ void set_redirections(t_token *tokens, t_redirec **redirs, t_redirec **herdocs)
 		args = NULL;
 		tmp = tmp->next;
 	}
-	print_tokens(tokens);
+	// print_tokens(tokens);
 	// args = NULL;
 }
 
@@ -170,14 +170,14 @@ t_command	get_final_command(t_token *cmd)
 
 	// nospace = remove_space_from_tokens(cmd);
 	// tmp = nospace;
-	print_tokens(cmd);
+	// print_tokens(cmd);
 	cpy = copy_tokens(cmd);
 	if (cmd && cmd->type == _SPACE)
 		cmd = cmd->next;
 	command.redirections = NULL;
 	command.herdocs = NULL;
 	set_redirections(cmd, &command.redirections, &command.herdocs);
-	print_tokens(cmd);
+	// print_tokens(cmd);
 	noredir = remove_redirections(cpy);
 	free_tokens(cpy);
 	command.args = get_command_table(noredir);
@@ -186,7 +186,7 @@ t_command	get_final_command(t_token *cmd)
 		command.cmd = command.args[0];
 	else
 		command.cmd = NULL;
-	print_tokens(cmd);
+	// print_tokens(cmd);
 	return (command);
 } 
 
@@ -207,7 +207,7 @@ void	get_ready_commands(t_shell *shell)
 	// printf("--------start2----------\n");
 	if (shell->cmd_count == 0)
 		return ;
-	shell->ready_commands = ft_malloc(sizeof(t_command) * shell->cmd_count);
+	shell->ready_commands = malloc(sizeof(t_command) * shell->cmd_count);
 	if (!shell->ready_commands)
 		return ;
 	i = 0;

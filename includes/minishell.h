@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/30 17:57:28 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 08:31:28 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,6 @@ void	free_token(t_token *token);
  * @brief 
  * 
  */
-void *ft_malloc(size_t size);
+void *malloc(size_t size);
 
 #endif

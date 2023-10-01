@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/30 17:27:41 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 08:42:18 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,16 +124,8 @@ int	parse_line(t_shell *shell, char *line)
 		return (0);
 	}
 	expand(shell);
-	// print_tokens(shell->tokens);
-
 	split_cmds(shell);
 	get_ready_commands(shell);
-	int i = 0;
-	while (i < shell->cmd_count)
-	{
-		print_final_command(&shell->ready_commands[i]);
-		i++;
-	}
 	free(trimmed);
 	return (1);
 }
@@ -144,36 +136,18 @@ void	shell_loop(t_shell *shell, char *prompt)
 	int std_in;
 
 	std_in = dup(0);
-	// int		fd = 0;
 	while (1)
 	{
 		getcwd(shell->cwd, sizeof(shell->cwd));
-		// set_env(&shell->env, "PWD", shell->cwd, 1);
 		line = readline(prompt);
 		if (!line)
 		{
 			free(line);
-			// free_tokens(shell->tokens);
-			// free_commands(shell->commands, shell->cmd_count);
 			exit(g_exit_status);
 		}
 		if (!parse_line(shell, line))
 		{
 			free_tokens(shell->tokens);	
-			// free_commands(shell->commands, shell->cmd_count);
-			// int j = 0;
-			// while (j < shell->cmd_count)
-			// {
-			// 	ft_free_2d(shell->ready_commands[j].args);
-			// 	free_redirections(&shell->ready_commands[j].redirections);
-			// 	free_redirections(&shell->ready_commands[j].herdocs);
-			// 	j++;
-			// }
-			// free(shell->ready_commands);
-			// shell->tokens = NULL;
-			// shell->commands = NULL;
-			// shell->ready_commands = NULL;
-			// free_commands(shell);
 			continue ;
 		}
 		// execline(shell, env_to_array(shell->env));
