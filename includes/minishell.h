@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/01 08:31:28 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 15:14:52 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include <sys/wait.h>
 
 int	g_exit_status;
-int rl_catch_signals;
+
 typedef enum e_state
 {
 	INDQOUTES,
@@ -60,7 +60,7 @@ typedef struct s_token
 	int				length;
 	t_state			state;
 	struct s_token	*next;
-} t_token;
+}	t_token;
 
 typedef struct s_redirec
 {
@@ -99,6 +99,7 @@ void	split_cmds(t_shell	*shell);
 void	execute_builtins2(t_shell *shell, t_command command);
 int		check_valid_variable(char *var);
 int		is_valid_exit_status(char *status);
+
 //prsing utilities
 int		is_char(int c, t_shell *shell);
 int		is_delim(int c, t_shell *shell);
@@ -106,7 +107,9 @@ char	*get_word(char *s, t_shell *shell);
 char	*get_var(char *s, t_shell *shell);
 void	set_value(char **w, t_token **token, char *value, t_tokentype tt);
 void	lexer(t_shell *shell, char *s);
-void	expand(t_shell *shell);
+void	expand(t_shell *shell, int to_expand);
+void	expand_var(t_shell *shell, t_token *tmp, t_token **new);
+int		is_expandable(t_token *tmp, int to_expand);
 int		is_redirection(t_token *token);
 t_token	*remove_space_from_tokens(t_token *tokens);
 
@@ -150,10 +153,10 @@ void	ft_unset(t_shell *shell, char **command);
 void	ft_exit(t_shell *shell, char **command);
 
 //*excution
-char	*getCommandPath(t_env *env, const char* command);
+char	*getCommandPath(t_env *env, const char *command);
 char	***to3d_arr(t_shell *shell);
 char	**ft_splitt(char const *s, char c);
-void 	execline(t_shell *shell, char **env);
+void	execline(t_shell *shell, char **env);
 void	execute_builtins_new(t_shell *shell, char **command);
 int		is_builtin(char *cmd);
 int		is_child_builtin(char *cmd);
@@ -164,13 +167,7 @@ char	*get_var(char *s, t_shell *shell);
 //*free
 void	free_tokens(t_token *token);
 void	free_token(t_token *token);
-
-
-
-/**
- * @brief 
- * 
- */
-void *malloc(size_t size);
-
+void	free_redirections(t_redirec **redirections);
+void	free_commands(t_token **commands, int cmd_count);
+void	full_free(t_shell *shell);
 #endif

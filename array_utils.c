@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 17:55:58 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/01 08:31:27 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 13:23:33 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,3 @@ void	print_cmd_table(char **args)
 	}
 	printf("\n");
 }
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (shell->cmd_table[i])
-// 	{
-// 		printf("[%s]", shell->cmd_table[i]);
-// 		i++;
-// 	}
-// 	printf("\n");
-// }
