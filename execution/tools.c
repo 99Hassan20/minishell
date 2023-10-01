@@ -5,129 +5,25 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/02 09:37:32 by abdelmajid        #+#    #+#             */
-/*   Updated: 2023/09/30 13:41:00 by hoigag           ###   ########.fr       */
+/*   Created: 2023/07/02 11:38:25 by abdel-ou          #+#    #+#             */
+/*   Updated: 2023/10/01 18:58:15 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	ft_word_count(const char *str, char c)
+char	***to3d_arr(t_shell *shell)
 {
-	int	i;
-	int	count;
+	char		***to_3d;
+	int			i;
 
-	i = 0;
-	count = 0;
-	while (str[i])
+	i = 0; 
+	to_3d = malloc(sizeof(char **) * (shell->cmd_count + 1));
+	while (i < shell->cmd_count)
 	{
-		if (str[i] == c)
-			i++;
-		else
-		{
-			count++;
-			while (str[i] != c && str[i])
-				i++;
-		}
-	}
-	return (count);
-}
-
-static char	*ft_print_line(const char *s1, int *index, char c)
-{
-	char	*copy;
-	size_t	word_len;
-	int		i;
-
-	word_len = 0;
-	while (s1[*index] == c)
-		(*index)++;
-	i = *index;
-	while (s1[i] && s1[i] != c)
-	{
-		word_len++;
+		to_3d[i] = shell->ready_commands[i].args;
 		i++;
 	}
-	copy = malloc(sizeof(char) * (word_len + 1));
-	if (!copy)
-		return (NULL);
-	i = 0;
-	while (s1[*index] && s1[*index] != c)
-		copy[i++] = s1[(*index)++];
-	copy[i] = '\0';
-	return (copy);
-}
-
-static char	**free_err(char **tab)
-{
-	unsigned int	i;
-
-	i = 0;
-	while (tab[i])
-		free(tab[i++]);
-	free(tab);
-	return (NULL);
-}
-
-char	**ft_splitt(char const *s, char c)
-{
-	char	**arr;
-	int		index;
-	int		word_count;
-	int		i;
-
-	index = 0;
-	i = 0;
-	if (!s)
-		return (NULL);
-	word_count = ft_word_count(s, c);
-	arr = malloc(sizeof(char *) * (word_count + 1));
-	if (!arr)
-		return (NULL);
-	while (i < word_count)
-	{
-		arr[i] = ft_print_line(s, &index, c);
-		if (!arr[i])
-			return (free_err(arr));
-		i++;
-	}
-	arr[i] = 0;
-	return (arr);
-}
-
-// char ***to3d_arr(t_shell *shell)
-// {
-//     char ***to_3d;
-//     int i = 0;
-//     char **pip_splite;
-//     pip_splite = ft_splitt(str, '|');
-//     while (pip_splite[i])
-//         i++;
-    
-//     to_3d = malloc(sizeof(char **) * (i + 1) );
-//     i = 0;
-//     while (pip_splite[i])
-//     {
-//         to_3d[i] =  ft_splitt(pip_splite[i], ' ');
-//         i++;
-//     }
-//     to_3d[i] = NULL;
-//     return to_3d;
-    
-// }
-char ***to3d_arr(t_shell *shell)
-{
-    char ***to_3d;
-    int i = 0;
-    // char **pip_splite;
-    to_3d = malloc(sizeof(char **) * (shell->cmd_count + 1) );
-    i = 0;
-    while (i < shell->cmd_count)
-    {
-        to_3d[i] = shell->ready_commands[i].args;
-        i++;
-    }
-    to_3d[i] = NULL;
-    return to_3d;
-    
+	to_3d[i] = NULL;
+	return (to_3d);
 }

@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/01 17:56:26 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 20:14:15 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ void	signal_handler(int sig)
 			g_exit_status = 1;
 		}
 	}
+	else if (sig == SIGQUIT)
+		return ;
 }
 
 int	parse_line(t_shell *shell, char *line)
@@ -54,7 +56,7 @@ int	parse_line(t_shell *shell, char *line)
 	expand(shell, 1);
 	split_cmds(shell);
 	get_ready_commands(shell);
-	print_all_ready_commands(shell);
+	// print_all_ready_commands(shell);
 	free(trimmed);
 	return (1);
 }
@@ -79,10 +81,10 @@ void	shell_loop(t_shell *shell, char *prompt)
 			free_tokens(shell->tokens);
 			continue ;
 		}
-		// execline(shell, env_to_array(shell->env));
+		execline(shell, env_to_array(shell->env));
 		dup2(std_in, 0);
 		full_free(shell);
-		system("leaks minishell -q");
+		// system("leaks minishell -q");
 	}
 }
 
@@ -94,7 +96,8 @@ int	main(int argc, char **argv, char *env[])
 	(void)argc;
 	(void)argv;
 	signal(SIGINT, signal_handler);
-	sigignore(SIGQUIT);
+	signal(SIGQUIT, signal_handler);
+	// sigignore(SIGQUIT);
 	prompt = "minishell $> ";
 	shell.env = NULL;
 	shell.tokens = NULL;
