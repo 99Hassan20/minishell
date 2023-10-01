@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/25 17:25:10 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/09/30 17:09:02 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,13 @@
 
 int	g_exit_status;
 int rl_catch_signals;
+
+typedef struct file_dis
+{
+	int		fdd;
+	int		fd[2];
+} file_dis ;
+
 typedef enum e_state
 {
 	INDQOUTES,
@@ -148,14 +155,23 @@ void	ft_unset(t_shell *shell, char **command);
 void	ft_exit(t_shell *shell, char **command);
 
 //*excution
-char	*getCommandPath(t_env *env, const char* command);
-char ***to3d_arr(t_shell *shell);
-char	**ft_splitt(char const *s, char c);
 void 	execline(t_shell *shell, char **env);
-void execute_builtins_new(t_shell *shell, char **command);
-int is_builtin(char *cmd);
-int is_child_builtin(char *cmd);
-char *get_full_path(t_env *env, char **tokens);
+int		is_builtin(char *cmd);
+int		is_child_builtin(char *cmd);
+char	*get_full_path(t_env *env, char **tokens);
 void	herdocs(t_shell *shell, int i);
 char	*get_var(char *s, t_shell *shell);
+void	error_log(char *file_name);
+void ft_rred(t_shell *shell, int i);
+void ft_arred(t_shell *shell, int i);
+void ft_lred(t_shell *shell, int i);
+void	herdocs(t_shell *shell, int i);
+void	redirection(t_shell *shell , int i);
+void ft_print_line_fd(t_shell *shell, int fd, char *str);
+void error_log(char *file_name);
+int	is_relative_path(char *file);
+void	execute_parent_builtin(t_shell *shell, char **cmd);
+int ft_check_dir(t_shell *shell, int i);
+int run_redi_whiout_cmd(t_shell *shell, int *i);
+int ft_check_builtins_run(t_shell *shell, int *i);
 #endif

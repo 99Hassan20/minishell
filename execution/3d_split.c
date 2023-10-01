@@ -3,344 +3,90 @@
 /*                                                        :::      ::::::::   */
 /*   3d_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/10 13:34:01 by abdelmajid        #+#    #+#             */
-/*   Updated: 2023/09/25 19:17:49 by hoigag           ###   ########.fr       */
+/*   Created: 2023/08/06 13:21:28 by abdel-ou          #+#    #+#             */
+/*   Updated: 2023/10/01 08:59:34 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void error_log(char *file_name)
+void	if_chaild(t_shell *shell, file_dis *file, int *i, char	**env)
 {
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(file_name, 2);
-	if (access(file_name, F_OK) != 0)
-		ft_putstr_fd(": No such file or directory\n", 2);
+	char	*executable;
+
+	executable = get_full_path(shell->env, shell->ready_commands[*i].args);
+	if (file->fd[0])
+		close(file->fd[0]);
+	dup2(file->fdd, 0);
+	if ((*i) + 1 < shell->cmd_count)
+	{
+		dup2(file->fd[1], 1);
+		close(file->fd[1]);
+	}
+	if (shell->ready_commands[*i].herdocs && shell->ready_commands[*i].cmd)
+		herdocs(shell, *i);
+	if (shell->ready_commands[*i].redirections)
+		redirection(shell, *i);
+	if (!is_child_builtin(shell->ready_commands[*i].cmd))
+		execve(executable, shell->ready_commands[*i].args, env);
+	if (is_child_builtin(shell->ready_commands[*i].cmd))
+		execute_builtins(shell, shell->ready_commands[*i].args);
+	exit(g_exit_status);
+}
+
+void	wait_pid(t_shell *shell, int *i, pid_t pid, file_dis *file)
+{
+	if ((*i) + 1 == shell->cmd_count)
+		waitpid(pid, &g_exit_status, 0);
+	if (file->fdd)
+		close(file->fdd);
+	if ((*i) + 1 < shell->cmd_count)
+	{
+		file->fdd = dup(file->fd[0]);
+		close(file->fd[1]);
+		close(file->fd[0]);
+	}
+}
+
+void	ft_pipes(t_shell *shell, file_dis *file, int *i, char **env)
+{
+	pid_t	pid;
+
+	if ((*i + 1) < shell->cmd_count)
+		pipe(file->fd);
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		exit(1);
+	}
+	else if (pid == 0)
+		if_chaild(shell, file, i, env);
 	else
-		ft_putstr_fd(": Permission denied\n", 2);
-		
-	
-}
-
-int	is_relative_path(char *file)
-{
-	if (!file)
-		return (0);
-	if ((file[0] == '.' && file[1] == '/')
-		|| (file[0] == '.' && file[1] == '.' && file[1] == '/')
-		|| file[0] == '/')
-	{
-		if (access(file, F_OK) != 0)
-		{
-			printf("minishell: %s: No such file or directory\n", file);
-			g_exit_status = 127;
-		}
-		else if (access(file, X_OK) != 0)
-		{
-			printf("minishell: %s: Permission denied\n", file);
-			g_exit_status = 126;
-		}
-		return (0);
-	}
-	return (1);
-}
-
-void	execute_parent_builtin(t_shell *shell, char **cmd)
-{
-	if (ft_strcmp(cmd[0], "cd") == 0 
-		|| ((ft_strcmp(cmd[0], "export") == 0) && cmd[1])
-		|| ((ft_strcmp(cmd[0], "unset") == 0) && cmd[1])
-		|| ((ft_strcmp(cmd[0], "exit") == 0) && cmd[1]))
-		execute_builtins(shell, cmd);
-}
-
-void	redirection(t_shell *shell , int i)
-{
-	
-		if (shell->ready_commands[i].redirections->type == RRED)
-		{
-			int frred; 
-			while (shell->ready_commands[i].redirections->next)
-			{
-				
-				frred = open(shell->ready_commands[i].redirections->file ,O_WRONLY | O_CREAT | O_TRUNC, 0644);
-				if(frred == -1)
-			{
-				error_log(shell->ready_commands[i].redirections->file);
-				g_exit_status = 1;
-				exit(g_exit_status);	
-			}
-				close(frred);
-				if (shell->ready_commands[i].redirections->next->type == RRED)
-				{
-					shell->ready_commands[i].redirections = shell->ready_commands[i].redirections->next;
-				}
-				else
-				{
-					break;
-				}
-			}
-			frred = open(shell->ready_commands[i].redirections->file ,O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			if(frred == -1)
-			{
-				error_log(shell->ready_commands[i].redirections->file);
-				g_exit_status = 1;
-				exit(g_exit_status);	
-			}
-			if (shell->ready_commands[i].cmd)
-				dup2(frred, 1);
-		}
-		
-		if (shell->ready_commands[i].redirections->type == ARRED)
-		{
-			
-			int farred; 
-			while (shell->ready_commands[i].redirections->next)
-			{
-				farred = open(shell->ready_commands[i].redirections->file ,O_WRONLY | O_APPEND | O_CREAT, 0644);
-				
-				if (farred == -1)
-				{
-					error_log(shell->ready_commands[i].redirections->file);
-					g_exit_status = 1;
-					exit(g_exit_status);
-				}
-				close(farred);
-				if (shell->ready_commands[i].redirections->next->type == ARRED)
-				{
-					shell->ready_commands[i].redirections = shell->ready_commands[i].redirections->next;
-				}
-				else
-				{
-					break;
-				}
-			}
-			
-			farred = open(shell->ready_commands[i].redirections->file ,O_WRONLY | O_CREAT | O_APPEND, 0644);
-			if(farred == -1)
-			{
-				error_log(shell->ready_commands[i].redirections->file);
-				g_exit_status = 1;
-				exit(g_exit_status);	
-			}
-			if (shell->ready_commands[i].cmd)
-				dup2(farred, 1);
-		}
-
-		if (shell->ready_commands[i].redirections->type == LRED)
-		{
-			
-			while (shell->ready_commands[i].redirections->next )
-			{
-				if (shell->ready_commands[i].redirections->next->type == LRED)
-				{
-					shell->ready_commands[i].redirections = shell->ready_commands[i].redirections->next;
-				}
-				else
-				{
-					break;
-				}
-			}
-			int flred = open(shell->ready_commands[i].redirections->file ,O_RDONLY, 0644);
-			if (flred == -1)
-			{
-				// printf("%s: No such file or directory \n",shell->ready_commands[i].redirections->file);
-				error_log(shell->ready_commands[i].redirections->file);
-				g_exit_status = 1;
-				exit(g_exit_status);
-			}
-			else
-			{
-			if (shell->ready_commands[i].cmd)
-				dup2(flred,0);
-			}
-		}
-
-	shell->ready_commands[i].redirections = shell->ready_commands[i].redirections->next;
-	
-	if (shell->ready_commands[i].redirections)
-	{
-		redirection(shell ,i);
-	}
-}
-
-void ft_print_line_fd(t_shell *shell, int fd, char *str)
-{
-	int i = 0;
-	char *var_name;
-
-	while (str[i])
-	{
-		if (str[i] == '$' && str[i + 1] && str[i + 1] == '?')
-		{
-			ft_putnbr_fd(g_exit_status, fd);
-			i += 2;
-		}
-		if (str[i] == '$' && str[i + 1])
-		{
-			var_name = get_var(str + i + 1, shell);
-			ft_putstr_fd(get_env(shell->env, var_name), fd);
-			i += ft_strlen(var_name);
-		}
-		else
-			ft_putchar_fd(str[i], fd);
-		i++;
-	}
-	ft_putchar_fd('\n', fd);
-}
-
-void	herdocs(t_shell *shell, int i)
-{
-	char *delimiter;
-	int tmp1 = open("/tmp/tmpp" , O_APPEND | O_WRONLY | O_CREAT, 0777);
-	rl_catch_signals = 1;
-	while (shell->ready_commands[i].herdocs)
-	{
-		delimiter = readline("> ");
-		if (!delimiter)
-			break ;
-		if (ft_strcmp(shell->ready_commands[i].herdocs->file,delimiter) == 0)
-			break;
-		if (shell->ready_commands[i].herdocs->expand_herdoc)
-			ft_print_line_fd(shell, tmp1, delimiter);
-		else
-		{
-			ft_putstr_fd(delimiter, tmp1);
-			ft_putchar_fd('\n', tmp1);
-		}
-	}
-	shell->ready_commands[i].herdocs = shell->ready_commands[i].herdocs->next;
-	if (shell->ready_commands[i].herdocs)
-		herdocs(shell , i);
-	close(tmp1);
-	int tmp2 = open("/tmp/tmpp",O_RDONLY);
-	unlink("/tmp/tmpp");
-	if (shell->ready_commands[i].cmd)
-	{
-		dup2(tmp2,0);
-	}
-	close(tmp2);
-	rl_catch_signals = 0;
+		wait_pid(shell, i, pid, file);
 }
 
 void	execline(t_shell *shell, char **env)
 {
-	int		fd[2];
-	pid_t	pid;
-	int		i = 0;
-	int		fdd;	
-	char	*executable;
-	DIR		*dir;
-	int		iter = 0;
+	int			i;
+	file_dis	file;
 
-	fdd = 0;
+	file.fdd = 0;
+	i = 0;
 	while (i < shell->cmd_count)
-	{		
-		dir = opendir(shell->ready_commands[i].cmd);
-		if (!is_builtin(shell->ready_commands[i].cmd) && dir)
-		{
-			closedir(dir);
-			printf("minishell: %s: is a directory\n", shell->ready_commands[i].cmd);
-			g_exit_status = 126;
-			i++;
+	{
+		if (ft_check_dir(shell, i) == 0)
 			continue ;
-		}
-		executable = get_full_path(shell->env, shell->ready_commands[i].args);
-		if (!executable && !is_relative_path(shell->ready_commands[i].cmd) && shell->ready_commands[i].herdocs)
-		{
-				herdocs(shell,i);
-			continue;
-		}
-		if (!executable && !is_relative_path(shell->ready_commands[i].cmd) && shell->ready_commands[i].redirections)
-		{
-				redirection(shell, i);
-				continue;
-				i++;
-		}
-		if (!executable && !is_relative_path(shell->ready_commands[i].cmd))
-		{
-			i++;
+		if (run_redi_whiout_cmd(shell, &i) == 0)
 			continue ;
-		}
-		if ((ft_strcmp(shell->ready_commands[i].cmd, "cd") == 0 && shell->cmd_count != 1))
-		{
-			i++;
+		if (ft_check_builtins_run(shell, &i) == 0)
 			continue ;
-		}
-		if (((ft_strcmp(shell->ready_commands[i].cmd, "export") == 0) && shell->ready_commands[i].args[1]) 
-			|| ((ft_strcmp(shell->ready_commands[i].cmd, "unset") == 0) && shell->ready_commands[i].args[1])
-			|| ((ft_strcmp(shell->ready_commands[i].cmd, "exit") == 0))
-			|| ((ft_strcmp(shell->ready_commands[i].cmd, "cd") == 0) && shell->cmd_count == 1))
-		{
-			// printf("is parent builtin\n");
-			execute_builtins(shell, shell->ready_commands[i].args);
-			i++;
-			continue ;
-		}
-		if (!is_builtin(shell->ready_commands[i].cmd) && !executable)
-		{
-			printf("minishell: %s: command not found\n", shell->ready_commands[i].cmd);
-			g_exit_status = 127;
-			i++;
-			continue ;
-		}
-
-		if ((i + 1) < shell->cmd_count)
-				pipe(fd);	
-		pid = fork();
-		if (pid == -1)
-		{
-			perror("fork");
-			exit(1);
-		}
-		else if (pid == 0)
-		{
-			if (fd[0])
-				close(fd[0]);
-			dup2(fdd, 0);
-			if (i + 1 < shell->cmd_count)
-			{
-				dup2(fd[1], 1);
-				close(fd[1]);
-			}
-				
-			if(shell->ready_commands[i].herdocs && shell->ready_commands[i].cmd )
-			{
-				herdocs(shell,i);
-				
-			}
-			if (shell->ready_commands[i].redirections)
-			{
-				redirection(shell ,i);
-			}
-			if (!is_child_builtin(shell->ready_commands[i].cmd))
-						execve(executable, shell->ready_commands[i].args, env);
-					
-			if (is_child_builtin(shell->ready_commands[i].cmd))
-			{
-				// printf("is child builtin\n");
-				execute_builtins(shell,	shell->ready_commands[i].args);
-			}
-			exit(g_exit_status);
-		}
-		else
-		{
-			if (i + 1 == shell->cmd_count)
-				waitpid(pid, &g_exit_status, 0);
-			if (fdd)
-				close(fdd);
-			if (i + 1 < shell->cmd_count)
-			{
-				fdd = dup(fd[0]);
-				close(fd[1]);
-				close(fd[0]);	
-			}
-		}
-		iter++;
+		ft_pipes(shell, &file, &i, env);
 		i++;
 	}
-	while (wait(NULL) > 0);
+	while (wait(NULL) > 0)
+		;
 	g_exit_status %= 255;
 }

@@ -6,7 +6,7 @@
 /*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 12:09:59 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/23 20:50:29 by abdel-ou         ###   ########.fr       */
+/*   Updated: 2023/10/01 15:51:00 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	is_builtin(char *cmd)
 {
-	char	*builtins[8];
+	char	*builtins[9];
 	int		i;
 
 	if (!cmd)
@@ -26,7 +26,8 @@ int	is_builtin(char *cmd)
 	builtins[4] = "unset";
 	builtins[5] = "env";
 	builtins[6] = "exit";
-	builtins[7] = NULL;
+	builtins[7] = "ENV";
+	builtins[8] = NULL;
 	i = 0;
 	while (builtins[i])
 	{
