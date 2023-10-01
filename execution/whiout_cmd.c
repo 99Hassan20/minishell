@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   whiout_cmd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/30 15:20:35 by abdel-ou          #+#    #+#             */
-/*   Updated: 2023/09/30 15:42:00 by abdel-ou         ###   ########.fr       */
+/*   Updated: 2023/10/01 23:26:08 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,10 @@ int	norminet_helper(t_shell *shell, int *i, char *executable)
 
 int	run_redi_whiout_cmd(t_shell *shell, int *i)
 {
-	shell->executable = get_full_path(shell->env, shell->ready_commands[*i].args);
-	if (!shell->executable && !is_relative_path(shell->ready_commands[*i].cmd))
+	char	*executable;
+
+	executable = get_full_path(shell->env, shell->ready_commands[*i].args);
+	if (!executable && !is_relative_path(shell->ready_commands[*i].cmd))
 	{
 		if (shell->ready_commands[*i].herdocs)
 			herdocs(shell,*i);
@@ -37,7 +39,19 @@ int	run_redi_whiout_cmd(t_shell *shell, int *i)
 		(*i)++;
 		return (0);
 	}
+	free(executable);
 	return (1);
+}
+
+int	valid_command_parent(t_shell *shell, int i)
+{
+	return (((ft_strcmp(shell->ready_commands[i].cmd, "export") == 0) 
+			&& shell->ready_commands[i].args[1])
+		|| ((ft_strcmp(shell->ready_commands[i].cmd, "unset") == 0) 
+			&& shell->ready_commands[i].args[1])
+		|| ((ft_strcmp(shell->ready_commands[i].cmd, "exit") == 0))
+		|| ((ft_strcmp(shell->ready_commands[i].cmd, "cd") == 0)
+			&& shell->cmd_count == 1));
 }
 
 int	ft_check_builtins_run(t_shell *shell, int *i)
@@ -49,22 +63,22 @@ int	ft_check_builtins_run(t_shell *shell, int *i)
 			&& shell->cmd_count != 1))
 	{
 		(*i)++;
+		free(executable);
 		return (0);
 	}
-	if (((ft_strcmp(shell->ready_commands[*i].cmd, "export") == 0) 
-			&& shell->ready_commands[*i].args[1]) 
-		|| ((ft_strcmp(shell->ready_commands[*i].cmd, "unset") == 0) 
-			&& shell->ready_commands[*i].args[1])
-		|| ((ft_strcmp(shell->ready_commands[*i].cmd, "exit") == 0))
-		|| ((ft_strcmp(shell->ready_commands[*i].cmd, "cd") == 0)
-			&& shell->cmd_count == 1))
+	if (valid_command_parent(shell, *i))
 	{
 		execute_builtins(shell, shell->ready_commands[*i].args);
+		if (executable)
+			free(executable);
 		(*i)++;
 		return (0);
 	}
 	if (norminet_helper(shell, i, executable) == 0)
+	{
+		free(executable);
 		return (0);
-	
+	}
+	free(executable);
 	return (1);
 }

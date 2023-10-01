@@ -6,13 +6,13 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 13:21:28 by abdel-ou          #+#    #+#             */
-/*   Updated: 2023/10/01 20:16:57 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 23:32:22 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	if_child(t_shell *shell, file_dis *file, int *i, char	**env)
+int	if_child(t_shell *shell, t_file_dis *file, int *i, char	**env)
 {
 	char	*executable;
 
@@ -25,7 +25,8 @@ int	if_child(t_shell *shell, file_dis *file, int *i, char	**env)
 		dup2(file->fd[1], 1);
 		close(file->fd[1]);
 	}
-	if (shell->ready_commands[*i].herdocs && shell->ready_commands[*i].cmd && !herdocs(shell, *i))
+	if (shell->ready_commands[*i].herdocs
+		&& shell->ready_commands[*i].cmd && !herdocs(shell, *i))
 		return (0);
 	if (shell->ready_commands[*i].redirections)
 		redirection(shell, *i);
@@ -33,10 +34,12 @@ int	if_child(t_shell *shell, file_dis *file, int *i, char	**env)
 		execve(executable, shell->ready_commands[*i].args, env);
 	if (is_child_builtin(shell->ready_commands[*i].cmd))
 		execute_builtins(shell, shell->ready_commands[*i].args);
+	if (executable)
+		free(executable);
 	exit(g_exit_status);
 }
 
-void	wait_pid(t_shell *shell, int *i, pid_t pid, file_dis *file)
+void	wait_pid(t_shell *shell, int *i, pid_t pid, t_file_dis *file)
 {
 	int	child_status;
 
@@ -56,7 +59,7 @@ void	wait_pid(t_shell *shell, int *i, pid_t pid, file_dis *file)
 		g_exit_status = 128 + WTERMSIG(child_status);
 }
 
-int	ft_pipes(t_shell *shell, file_dis *file, int *i, char **env)
+int	ft_pipes(t_shell *shell, t_file_dis *file, int *i, char **env)
 {
 	pid_t	pid;
 
@@ -78,7 +81,7 @@ int	ft_pipes(t_shell *shell, file_dis *file, int *i, char **env)
 void	execline(t_shell *shell, char **env)
 {
 	int			i;
-	file_dis	file;
+	t_file_dis	file;
 
 	file.fdd = 0;
 	i = 0;
@@ -97,7 +100,6 @@ void	execline(t_shell *shell, char **env)
 	while (wait(NULL) > 0)
 		;
 	g_exit_status %= 255;
-	free(shell->executable);
 	env_to_list(shell, env);
 	ft_free_2d(env);
 }

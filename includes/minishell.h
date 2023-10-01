@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/01 20:18:18 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 23:31:22 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,12 @@
 # include <sys/wait.h>
 
 int	g_exit_status;
-int rl_catch_signals;
 
-typedef struct file_dis
+typedef struct s_file_dis
 {
 	int		fdd;
 	int		fd[2];
-} file_dis ;
+}	t_file_dis;
 
 typedef enum e_state
 {
@@ -161,7 +160,7 @@ void	ft_exit(t_shell *shell, char **command);
 void	execute_builtins(t_shell *shell, char **command);
 
 //*excution
-void 	execline(t_shell *shell, char **env);
+void	execline(t_shell *shell, char **env);
 int		is_builtin(char *cmd);
 int		is_child_builtin(char *cmd);
 char	*get_full_path(t_env *env, char **tokens);
@@ -183,6 +182,7 @@ void	free_commands(t_token **commands, int cmd_count);
 void	full_free(t_shell *shell);
 void	free_single_token(t_token **tokens);
 char	*leak_free_join(char *s1, char *s2);
+void	free_env(t_env *env);
 
 //*printing
 void	print_final_command(t_command *command);

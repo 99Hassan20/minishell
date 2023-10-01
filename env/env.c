@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 17:34:56 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/01 08:31:28 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 23:30:54 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,24 +45,10 @@ int	unset_env(t_env **env, char *key)
 	return (-1);
 }
 
-char *leak_free_join(char *s1, char *s2)
+int	env_size(t_env *env)
 {
-	char *tmp;
-
-	tmp = ft_strjoin(s1, s2);
-	free(s1);
-	free(s2);
-	return (tmp);
-}
-
-
-char	**env_to_array(t_env *env)
-{
-	char	**env_array;
 	int		i;
 	t_env	*tmp;
-	char	*tmp_str;
-	char	*tmp_str2;
 
 	tmp = env;
 	i = 0;
@@ -71,7 +57,17 @@ char	**env_to_array(t_env *env)
 		i++;
 		tmp = tmp->next;
 	}
-	env_array = malloc(sizeof(char *) * (i + 1));
+	return (i);
+}
+
+char	**env_to_array(t_env *env)
+{
+	char	**env_array;
+	int		i;
+	char	*tmp_str;
+	char	*tmp_str2;
+
+	env_array = malloc(sizeof(char *) * (env_size(env) + 1));
 	i = 0;
 	while (env)
 	{
@@ -84,5 +80,5 @@ char	**env_to_array(t_env *env)
 		i++;
 	}
 	env_array[i] = NULL;
-	return (env_array);
+	return (free_env(env), env_array);
 }

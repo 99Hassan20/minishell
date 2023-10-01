@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 08:52:52 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/01 17:27:18 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 23:29:09 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,14 @@ void	free_single_token(t_token **tokens)
 	(*tokens) = (*tokens)->next;
 	free(to_delete->content);
 	free(to_delete);
+}
+
+char	*leak_free_join(char *s1, char *s2)
+{
+	char	*tmp;
+
+	tmp = ft_strjoin(s1, s2);
+	free(s1);
+	free(s2);
+	return (tmp);
 }
