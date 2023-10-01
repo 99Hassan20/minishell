@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/01 15:14:52 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 17:56:06 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,7 @@ t_token	*get_last_token(t_token *tokens);
 int		get_list_size(t_token *head);
 void	print_echo(t_token *tmp);
 void	delete_token(t_token **head, char *content);
+t_token	*copy_tokens(t_token *cmd);
 
 int		has_error(t_shell *shell);
 
@@ -133,14 +134,12 @@ char	*get_env(t_env *env, char *key);
 int		set_env(t_env **env, char *key, char *value, int overrite);
 int		unset_env(t_env **env, char *key);
 char	**env_to_array(t_env *env);
-//builtins
-void	execute_builtins(t_shell *shell, char **command);
+
 //array utils
 int		array_size(char **arr);
 char	**append_to_array(char **arr, char *value);
 char	**get_command_table(t_token *tokens);
 void	print_cmd_table(char **args);
-
 void	get_ready_commands(t_shell *shell);
 
 //* builtins
@@ -151,6 +150,7 @@ void	ft_pwd(t_shell *shell);
 void	ft_chdir(t_shell *shell, char **command);
 void	ft_unset(t_shell *shell, char **command);
 void	ft_exit(t_shell *shell, char **command);
+void	execute_builtins(t_shell *shell, char **command);
 
 //*excution
 char	*getCommandPath(t_env *env, const char *command);
@@ -164,10 +164,22 @@ char	*get_full_path(t_env *env, char **tokens);
 void	herdocs(t_shell *shell, int i);
 char	*get_var(char *s, t_shell *shell);
 
+//*redirections
+void	add_redirection(t_token **new, t_token **tmp);
+t_token	*remove_redirections(t_token *tokens);
+void	append_redirec(t_redirec **head, char *file, int type, int exp);
+char	**init_data(char **file_name, char **expand_herdoc);
+void	set_file_name(t_token *tmp, char **file_name);
+
 //*free
 void	free_tokens(t_token *token);
 void	free_token(t_token *token);
 void	free_redirections(t_redirec **redirections);
 void	free_commands(t_token **commands, int cmd_count);
 void	full_free(t_shell *shell);
+void	free_single_token(t_token **tokens);
+
+//*printing
+void	print_final_command(t_command *command);
+void print_all_ready_commands(t_shell *shell);
 #endif

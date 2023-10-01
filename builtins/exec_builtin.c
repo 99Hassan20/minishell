@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 12:09:59 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/23 20:50:29 by abdel-ou         ###   ########.fr       */
+/*   Updated: 2023/10/01 17:46:24 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,5 +78,4 @@ void	execute_builtins(t_shell *shell, char **command)
 	}
 	else if (ft_strcmp(command[0], "unset") == 0)
 		ft_unset(shell, command);
-		
 }

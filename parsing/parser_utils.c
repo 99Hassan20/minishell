@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:00:56 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/01 08:35:14 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 17:25:14 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	split_cmds(t_shell	*shell)
 {
 	t_token	*tmp;
 	int		i;
-	t_token *cpy;
+	t_token	*cpy;
 
 	count_pipes(shell);
 	shell->commands = malloc(sizeof(t_token *) * shell->cmd_count);
@@ -89,4 +89,20 @@ void	split_cmds(t_shell	*shell)
 			tmp = tmp->next;
 		i++;
 	}
+}
+
+t_token	*copy_tokens(t_token *cmd)
+{
+	t_token	*tmp;
+	t_token	*new;
+
+	new = NULL;
+	tmp = cmd;
+	while (tmp)
+	{
+		append_token(&new,
+			new_token(tmp->type, tmp->content, tmp->length, tmp->state));
+		tmp = tmp->next;
+	}
+	return (new);
 }

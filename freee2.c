@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 08:52:52 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/01 08:58:53 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 17:27:18 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,14 @@ void	full_free(t_shell *shell)
 	shell->tokens = NULL;
 	shell->commands = NULL;
 	shell->ready_commands = NULL;
+}
+
+void	free_single_token(t_token **tokens)
+{
+	t_token	*to_delete;
+
+	to_delete = *tokens;
+	(*tokens) = (*tokens)->next;
+	free(to_delete->content);
+	free(to_delete);
 }

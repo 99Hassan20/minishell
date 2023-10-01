@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 15:15:36 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/01 08:31:28 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 17:45:37 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,7 @@ void	env_to_list(t_shell *shell, char *env[])
 		if (!pair)
 			return ;
 		if (!push_env(&shell->env, ft_strdup(pair[0]), ft_strdup(pair[1])))
-		{
-			printf("could not add to env list\n");
 			return ;
-		}
 		ft_free_2d(pair);
 		i++;
 	}
