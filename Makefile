@@ -18,7 +18,7 @@ all : $(NAME)
 
 $(NAME) : $(OBJS) 
 	make -C libft all
-	$(CC) $(CFLAGS) $(LIBFT) $(RLFLGS) $^  -o $@
+	$(CC) $(CFLAGS)  $^ $(LIBFT) $(RLFLGS) -o $@
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(RLOFLGS) -c $< -o $@

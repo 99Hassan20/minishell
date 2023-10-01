@@ -27,10 +27,8 @@ int	norminet_helper(t_shell *shell, int *i, char *executable)
 
 int	run_redi_whiout_cmd(t_shell *shell, int *i)
 {
-	char	*executable;
-
-	executable = get_full_path(shell->env, shell->ready_commands[*i].args);
-	if (!executable && !is_relative_path(shell->ready_commands[*i].cmd))
+	shell->executable = get_full_path(shell->env, shell->ready_commands[*i].args);
+	if (!shell->executable && !is_relative_path(shell->ready_commands[*i].cmd))
 	{
 		if (shell->ready_commands[*i].herdocs)
 			herdocs(shell,*i);
@@ -67,5 +65,6 @@ int	ft_check_builtins_run(t_shell *shell, int *i)
 	}
 	if (norminet_helper(shell, i, executable) == 0)
 		return (0);
+	
 	return (1);
 }

@@ -97,4 +97,7 @@ void	execline(t_shell *shell, char **env)
 	while (wait(NULL) > 0)
 		;
 	g_exit_status %= 255;
+	free(shell->executable);
+	env_to_list(shell, env);
+	ft_free_2d(env);
 }

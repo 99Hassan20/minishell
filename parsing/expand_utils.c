@@ -17,7 +17,7 @@ void	get_quoted_string(t_token **tmp, char **str)
 	char	*tmp_str;
 
 	while ((*tmp) && ((*tmp)->type == STR || ((*tmp)->type == _SPACE
-				&& ((*tmp)->state == INDQOUTES |(*tmp)->state == INSQOUTES))
+				&& ((*tmp)->state == INDQOUTES || (*tmp)->state == INSQOUTES))
 			|| (*tmp)->type == VAR || (*tmp)->type == DQUOTES
 			|| (*tmp)->type == SQUOTES))
 	{

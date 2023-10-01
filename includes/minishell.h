@@ -97,6 +97,7 @@ typedef struct s_shell
 	t_token		**commands;
 	t_command	*ready_commands;
 	int			in_herdoc;
+	char		*executable;
 	char		cwd[1024];
 }	t_shell;
 
@@ -181,6 +182,7 @@ void	free_redirections(t_redirec **redirections);
 void	free_commands(t_token **commands, int cmd_count);
 void	full_free(t_shell *shell);
 void	free_single_token(t_token **tokens);
+char	*leak_free_join(char *s1, char *s2);
 
 //*printing
 void	print_final_command(t_command *command);

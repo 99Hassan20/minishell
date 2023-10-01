@@ -61,6 +61,20 @@ int	parse_line(t_shell *shell, char *line)
 	return (1);
 }
 
+void free_env(t_env *env)
+{
+	t_env	*tmp;
+
+	while (env)
+	{
+		tmp = env;
+		env = env->next;
+		free(tmp->key);
+		free(tmp->value);
+		free(tmp);
+	}
+}
+
 void	shell_loop(t_shell *shell, char *prompt)
 {
 	char	*line;
@@ -74,6 +88,7 @@ void	shell_loop(t_shell *shell, char *prompt)
 		if (!line)
 		{
 			free(line);
+			// free(shell->executable);
 			exit(g_exit_status);
 		}
 		if (!parse_line(shell, line))
@@ -82,6 +97,7 @@ void	shell_loop(t_shell *shell, char *prompt)
 			continue ;
 		}
 		execline(shell, env_to_array(shell->env));
+		free_env(shell->env);
 		dup2(std_in, 0);
 		full_free(shell);
 		// system("leaks minishell -q");

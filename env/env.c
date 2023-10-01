@@ -45,11 +45,24 @@ int	unset_env(t_env **env, char *key)
 	return (-1);
 }
 
+char *leak_free_join(char *s1, char *s2)
+{
+	char *tmp;
+
+	tmp = ft_strjoin(s1, s2);
+	free(s1);
+	free(s2);
+	return (tmp);
+}
+
+
 char	**env_to_array(t_env *env)
 {
 	char	**env_array;
 	int		i;
 	t_env	*tmp;
+	char	*tmp_str;
+	char	*tmp_str2;
 
 	tmp = env;
 	i = 0;
@@ -62,7 +75,11 @@ char	**env_to_array(t_env *env)
 	i = 0;
 	while (env)
 	{
-		env_array[i] = ft_strjoin(ft_strjoin(env->key, "="), env->value);
+		tmp_str = leak_free_join(ft_strdup(env->key), ft_strdup("="));
+		tmp_str2 = leak_free_join(ft_strdup(tmp_str), ft_strdup(env->value));
+		free(tmp_str);
+		env_array[i] = ft_strdup(tmp_str2);
+		free(tmp_str2);
 		env = env->next;
 		i++;
 	}
