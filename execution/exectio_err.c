@@ -6,7 +6,7 @@
 /*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/30 15:11:56 by abdel-ou          #+#    #+#             */
-/*   Updated: 2023/09/30 15:18:11 by abdel-ou         ###   ########.fr       */
+/*   Updated: 2023/10/02 13:01:03 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,17 +54,17 @@ void	execute_parent_builtin(t_shell *shell, char **cmd)
 		execute_builtins(shell, cmd);
 }
 
-int	ft_check_dir(t_shell *shell, int i)
+int	ft_check_dir(t_shell *shell, int *i)
 {
 	DIR		*dir;
 
-	dir = opendir(shell->ready_commands[i].cmd);
-	if (!is_builtin(shell->ready_commands[i].cmd) && dir)
+	dir = opendir(shell->ready_commands[*i].cmd);
+	if (!is_builtin(shell->ready_commands[*i].cmd) && dir)
 	{
 		closedir(dir);
-		printf("minishell: %s: is a directory\n", shell->ready_commands[i].cmd);
+		printf("minishell: %s: is a directory\n", shell->ready_commands[*i].cmd);
 		g_exit_status = 126;
-		i++;
+		(*i)++;
 		return (0);
 	}
 	if (dir)

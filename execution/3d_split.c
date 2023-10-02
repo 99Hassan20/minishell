@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   3d_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 13:21:28 by abdel-ou          #+#    #+#             */
-/*   Updated: 2023/10/02 11:03:07 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/02 13:01:11 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	execline(t_shell *shell, char **env)
 	i = 0;
 	while (i < shell->cmd_count)
 	{
-		if (ft_check_dir(shell, i) == 0)
+		if (ft_check_dir(shell, &i) == 0)
 			continue ;
 		if (run_redi_whiout_cmd(shell, &i) == 0)
 			continue ;

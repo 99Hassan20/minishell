@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/01 23:31:22 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/02 13:01:25 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,7 +198,7 @@ void	ft_print_line_fd(t_shell *shell, int fd, char *str);
 void	error_log(char *file_name);
 int		is_relative_path(char *file);
 void	execute_parent_builtin(t_shell *shell, char **cmd);
-int		ft_check_dir(t_shell *shell, int i);
+int		ft_check_dir(t_shell *shell, int *i);
 int		run_redi_whiout_cmd(t_shell *shell, int *i);
 int		ft_check_builtins_run(t_shell *shell, int *i);
 #endif

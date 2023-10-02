@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/02 11:22:09 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/02 13:30:56 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	parse_line(t_shell *shell, char *line)
 	if (has_error(shell))
 	{
 		free(trimmed);
-		g_exit_status = 2;
+		g_exit_status = 258;
 		return (0);
 	}
 	expand(shell, 1);

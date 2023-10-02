@@ -6,7 +6,7 @@
 /*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/13 14:50:57 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/01 16:17:52 by abdel-ou         ###   ########.fr       */
+/*   Updated: 2023/10/02 12:56:21 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	*get_full_path(t_env *env, char **cmd)
 		return (NULL);
 	else if (cmd[0][0] == '/' && access(cmd[0], F_OK) == 0
 		&& access(cmd[0], X_OK) == 0)
-		full_path = ft_strdup(cmd[0]);
+			return(ft_strdup(cmd[0]));
 	else if (!path)
 		return (free(full_path), NULL);
 	return (is_file_in_path(path, cmd[0]));
