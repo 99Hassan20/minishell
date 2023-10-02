@@ -1,7 +1,6 @@
 CC = cc
 CFLAGS = -Wall -Werror -Wextra -I./includes #-fsanitize=address -g
 NAME = minishell
-READLINE =  -L/Users//.brew/opt/readline/lib -I/Users/hoigag/.brew/opt/readline/include
 LIBFT = -L./libft -lft
 
 RLFLGS    = -L/Users/hoigag/.brew/opt/readline/lib -lreadline
@@ -25,7 +24,7 @@ $(NAME) : $(OBJS)
 
 clean:
 	make -C libft clean
-	rm $(OBJS)
+	rm -f $(OBJS)
 
 fclean: clean
 	make -C libft fclean
