@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/30 15:20:35 by abdel-ou          #+#    #+#             */
-/*   Updated: 2023/10/01 23:26:08 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/02 18:18:37 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,20 @@ int	norminet_helper(t_shell *shell, int *i, char *executable)
 
 int	run_redi_whiout_cmd(t_shell *shell, int *i)
 {
-	char	*executable;
+	char		*executable;
+	t_redirec	*pointer;
 
 	executable = get_full_path(shell->env, shell->ready_commands[*i].args);
+	pointer = shell->ready_commands[*i].redirections;
 	if (!executable && !is_relative_path(shell->ready_commands[*i].cmd))
 	{
 		if (shell->ready_commands[*i].herdocs)
 			herdocs(shell,*i);
 		if (shell->ready_commands[*i].redirections)
+		{
 			redirection(shell, *i);
+			free_redirections(&pointer);
+		}
 		(*i)++;
 		return (0);
 	}

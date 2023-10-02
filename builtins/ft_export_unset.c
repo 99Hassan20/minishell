@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_unset.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 13:22:27 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/02 15:51:08 by abdel-ou         ###   ########.fr       */
+/*   Updated: 2023/10/02 17:33:24 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*get_joinded_strings(char **strings)
 {
 	int		i;
 	char	*joined;
-	char 	*tmp;
+	char	*tmp;
 
 	i = 0;
 	joined = ft_strdup("");
@@ -66,14 +66,13 @@ void	ft_export(t_shell *shell, char **command)
 		{
 			pair = ft_split(command[i], '=');
 			if (!pair[1] && ft_get_index_of(command[i], '=') != -1)
-				pair[1] = ft_strdup("");
+				pair = append_to_array(pair, "");
 			else
 				joined = get_joinded_strings(pair + 1);
 			if (ft_get_index_of(command[i], '=') != -1)
 				set_env(&shell->env, pair[0], joined, 1);
 			else
 				set_env(&shell->env, pair[0], joined, 1);
-			// free(joined);
 			ft_free_2d(pair);
 		}
 		else

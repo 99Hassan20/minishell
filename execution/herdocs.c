@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/30 13:04:15 by abdel-ou          #+#    #+#             */
-/*   Updated: 2023/10/02 11:49:35 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/02 17:24:26 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,7 @@ int	herdocs_condtion(t_shell *shell, int i, char *delimiter, int tmp1)
 	{
 		delimiter = readline("> ");
 		if (!delimiter)
-		{
-			free(shell->ready_commands[i].herdocs->file);
-			free(shell->ready_commands[i].herdocs);
 			return (0);
-		}
 		if (ft_strcmp(shell->ready_commands[i].herdocs->file, delimiter) == 0)
 		{
 			free(shell->ready_commands[i].herdocs->file);

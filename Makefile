@@ -3,8 +3,8 @@ CFLAGS = -Wall -Werror -Wextra -I./includes -g #-fsanitize=address -g
 NAME = minishell
 LIBFT = -L./libft -lft
 
-RLFLGS    = -L/Users/abdel-ou/.brew/opt/readline/lib -lreadline
-RLOFLGS   = -I/Users/abdel-ou/.brew/opt/readline/include
+RLFLGS    = -L/Users/hoigag/.brew/opt/readline/lib -lreadline
+RLOFLGS   = -I/Users/hoigag/.brew/opt/readline/include
 
 BUILIN_SRCS = $(addprefix builtins/, ft_echo.c ft_env.c ft_pwd.c ft_cd.c ft_export_unset.c ft_exit.c exec_builtin.c)
 PARSING_SRCS = $(addprefix parsing/, printing.c expand.c expand_utils.c lexer_utils.c lexer.c tokenizer.c parser_utils.c parse_redirections.c parse_redirections2.c)
