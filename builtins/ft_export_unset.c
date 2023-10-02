@@ -32,18 +32,21 @@ char	*get_joinded_strings(char **strings)
 {
 	int		i;
 	char	*joined;
+	char 	*tmp;
 
 	i = 0;
 	joined = ft_strdup("");
 	if (!strings || !strings[0])
-		return (NULL);
+		return (free(joined), NULL);
 	if (!strings[0][0])
-		return (joined);
+		return (free(joined), joined);
 	while (strings[i])
 	{
 		if (strings[i + 1])
 			strings[i] = ft_strjoin(strings[i], "=");
+		tmp = joined;
 		joined = ft_strjoin(joined, strings[i]);
+		free(tmp);
 		i++;
 	}
 	return (joined);
@@ -64,9 +67,10 @@ void	ft_export(t_shell *shell, char **command)
 			if (!pair[1] && ft_get_index_of(command[i], '=') != -1)
 				pair[1] = ft_strdup("");
 			if (ft_get_index_of(command[i], '=') != -1)
-				set_env(&shell->env, pair[0], get_joinded_strings(pair + 1), 1);
+				set_env(&shell->env, ft_strdup(pair[0]), get_joinded_strings(pair + 1), 1);
 			else
-				set_env(&shell->env, pair[0], get_joinded_strings(pair + 1), 0);
+				set_env(&shell->env, ft_strdup(pair[0]), get_joinded_strings(pair + 1), 0);
+			ft_free_2d(pair);
 		}
 		else
 		{

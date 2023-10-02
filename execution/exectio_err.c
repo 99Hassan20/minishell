@@ -67,5 +67,7 @@ int	ft_check_dir(t_shell *shell, int i)
 		i++;
 		return (0);
 	}
+	if (dir)
+        closedir(dir);
 	return (1);
 }

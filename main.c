@@ -94,10 +94,10 @@ void	shell_loop(t_shell *shell, char *prompt)
 			free_tokens(shell->tokens);
 			continue ;
 		}
-		execline(shell, env_to_array(shell->env));
+		execline(shell, NULL);
 		dup2(std_in, 0);
 		full_free(shell);
-		system("leaks minishell -q");
+		// system("leaks minishell -q");
 	}
 }
 
