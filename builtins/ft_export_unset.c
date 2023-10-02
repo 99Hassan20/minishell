@@ -6,7 +6,7 @@
 /*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 13:22:27 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/02 13:44:32 by abdel-ou         ###   ########.fr       */
+/*   Updated: 2023/10/02 15:51:08 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	*get_joinded_strings(char **strings)
 	if (!strings || !strings[0])
 		return (free(joined), NULL);
 	if (!strings[0][0])
-		return (free(joined), joined);
+		return (joined);
 	while (strings[i])
 	{
 		if (strings[i + 1])
@@ -56,6 +56,7 @@ void	ft_export(t_shell *shell, char **command)
 {
 	int		i;
 	char	**pair;
+	char	*joined;
 
 	g_exit_status = 0;
 	i = 1;
@@ -66,10 +67,13 @@ void	ft_export(t_shell *shell, char **command)
 			pair = ft_split(command[i], '=');
 			if (!pair[1] && ft_get_index_of(command[i], '=') != -1)
 				pair[1] = ft_strdup("");
-			if (ft_get_index_of(command[i], '=') != -1)
-				set_env(&shell->env, pair[0], get_joinded_strings(pair + 1), 1);
 			else
-				set_env(&shell->env, pair[0], get_joinded_strings(pair + 1), 0);
+				joined = get_joinded_strings(pair + 1);
+			if (ft_get_index_of(command[i], '=') != -1)
+				set_env(&shell->env, pair[0], joined, 1);
+			else
+				set_env(&shell->env, pair[0], joined, 1);
+			// free(joined);
 			ft_free_2d(pair);
 		}
 		else

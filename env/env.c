@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 17:34:56 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/02 11:04:59 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/02 15:57:10 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,27 @@
 int	set_env(t_env **env, char *key, char *value, int overrite)
 {
 	t_env	*tmp;
+	int		res;
 
 	tmp = *env;
 	while (tmp && ft_strcmp(tmp->key, key) != 0)
 		tmp = tmp->next;
 	if (!tmp)
-		return (push_env(env, key, value));
+	{
+		res = push_env(env, key, value);
+		if (value)
+		{
+			free(value);
+			value = NULL;
+		}
+		return (res);
+	}
 	if (tmp && overrite)
+	{
+		if (tmp->value)
+			free(tmp->value);
 		tmp->value = value;
+	}
 	return (1);
 }
 
