@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 15:15:36 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/01 17:45:37 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/02 13:46:17 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ t_env	*new_env(char *key, char *value)
 	new = malloc(sizeof(t_env));
 	if (!new)
 		return (NULL);
-	new->key = key;
-	new->value = value;
+	new->key = ft_strdup(key);
+	new->value = ft_strdup(value);
 	new->next = NULL;
 	return (new);
 }
@@ -65,7 +65,7 @@ void	env_to_list(t_shell *shell, char *env[])
 		}
 		if (!pair)
 			return ;
-		if (!push_env(&shell->env, ft_strdup(pair[0]), ft_strdup(pair[1])))
+		if (!push_env(&shell->env, pair[0], pair[1]))
 			return ;
 		ft_free_2d(pair);
 		i++;
