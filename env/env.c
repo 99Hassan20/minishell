@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 17:34:56 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/01 23:30:54 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/02 11:04:59 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ int	unset_env(t_env **env, char *key)
 		to_delete = tmp->next;
 		tmp->next = to_delete->next;
 		to_delete->next = NULL;
+		free(to_delete->key);
+		free(to_delete->value);
 		free(to_delete);
 		return (1);
 	}

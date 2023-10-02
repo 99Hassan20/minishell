@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/30 13:04:15 by abdel-ou          #+#    #+#             */
-/*   Updated: 2023/10/01 20:17:19 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/02 11:23:52 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	ft_print_line_fd(t_shell *shell, int fd, char *str)
 			var_name = get_var(str + i + 1, shell);
 			ft_putstr_fd(get_env(shell->env, var_name), fd);
 			i += ft_strlen(var_name);
+			free(var_name);
 		}
 		else
 			ft_putchar_fd(str[i], fd);
@@ -46,7 +47,10 @@ int	herdocs_condtion(t_shell *shell, int i, char *delimiter, int tmp1)
 		if (!delimiter)
 			return (0);
 		if (ft_strcmp(shell->ready_commands[i].herdocs->file, delimiter) == 0)
+		{
+			free(delimiter);
 			break ;
+		}
 		if (shell->ready_commands[i].herdocs->expand_herdoc)
 			ft_print_line_fd(shell, tmp1, delimiter);
 		else
@@ -54,6 +58,7 @@ int	herdocs_condtion(t_shell *shell, int i, char *delimiter, int tmp1)
 			ft_putstr_fd(delimiter, tmp1);
 			ft_putchar_fd('\n', tmp1);
 		}
+		free(delimiter);
 	}
 	return (1);
 }

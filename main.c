@@ -6,7 +6,7 @@
 /*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 13:41:07 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/01 23:39:59 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/02 11:22:09 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void	shell_loop(t_shell *shell, char *prompt)
 		execline(shell, NULL);
 		dup2(std_in, 0);
 		full_free(shell);
-		// system("leaks minishell -q");
+		system("leaks minishell -q");
 	}
 }
 
