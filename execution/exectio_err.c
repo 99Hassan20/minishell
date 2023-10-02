@@ -6,7 +6,7 @@
 /*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/30 15:11:56 by abdel-ou          #+#    #+#             */
-/*   Updated: 2023/10/02 13:01:03 by abdel-ou         ###   ########.fr       */
+/*   Updated: 2023/10/02 19:01:25 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,6 @@ int	ft_check_dir(t_shell *shell, int *i)
 		return (0);
 	}
 	if (dir)
-        closedir(dir);
+		closedir(dir);
 	return (1);
 }

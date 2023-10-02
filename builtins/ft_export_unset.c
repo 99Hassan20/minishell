@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_unset.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 13:22:27 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/02 17:33:24 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/02 19:49:55 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,24 +52,22 @@ char	*get_joinded_strings(char **strings)
 	return (joined);
 }
 
-void	ft_export(t_shell *shell, char **command)
+void	ft_export(t_shell *shell, char **c)
 {
 	int		i;
 	char	**pair;
 	char	*joined;
 
-	g_exit_status = 0;
-	i = 1;
-	while (command[i])
+	i = -1;
+	while (c[++i])
 	{
-		if (check_valid_variable(command[i]))
+		if (check_valid_variable(c[i]))
 		{
-			pair = ft_split(command[i], '=');
-			if (!pair[1] && ft_get_index_of(command[i], '=') != -1)
+			pair = ft_split(c[i], '=');
+			if (!pair[1] && ft_get_index_of(c[i], '=') != -1)
 				pair = append_to_array(pair, "");
-			else
-				joined = get_joinded_strings(pair + 1);
-			if (ft_get_index_of(command[i], '=') != -1)
+			joined = get_joinded_strings(pair + 1);
+			if (ft_get_index_of(c[i], '=') != -1)
 				set_env(&shell->env, pair[0], joined, 1);
 			else
 				set_env(&shell->env, pair[0], joined, 1);
@@ -78,10 +76,8 @@ void	ft_export(t_shell *shell, char **command)
 		else
 		{
 			g_exit_status = 1;
-			printf("minishell: export: `%s':\
- not a valid identifier\n", command[i]);
+			printf("minishell: export: `%s': not a valid identifier\n", c[i]);
 		}
-		i++;
 	}
 }
 

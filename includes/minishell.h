@@ -6,7 +6,7 @@
 /*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 14:34:46 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/02 13:01:25 by abdel-ou         ###   ########.fr       */
+/*   Updated: 2023/10/02 19:54:29 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,10 +183,6 @@ void	full_free(t_shell *shell);
 void	free_single_token(t_token **tokens);
 char	*leak_free_join(char *s1, char *s2);
 void	free_env(t_env *env);
-
-//*printing
-void	print_final_command(t_command *command);
-void	print_all_ready_commands(t_shell *shell);
 
 void	error_log(char *file_name);
 

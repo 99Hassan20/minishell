@@ -6,13 +6,14 @@
 /*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 13:21:28 by abdel-ou          #+#    #+#             */
-/*   Updated: 2023/10/02 13:01:11 by abdel-ou         ###   ########.fr       */
+/*   Updated: 2023/10/02 19:42:49 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	if_child(t_shell *shell, t_file_dis *file, int *i, char	__attribute__((unused))**env)
+int	if_child(t_shell *shell, t_file_dis *file, int *i,
+	char __attribute__((unused))**env)
 {
 	char	*executable;
 
@@ -31,10 +32,8 @@ int	if_child(t_shell *shell, t_file_dis *file, int *i, char	__attribute__((unuse
 	if (shell->ready_commands[*i].redirections)
 		redirection(shell, *i);
 	if (!is_child_builtin(shell->ready_commands[*i].cmd))
-	{
-		char **env = env_to_array(shell->env);
-		execve(executable, shell->ready_commands[*i].args, env);
-	}
+		execve(executable, shell->ready_commands[*i].args,
+			env_to_array(shell->env));
 	if (is_child_builtin(shell->ready_commands[*i].cmd))
 		execute_builtins(shell, shell->ready_commands[*i].args);
 	if (executable)
@@ -62,7 +61,8 @@ void	wait_pid(t_shell *shell, int *i, pid_t pid, t_file_dis *file)
 		g_exit_status = 128 + WTERMSIG(child_status);
 }
 
-int	ft_pipes(t_shell *shell, t_file_dis *file, int *i, char __attribute__((unused))**env)
+int	ft_pipes(t_shell *shell, t_file_dis *file, int *i,
+	char __attribute__((unused))**env)
 {
 	pid_t	pid;
 
@@ -103,6 +103,5 @@ void	execline(t_shell *shell, char **env)
 	while (wait(NULL) > 0)
 		;
 	g_exit_status %= 255;
-	// env_to_list(shell, env);
 	ft_free_2d(env);
 }

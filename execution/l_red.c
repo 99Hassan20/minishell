@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   l_red.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/30 12:41:48 by abdel-ou          #+#    #+#             */
-/*   Updated: 2023/10/02 18:10:09 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/02 18:59:11 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,4 @@ void	redirection(t_shell *shell, int i)
 		= shell->ready_commands[i].redirections->next;
 	if (shell->ready_commands[i].redirections)
 		redirection(shell, i);
-	// free(shell->ready_commands[i].redirections->file);
-	// free(shell->ready_commands[i].redirections);
 }

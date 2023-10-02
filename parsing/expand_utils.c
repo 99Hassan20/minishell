@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
+/*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/01 15:13:36 by hoigag            #+#    #+#             */
-/*   Updated: 2023/10/02 18:29:40 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/02 18:53:55 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,6 @@ void	expand_var(t_shell *shell, t_token *tmp, t_token **new)
 				ft_strlen(value), tmp->state));
 	else
 		handle_quoted_var(new, value, tmp);
-	// if (value)
-	// 	free(value);
 }
 
 int	is_expandable(t_token *tmp, int to_expand)
