@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -I./includes #-fsanitize=address -g
+CFLAGS = -Wall -Werror -Wextra -I./includes -g #-fsanitize=address -g
 NAME = minishell
 LIBFT = -L./libft -lft
 
