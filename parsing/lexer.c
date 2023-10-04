@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/01 11:10:03 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/15 08:48:52 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 12:13:17 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,11 @@
 
 void	parse_word(t_shell *shell, char *s, char **w, t_token **t)
 {
-	char	*word;
-	t_token	*token;
-
-	word = get_word(s, shell);
+	*w = get_word(s, shell);
 	if (shell->in_quotes)
-		token = new_token(STR, word, ft_strlen(word), shell->q_type);
+		*t = new_token(STR, *w, ft_strlen(*w), shell->q_type);
 	else
-		token = new_token(STR, word, ft_strlen(word), DFAULT);
-	*w = word;
-	*t = token;
+		*t = new_token(STR, *w, ft_strlen(*w), DFAULT);
 }
 
 void	parse_single_tokens(t_shell *shell, char *s, char **w, t_token **t)
@@ -123,5 +118,6 @@ void	lexer(t_shell *shell, char *s)
 			parse_quotes(shell, *s, &word, &token);
 		append_token(&shell->tokens, token);
 		s += ft_strlen(word);
+		free(word);
 	}
 }

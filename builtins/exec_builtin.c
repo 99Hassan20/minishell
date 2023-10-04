@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtin.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 12:09:59 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/15 08:48:52 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 18:59:26 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 
 int	is_builtin(char *cmd)
 {
-	char	*builtins[8];
+	char	*builtins[9];
 	int		i;
 
+	if (!cmd)
+		return (0);
 	builtins[0] = "echo";
 	builtins[1] = "cd";
 	builtins[2] = "pwd";
@@ -24,7 +26,8 @@ int	is_builtin(char *cmd)
 	builtins[4] = "unset";
 	builtins[5] = "env";
 	builtins[6] = "exit";
-	builtins[7] = NULL;
+	builtins[7] = "ENV";
+	builtins[8] = NULL;
 	i = 0;
 	while (builtins[i])
 	{

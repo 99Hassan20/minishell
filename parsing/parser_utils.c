@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/20 16:00:56 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/15 08:48:52 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 17:25:14 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,12 @@ t_token	*copy_token(t_token *token)
 	copy = malloc(sizeof(t_token));
 	if (!copy)
 		return (NULL);
-	copy->content = token->content;
+	copy->content = ft_strdup(token->content);
+	if (!copy->content)
+	{
+		free(copy);
+		return (NULL);
+	}
 	copy->length = token->length;
 	copy->state = token->state;
 	copy->type = token->type;
@@ -63,6 +68,7 @@ void	split_cmds(t_shell	*shell)
 {
 	t_token	*tmp;
 	int		i;
+	t_token	*cpy;
 
 	count_pipes(shell);
 	shell->commands = malloc(sizeof(t_token *) * shell->cmd_count);
@@ -75,11 +81,28 @@ void	split_cmds(t_shell	*shell)
 		shell->commands[i] = NULL;
 		while (tmp && tmp->type != PIPE)
 		{
-			append_token(&shell->commands[i], copy_token(tmp));
+			cpy = copy_token(tmp);
+			append_token(&shell->commands[i], cpy);
 			tmp = tmp->next;
 		}
 		if (tmp && tmp->type == PIPE && tmp->next)
 			tmp = tmp->next;
 		i++;
 	}
+}
+
+t_token	*copy_tokens(t_token *cmd)
+{
+	t_token	*tmp;
+	t_token	*new;
+
+	new = NULL;
+	tmp = cmd;
+	while (tmp)
+	{
+		append_token(&new,
+			new_token(tmp->type, tmp->content, tmp->length, tmp->state));
+		tmp = tmp->next;
+	}
+	return (new);
 }

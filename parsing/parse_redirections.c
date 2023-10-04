@@ -3,103 +3,100 @@
 /*                                                        :::      ::::::::   */
 /*   parse_redirections.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/10 17:24:00 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/15 08:48:52 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 17:36:59 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	remove_all_redir(t_token **token)
+char	**get_file_name(t_token **tokens)
 {
-	t_token	*tmp;
-	t_token	*red;
-	t_token	*file;
+	char	*file_name;
+	char	*expand_herdoc;
+	char	**args;
 
-	tmp = *token;
-	if (is_redirection(tmp))
+	args = init_data(&file_name, &expand_herdoc);
+	if (!args)
+		return (NULL);
+	if ((*tokens)->type == _SPACE)
+		free_single_token(tokens);
+	while ((*tokens) && !is_redirection(*tokens))
 	{
-		red = tmp;
-		file = tmp->next;
-		if (file && (file->type == STR || file->type == VAR))
-			*token = file->next;
-		else if (file && file->type == _SPACE)
+		if ((*tokens)->type == _SPACE && (*tokens)->state == DFAULT)
+			break ;
+		if ((*tokens)->type == DQUOTES || (*tokens)->type == SQUOTES)
 		{
-			file = file->next;
-			if (file && (file->type == STR || file->type == VAR))
-				*token = file->next;
-			else
-				*token = tmp->next;
+			free(expand_herdoc);
+			expand_herdoc = NULL;
 		}
-		else
-			*token = tmp->next;
+		set_file_name(*tokens, &file_name);
+		free_single_token(tokens);
 	}
-	while (tmp && tmp->next)
-	{
-		red = tmp->next;
-		file = red->next;
-		if (is_redirection(red) && file
-			&& (file->type == STR || file->type == VAR))
-			tmp->next = file->next;
-		else if (is_redirection(red) && file && file->type == _SPACE)
-		{
-			file = file->next;
-			if (file && (file->type == STR || file->type == VAR))
-				tmp->next = file->next;
-			else
-				tmp = tmp->next;
-		}
-		else
-			tmp = tmp->next;
-	}
+	args[0] = file_name;
+	args[1] = expand_herdoc;
+	args[2] = NULL;
+	return (args);
 }
 
-void	append_redirec(t_redirec **head, char *file, int type)
+void	go_to_next_redirection(t_token **tmp, char ***args)
 {
-	t_redirec	*tmp;
-	t_redirec	*new;
+	ft_free_2d(*args);
+	*args = NULL;
+	*tmp = (*tmp)->next;
+}
 
-	tmp = *head;
-	new = malloc(sizeof(t_redirec));
-	if (!new)
-		return ;
-	new->file = file;
-	new->type = type;
-	new->next = NULL;
-	if (!tmp)
+void	set_redirections(t_token *tokens,
+	t_redirec **redirs, t_redirec **herdocs, int expand_herdoc)
+{
+	char	*file_name;
+	char	**args;
+	t_token	*tmp;
+
+	args = NULL;
+	tmp = tokens;
+	while (tmp)
 	{
-		*head = new;
-		return ;
+		if (tmp->type == ALRED && tmp->next)
+		{
+			args = get_file_name(&tmp->next);
+			file_name = args[0];
+			if (!args[1])
+				expand_herdoc = 0;
+			append_redirec(herdocs, file_name, tmp->type, expand_herdoc);
+		}
+		else if (is_redirection(tmp) && tmp->next)
+		{
+			args = get_file_name(&tmp->next);
+			file_name = args[0];
+			append_redirec(redirs, file_name, tmp->type, expand_herdoc);
+		}
+		go_to_next_redirection(&tmp, &args);
 	}
-	while (tmp && tmp->next)
-		tmp = tmp->next;
-	tmp->next = new;
 }
 
 t_command	get_final_command(t_token *cmd)
 {
 	t_command	command;
-	t_token		*tmp;
-	t_token		*nospace;
+	t_token		*cpy;
+	t_token		*noredir;
 
-	nospace = remove_space_from_tokens(cmd);
-	tmp = nospace;
+	cpy = copy_tokens(cmd);
 	if (cmd && cmd->type == _SPACE)
 		cmd = cmd->next;
 	command.redirections = NULL;
-	while (tmp && tmp->next)
-	{
-		if (is_redirection(tmp) && tmp->next)
-			append_redirec(&command.redirections,
-				tmp->next->content, tmp->type);
-		tmp = tmp->next;
-	}
-	remove_all_redir(&cmd);
-	command.args = get_command_table(cmd);
+	command.herdocs = NULL;
+	set_redirections(cmd, &command.redirections, &command.herdocs, 1);
+	noredir = remove_redirections(cpy);
+	free_tokens(cpy);
+	command.args = get_command_table(noredir);
+	free_tokens(noredir);
 	if (command.args && command.args[0])
 		command.cmd = command.args[0];
+	else
+		command.cmd = NULL;
 	return (command);
 }
 

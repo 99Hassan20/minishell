@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 15:10:06 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/15 08:48:52 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 17:34:56 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,12 @@ t_token	*new_token(t_tokentype type, char *content, int length, t_state state)
 	new = malloc(sizeof(t_token));
 	if (!new)
 		return (NULL);
-	new->content = content;
+	new->content = ft_strdup(content);
+	if (!new->content)
+	{
+		free(new);
+		return (NULL);
+	}
 	new->length = length;
 	new->state = state;
 	new->type = type;
@@ -86,39 +91,4 @@ void	delete_token(t_token **head, char *content)
 		tmp->next = to_delete->next;
 		to_delete->next = NULL;
 	}
-}
-
-void	print_echo(t_token *tmp)
-{
-	while (tmp)
-	{
-		printf("%s", tmp->content);
-		if (tmp->next)
-			printf(" ");
-		tmp = tmp->next;
-	}
-}
-
-void	print_tokens(t_token *tokens)
-{
-	char *state[] = {"INDQOUTES", "INSQOUTES", "DFAULT"};
-	char *type[] = {"PIPE", "_SPACE", "STR", "VAR", "RRED", "LRED", "ARRED", "ALRED", "DQUOTES", "SQUOTES"};
-
-	printf("\033[1;33m"); // Set the color to yellow (for table headers)
-	printf("\033[1;35m"); // Set the color to magenta (for table border)
-	printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-	printf("| \033[1;33m%-10s\033[1;35m | \033[1;33m%-10s\033[1;35m | \033[1;33m%-10s\033[1;35m | \033[1;33m%-10s\033[1;35m |\n", "Token", "Type", "Length", "State");
-	printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-
-	while (tokens)
-	{
-		printf("\033[1;37m"); // Set the color to white (for table content)
-		printf("\033[1;35m|\033[0m %-10s \033[1;35m|\033[0m %-10s |\033[0m %-10d \033[1;35m|\033[0m %-10s \033[1;35m|\033[0m\n",
-			   tokens->content, type[tokens->type], tokens->length, state[tokens->state]);
-		printf("\033[1;35m"); // Set the color to magenta (for table border)
-		printf("+++++++++++++++++++++++++++++++++++++++++++++++++++++\n");
-		tokens = tokens->next;
-	}
-
-	printf("\033[0m"); // Reset the color to default
 }

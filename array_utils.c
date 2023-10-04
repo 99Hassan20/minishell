@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   array_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: hoigag <hoigag@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 17:55:58 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/13 19:36:15 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/01 13:23:33 by hoigag           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,9 @@ char	**append_to_array(char **arr, char *value)
 		new[i] = ft_strdup(arr[i]);
 		i++;
 	}
-	new[i] = value;
+	new[i] = ft_strdup(value);
 	new[i + 1] = NULL;
+	ft_free_2d(arr);
 	return (new);
 }
 
@@ -58,14 +59,3 @@ void	print_cmd_table(char **args)
 	}
 	printf("\n");
 }
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (shell->cmd_table[i])
-// 	{
-// 		printf("[%s]", shell->cmd_table[i]);
-// 		i++;
-// 	}
-// 	printf("\n");
-// }

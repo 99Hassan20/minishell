@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/08 17:34:56 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/15 08:48:52 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/02 15:57:10 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,27 @@
 int	set_env(t_env **env, char *key, char *value, int overrite)
 {
 	t_env	*tmp;
+	int		res;
 
 	tmp = *env;
 	while (tmp && ft_strcmp(tmp->key, key) != 0)
 		tmp = tmp->next;
 	if (!tmp)
-		return (push_env(env, key, value));
+	{
+		res = push_env(env, key, value);
+		if (value)
+		{
+			free(value);
+			value = NULL;
+		}
+		return (res);
+	}
 	if (tmp && overrite)
+	{
+		if (tmp->value)
+			free(tmp->value);
 		tmp->value = value;
+	}
 	return (1);
 }
 
@@ -39,15 +52,16 @@ int	unset_env(t_env **env, char *key)
 		to_delete = tmp->next;
 		tmp->next = to_delete->next;
 		to_delete->next = NULL;
+		free(to_delete->key);
+		free(to_delete->value);
 		free(to_delete);
 		return (1);
 	}
 	return (-1);
 }
 
-char	**env_to_array(t_env *env)
+int	env_size(t_env *env)
 {
-	char	**env_array;
 	int		i;
 	t_env	*tmp;
 
@@ -58,14 +72,28 @@ char	**env_to_array(t_env *env)
 		i++;
 		tmp = tmp->next;
 	}
-	env_array = malloc(sizeof(char *) * (i + 1));
+	return (i);
+}
+
+char	**env_to_array(t_env *env)
+{
+	char	**env_array;
+	int		i;
+	char	*tmp_str;
+	char	*tmp_str2;
+
+	env_array = malloc(sizeof(char *) * (env_size(env) + 1));
 	i = 0;
 	while (env)
 	{
-		env_array[i] = ft_strjoin(ft_strjoin(env->key, "="), env->value);
+		tmp_str = leak_free_join(ft_strdup(env->key), ft_strdup("="));
+		tmp_str2 = leak_free_join(ft_strdup(tmp_str), ft_strdup(env->value));
+		free(tmp_str);
+		env_array[i] = ft_strdup(tmp_str2);
+		free(tmp_str2);
 		env = env->next;
 		i++;
 	}
 	env_array[i] = NULL;
-	return (env_array);
+	return (free_env(env), env_array);
 }

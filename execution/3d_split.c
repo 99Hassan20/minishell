@@ -3,118 +3,105 @@
 /*                                                        :::      ::::::::   */
 /*   3d_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/10 13:34:01 by abdelmajid        #+#    #+#             */
-/*   Updated: 2023/09/15 09:01:34 by hoigag           ###   ########.fr       */
+/*   Created: 2023/08/06 13:21:28 by abdel-ou          #+#    #+#             */
+/*   Updated: 2023/10/02 19:42:49 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	is_relative_path(char *file)
+int	if_child(t_shell *shell, t_file_dis *file, int *i,
+	char __attribute__((unused))**env)
 {
-	if ((file[0] == '.' && file[1] == '/')
-		|| (file[0] == '.' && file[1] == '.' && file[1] == '/')
-		|| file[0] == '/')
+	char	*executable;
+
+	executable = get_full_path(shell->env, shell->ready_commands[*i].args);
+	if (file->fd[0])
+		close(file->fd[0]);
+	dup2(file->fdd, 0);
+	if ((*i) + 1 < shell->cmd_count)
 	{
-		if (access(file, F_OK) != 0)
-		{
-			printf("minishell: %s: No such file or directory\n", file);
-			g_exit_status = 127;
-		}
-		else if (access(file, X_OK) != 0)
-		{
-			printf("minishell: %s: Permission denied\n", file);
-			g_exit_status = 126;
-		}
+		dup2(file->fd[1], 1);
+		close(file->fd[1]);
+	}
+	if (shell->ready_commands[*i].herdocs
+		&& shell->ready_commands[*i].cmd && !herdocs(shell, *i))
+		return (0);
+	if (shell->ready_commands[*i].redirections)
+		redirection(shell, *i);
+	if (!is_child_builtin(shell->ready_commands[*i].cmd))
+		execve(executable, shell->ready_commands[*i].args,
+			env_to_array(shell->env));
+	if (is_child_builtin(shell->ready_commands[*i].cmd))
+		execute_builtins(shell, shell->ready_commands[*i].args);
+	if (executable)
+		free(executable);
+	exit(g_exit_status);
+}
+
+void	wait_pid(t_shell *shell, int *i, pid_t pid, t_file_dis *file)
+{
+	int	child_status;
+
+	if ((*i) + 1 == shell->cmd_count)
+		waitpid(pid, &child_status, 0);
+	if (file->fdd)
+		close(file->fdd);
+	if ((*i) + 1 < shell->cmd_count)
+	{
+		file->fdd = dup(file->fd[0]);
+		close(file->fd[1]);
+		close(file->fd[0]);
+	}
+	if (WIFEXITED(child_status))
+		g_exit_status = WEXITSTATUS(child_status);
+	else if (WIFSIGNALED(child_status))
+		g_exit_status = 128 + WTERMSIG(child_status);
+}
+
+int	ft_pipes(t_shell *shell, t_file_dis *file, int *i,
+	char __attribute__((unused))**env)
+{
+	pid_t	pid;
+
+	if ((*i + 1) < shell->cmd_count)
+		pipe(file->fd);
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
 		return (0);
 	}
+	else if (pid == 0)
+		return (if_child(shell, file, i, env));
+	else
+		wait_pid(shell, i, pid, file);
 	return (1);
 }
 
-void	execute_parent_builtin(t_shell *shell, char **cmd)
+void	execline(t_shell *shell, char **env)
 {
-	if (ft_strcmp(cmd[0], "cd") == 0 
-		|| ((ft_strcmp(cmd[0], "export") == 0) && cmd[1])
-		|| ((ft_strcmp(cmd[0], "unset") == 0) && cmd[1])
-		|| ((ft_strcmp(cmd[0], "exit") == 0) && cmd[1]))
-		execute_builtins(shell, cmd);
-}
+	int			i;
+	t_file_dis	file;
 
-void	execline(t_shell *shell, char ***cmd, char **env)
-{
-	int		fd[2];
-	pid_t	pid;
-	int		fdd;	
-	char	*executable;
-	DIR		*dir;
-
-	fdd = 0;
-	while (*cmd)
+	file.fdd = 0;
+	i = 0;
+	while (i < shell->cmd_count)
 	{
-		dir = opendir((*cmd)[0]);
-		if (!is_builtin(*cmd[0]) && dir)
-		{
-			closedir(dir);
-			printf("minishell: %s: is a directory\n", (*cmd)[0]);
-			g_exit_status = 126;
-			cmd++;
+		if (ft_check_dir(shell, &i) == 0)
 			continue ;
-		}
-		executable = get_full_path(shell->env, *cmd);
-		if (!executable && !is_relative_path((*cmd)[0]))
-		{
-			cmd++;
+		if (run_redi_whiout_cmd(shell, &i) == 0)
 			continue ;
-		}
-		if ((ft_strcmp((*cmd)[0], "cd") == 0 && shell->cmd_count != 1))
-		{
-			cmd++;
+		if (ft_check_builtins_run(shell, &i) == 0)
 			continue ;
-		}
-		if (((ft_strcmp((*cmd)[0], "export") == 0) && cmd[0][1]) 
-			|| ((ft_strcmp((*cmd)[0], "unset") == 0) && cmd[0][1])
-			|| ((ft_strcmp((*cmd)[0], "exit") == 0))
-			|| ((ft_strcmp((*cmd)[0], "cd") == 0) && shell->cmd_count == 1))
-		{
-			execute_builtins(shell, *cmd);
-			cmd++;
-			continue ;
-		}
-		if (!is_builtin(*cmd[0]) && !executable)
-		{
-			printf("minishell: %s: command not found\n", *cmd[0]);
-			g_exit_status = 127;
-			cmd++;
-			continue ;
-		}
-		pipe(fd);
-		pid = fork();
-		if (pid == -1)
-		{
-			perror("fork");
-			exit(1);
-		}
-		else if (pid == 0)
-		{
-			dup2(fdd, 0);
-			if (*(cmd + 1) != NULL)
-				dup2(fd[1], 1);
-			close(fd[0]);
-			if (is_child_builtin(*cmd[0]))
-				execute_builtins(shell, *cmd);
-			else
-				execve(executable, *cmd, env);
-			exit(g_exit_status);
-		}
-		else
-		{
-			waitpid(pid, &g_exit_status, 0);
-			close(fd[1]);
-			fdd = fd[0];
-			cmd++;
-		}
+		if (!ft_pipes(shell, &file, &i, env))
+			return ;
+		i++;
 	}
+	while (wait(NULL) > 0)
+		;
 	g_exit_status %= 255;
+	ft_free_2d(env);
 }

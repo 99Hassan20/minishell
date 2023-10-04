@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_unset.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoigag <hoigag@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: abdel-ou <abdel-ou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/17 13:22:27 by hoigag            #+#    #+#             */
-/*   Updated: 2023/09/15 08:48:52 by hoigag           ###   ########.fr       */
+/*   Updated: 2023/10/02 19:49:55 by abdel-ou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,49 +32,52 @@ char	*get_joinded_strings(char **strings)
 {
 	int		i;
 	char	*joined;
+	char	*tmp;
 
 	i = 0;
 	joined = ft_strdup("");
 	if (!strings || !strings[0])
-		return (NULL);
+		return (free(joined), NULL);
 	if (!strings[0][0])
 		return (joined);
 	while (strings[i])
 	{
 		if (strings[i + 1])
 			strings[i] = ft_strjoin(strings[i], "=");
+		tmp = joined;
 		joined = ft_strjoin(joined, strings[i]);
+		free(tmp);
 		i++;
 	}
 	return (joined);
 }
 
-void	ft_export(t_shell *shell, char **command)
+void	ft_export(t_shell *shell, char **c)
 {
 	int		i;
 	char	**pair;
+	char	*joined;
 
-	g_exit_status = 0;
-	i = 1;
-	while (command[i])
+	i = -1;
+	while (c[++i])
 	{
-		if (check_valid_variable(command[i]))
+		if (check_valid_variable(c[i]))
 		{
-			pair = ft_split(command[i], '=');
-			if (!pair[1] && ft_get_index_of(command[i], '=') != -1)
-				pair[1] = ft_strdup("");
-			if (ft_get_index_of(command[i], '=') != -1)
-				set_env(&shell->env, pair[0], get_joinded_strings(pair + 1), 1);
+			pair = ft_split(c[i], '=');
+			if (!pair[1] && ft_get_index_of(c[i], '=') != -1)
+				pair = append_to_array(pair, "");
+			joined = get_joinded_strings(pair + 1);
+			if (ft_get_index_of(c[i], '=') != -1)
+				set_env(&shell->env, pair[0], joined, 1);
 			else
-				set_env(&shell->env, pair[0], get_joinded_strings(pair + 1), 0);
+				set_env(&shell->env, pair[0], joined, 1);
+			ft_free_2d(pair);
 		}
 		else
 		{
 			g_exit_status = 1;
-			printf("minishell: export: `%s':\
- not a valid identifier\n", command[i]);
+			printf("minishell: export: `%s': not a valid identifier\n", c[i]);
 		}
-		i++;
 	}
 }
 
@@ -90,7 +93,10 @@ void	ft_unset(t_shell *shell, char **command)
 	{
 		if (check_valid_variable(command[i])
 			&& ft_get_index_of(command[i], '=') == -1)
-			unset_env(&shell->env, command[i]);
+		{
+			if (ft_strcmp(command[i], "_") != 0)
+				unset_env(&shell->env, command[i]);
+		}
 		else
 		{
 			printf("minishell: unset: \
